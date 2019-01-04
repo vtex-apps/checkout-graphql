@@ -1,0 +1,126 @@
+type Shipping {
+  addresses: Addresses
+  options: ShippingOptions
+  parcels: [Parcel]
+}
+
+type Addresses {
+  selected: Address
+  saved: [Address]
+}
+
+type ShippingOptions {
+  delivery: DeliveryOptions
+  pickups: [Pickup]
+}
+
+type DeliveryOptions {
+  cheapest: DeliveryOption
+  fastest: DeliveryOption
+  scheduled: DeliveryOption
+  all: ExtendedDeliveryOption
+}
+
+scalar Date
+
+type Price {
+  value: Int
+  currencyCode: String
+}
+
+type Estimate {
+  type: EstimateType
+  value: Int
+}
+
+type TimeFrame {
+  start: Date
+  end: Date
+  price: Price
+  tax: Price
+}
+
+enum EstimateType {
+  MINUTE
+  HOUR
+  DAY
+  BUSINESS_DAY
+}
+
+interface ShippingOption {
+  price: Price
+  estimate: Estimate
+  timeFrames: [TimeFrame]
+  selectedTimeFrame: TimeFrame
+}
+
+type DeliveryOption implements ShippingOption {
+  numberOfParcels: Int
+  price: Price
+  estimate: Estimate
+  timeFrames: [TimeFrame]
+  selectedTimeFrame: TimeFrame
+}
+
+type ExtendedDeliveryOption implements ShippingOption {
+  id: ID
+  items: [ItemIndex]
+  price: Price
+  estimate: Estimate
+  timeFrames: [TimeFrame]
+  selectedTimeFrame: TimeFrame
+}
+
+type PickupOption implements ShippingOption {
+  id: ID
+  price: Price
+  estimate: Estimate
+  timeFrames: [TimeFrame]
+  selectedTimeFrame: TimeFrame
+}
+
+type Pickup {
+  id: ID
+  name: String
+  additionalInfo: String
+  address: Address
+  distance: Int
+  pickupOptions: [PickupOption]
+}
+
+union SelectedOption = DeliveryOption | ExtendedDeliveryOption | PickupOption
+
+type Parcel {
+  price: Price
+  selectedTimeFrame: TimeFrame
+  selectedOption: SelectedOption
+  pickupName: String
+  items: [NotDefined]
+  seller: NotDefined
+  address: Address
+}
+
+type Address {
+  id: ID
+  addressType: AddressType
+  city: String
+  complement: String
+  country: String
+  geoCoordinates: [Int]
+  neighborhood: String
+  number: String
+  postalCode: String
+  receiverName: String
+  reference: String
+  state: String
+  street: String
+}
+
+enum AddressType {
+  RESIDENTIAL
+  COMMERCIAL
+  INSTORE
+  GIFT_REGISTRY
+  PICKUP
+  SEARCH
+}

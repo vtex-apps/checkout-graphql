@@ -1,0 +1,26 @@
+{
+  "name": "checkout-ui",
+  "vendor": "vtex",
+  "version": "0.0.1",
+  "title": "Smart Checkout",
+  "description": "Smart Checkout",
+  "dependencies": {},
+  "builders": {
+    "graphql": "1.x",
+    "node": "3.x"
+  },
+  "credentialType": "absolute",
+  "mustUpdateAt": "2019-11-05",
+  "registries": [
+    "smartcheckout"
+  ],
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexcommercestable.com.br",
+        "path": "/api/checkout/pub/*"
+      }
+    }
+  ]
+}

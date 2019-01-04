@@ -1,0 +1,4 @@
+type Query {
+  cart: Cart @cacheControl(scope: PRIVATE)
+}
+
