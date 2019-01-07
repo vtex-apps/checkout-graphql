@@ -5,6 +5,9 @@
   "license": "MIT",
   "dependencies": {
     "@vtex/api": "^1.5.2",
+    "@vtex/delivery-packages": "^2.16.2",
+    "@vtex/estimate-calculator": "^1.1.0",
+    "@vtex/lean-shipping-calculator": "^0.1.3",
     "apollo-datasource-rest": "^0.2.1",
     "apollo-server-errors": "^2.2.0",
     "graphql": "^14.0.2",

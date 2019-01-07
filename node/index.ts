@@ -1,9 +1,10 @@
 import CheckoutDataSource from './dataSources/checkout'
 
-import cartQuery from './resolvers/cart'
 import {
-  fieldResolvers as shippingFieldResolvers
-} from './resolvers/shipping'
+  queries as cartQueries,
+  resolvers as cartResolvers,
+} from './resolvers/Cart'
+import shippingResolvers from './resolvers/shipping'
 
 export default {
   graphql: {
@@ -11,10 +12,11 @@ export default {
       checkout: new CheckoutDataSource(),
     }),
     resolvers: {
-      ...shippingFieldResolvers,
       Query: {
-        cart: cartQuery,
-      }
+        ...cartQueries,
+      },
+      ...cartResolvers,
+      ...shippingResolvers,
     },
   }
 }

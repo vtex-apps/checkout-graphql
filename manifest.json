@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "title": "Smart Checkout",
   "description": "Smart Checkout",
-  "dependencies": {},
+  "dependencies": {
+  },
   "builders": {
     "graphql": "1.x",
     "node": "3.x"

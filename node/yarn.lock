@@ -148,6 +148,35 @@
     stats-lite vtex/node-stats-lite#dist
     tar-fs "^1.15.3"
 
+"@vtex/delivery-packages@^2.16.2":
+  version "2.16.2"
+  resolved "https://registry.yarnpkg.com/@vtex/delivery-packages/-/delivery-packages-2.16.2.tgz#7ac6f8402e26ca75d9120c1b9dd1b7c1e10080e8"
+  integrity sha512-bgrsbAx/l+xTs1nN+pwWCwNVGs7Rw2mHRdlo3h9RvZcdzptuJvdWJDVN2YY2Klm/AZ9MxLhSgokhxrf7J4BJzQ==
+  dependencies:
+    "@vtex/estimate-calculator" "^1.0.8"
+
+"@vtex/estimate-calculator@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@vtex/estimate-calculator/-/estimate-calculator-1.0.7.tgz#4b0da3acf8eb05ca47ca8dd25d4eb4d8370b987f"
+  integrity sha512-bD/NhVhmbqATxe1VYEyjzjZitUYpdkiCX0xqzVScUeATcpzRyfQBuD37HskUyUM+A1oP7MESxMFcCkEJPUneAg==
+  dependencies:
+    lodash "^4.17.5"
+
+"@vtex/estimate-calculator@^1.0.8", "@vtex/estimate-calculator@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@vtex/estimate-calculator/-/estimate-calculator-1.1.0.tgz#f1904e6681d72f7ae24745c85913f321507a1a19"
+  integrity sha512-kN1o20vCce6Xtqg8U6odwMQcgx9PE4sAezyfkREe8LnCM6MaPUmJjVByt/4KYDmoa4YX1Q2mI4DiSKPFlOuJnQ==
+  dependencies:
+    lodash "^4.17.5"
+
+"@vtex/lean-shipping-calculator@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@vtex/lean-shipping-calculator/-/lean-shipping-calculator-0.1.3.tgz#eaff0556bb81697c49c401b7967c5194266355cc"
+  integrity sha512-Hoqqf1ct0d7n91kPBMi+q0LTGP+/d9pNCYOyGP3z3YvtF9flPwlVtODAkvhmNiUHOWndg1mS9DLLEPVe3SfGdw==
+  dependencies:
+    "@vtex/estimate-calculator" "1.0.7"
+    lodash "^4.17.5"
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
@@ -753,7 +782,7 @@ lodash.union@^4.6.0:
   resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
   integrity sha1-SLtQiECfFvGCFmZkHETdGqrjzYg=
 
-lodash@^4.17.10, lodash@^4.17.11:
+lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.5:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==

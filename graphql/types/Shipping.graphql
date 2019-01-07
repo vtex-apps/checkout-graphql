@@ -88,12 +88,8 @@ type Pickup {
   pickupOptions: [PickupOption]
 }
 
-union SelectedOption = DeliveryOption | ExtendedDeliveryOption | PickupOption
-
 type Parcel {
-  price: Price
-  selectedTimeFrame: TimeFrame
-  selectedOption: SelectedOption
+  selectedOption: ShippingOption
   pickupName: String
   items: [NotDefined]
   seller: NotDefined
@@ -101,7 +97,7 @@ type Parcel {
 }
 
 type Address {
-  id: ID
+  addressId: ID
   addressType: AddressType
   city: String
   complement: String
@@ -117,10 +113,10 @@ type Address {
 }
 
 enum AddressType {
-  RESIDENTIAL
-  COMMERCIAL
-  INSTORE
-  GIFT_REGISTRY
-  PICKUP
-  SEARCH
+  residential
+  commercial
+  instore
+  giftRegistry
+  pickup
+  search
 }
