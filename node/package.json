@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "@vtex/api": "^1.5.2",
     "@vtex/delivery-packages": "^2.16.2",
@@ -14,11 +17,15 @@
     "lodash": "^4.17.11"
   },
   "devDependencies": {
+    "@types/jest": "^23.3.12",
     "@types/koa": "^2.0.48",
     "@types/node": "^10.12.18",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "tslint": "^5.12.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "^3.2.2"
   }
 }
+ 

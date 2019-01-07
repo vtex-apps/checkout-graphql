@@ -3,7 +3,6 @@ export const queries = {
     const { dataSources: { checkout } } = ctx
     ctx.orderForm = await checkout.orderForm()
   
-  
     return {
       ...ctx.orderForm,
     }

@@ -16,13 +16,13 @@ export default function resolver(root, args, ctx) {
       address: parcel.address,
       items: parcel.items,
       pickupName: parcel.pickupFriendlyName,
-      selectedOption: getSelectedOption(orderForm, parcel),
-      seller: orderForm.sellers.find(seller => seller.id === parcel.seller),
+      selectedOption: getSelectedOption(parcel),
+      seller: parcel.seller,
     }
   })
 }
 
-function getSelectedOption(orderForm, parcel) {
+function getSelectedOption(parcel) {
   const scheduledParams = hasDeliveryWindows(parcel.selectedSlaObj)
     ? { selectedTimeFrame: null, timeFrames: [] }
     : { selectedTimeFrame: null, timeFrames: [] }

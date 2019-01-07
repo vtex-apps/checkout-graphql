@@ -9,13 +9,15 @@ const ESTIMATE_TYPES = {
 
 interface ParentObj {
   estimate: String
+  shippingEstimate: String
 }
 
 export default function resolver(parentObj: ParentObj) {
-  if (!parentObj.estimate) return null
+  const estimate = parentObj.estimate || parentObj.shippingEstimate
+  if (!estimate) return null
 
-  const value = shippingEstimate.getShippingEstimateQuantity(parentObj.estimate)
-  const type = shippingEstimate.getShippingEstimateUnit(parentObj.estimate)
+  const value = shippingEstimate.getShippingEstimateQuantity(estimate)
+  const type = shippingEstimate.getShippingEstimateUnit(estimate)
 
   return {
     value,
