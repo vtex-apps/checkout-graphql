@@ -4,7 +4,8 @@ import {
   queries as cartQueries,
   resolvers as cartResolvers,
 } from './resolvers/Cart'
-import shippingResolvers from './resolvers/shipping'
+import shippingResolvers from './resolvers/Shipping'
+import shippingMutations from './mutations/Shipping'
 
 export default {
   graphql: {
@@ -12,6 +13,9 @@ export default {
       checkout: new CheckoutDataSource(),
     }),
     resolvers: {
+      // Mutation: {
+      //   ...shippingMutations,
+      // },
       Query: {
         ...cartQueries,
       },

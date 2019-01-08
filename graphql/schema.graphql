@@ -2,3 +2,9 @@ type Query {
   cart: Cart @cacheControl(scope: PRIVATE)
 }
 
+# type Mutation {
+#   updateAddress(address: AddressInput) : Cart
+#   selectAddress(address: AddressInput) : Cart
+#   selectDeliveryOption(option: Option) : Cart
+#   selectPickupOption(pickupId: ID, pcikupOptionId: ID) : Cart
+# }

@@ -112,6 +112,27 @@ type Address {
   street: String
 }
 
+input AddressInput {
+  addressId: ID
+  addressType: AddressType
+  city: String
+  complement: String
+  country: String
+  geoCoordinates: [Int]
+  neighborhood: String
+  number: String
+  postalCode: String
+  receiverName: String
+  reference: String
+  state: String
+  street: String
+}
+
+enum Option {
+  CHEAPEST
+  FASTEST
+}
+
 enum AddressType {
   residential
   commercial
