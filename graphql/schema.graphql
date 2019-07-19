@@ -1,5 +1,5 @@
 type Query {
-  cart: Cart @cacheControl(scope: PRIVATE)
+  cart: Cart @cacheControl(scope: PRIVATE) @withOrderFormId @withSegment
 }
 
 # type Mutation {

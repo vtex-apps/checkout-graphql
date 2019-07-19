@@ -1,17 +1,9 @@
 export const queries = {
-  cart: async (root, args, ctx) => {
-    const { dataSources: { checkout } } = ctx
-    ctx.orderForm = await checkout.orderForm()
-  
+  cart: async (_: any, __: any, ctx: Context) => {
+    const { clients: { checkout } } = ctx
+    const orderForm = await checkout.orderForm()
     return {
-      ...ctx.orderForm,
+      id: orderForm.orderFormId,
     }
-  }
-}
-
-export const resolvers = {
-  Cart: {
-    // Return non nullable value, so its field resolvers do their work
-    shipping: () => ({}),
-  }
+  },
 }

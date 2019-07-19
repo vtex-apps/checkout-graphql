@@ -1,14 +1,12 @@
 {
-  "name": "checkout-ui",
+  "name": "checkout-graphql",
   "vendor": "vtex",
   "version": "0.0.1",
-  "title": "Smart Checkout",
-  "description": "Smart Checkout",
-  "dependencies": {
-  },
+  "title": "Checkout GraphQL",
+  "description": "Checkout GraphQL API",
   "builders": {
     "graphql": "1.x",
-    "node": "3.x"
+    "node": "4.x"
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
@@ -19,9 +17,10 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "{{account}}.vtexcommercestable.com.br",
+        "host": "portal.vtexcommercestable.com.br",
         "path": "/api/checkout/pub/*"
       }
     }
-  ]
+  ],
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
