@@ -3,7 +3,18 @@ export const queries = {
     const { clients: { checkout } } = ctx
     const orderForm = await checkout.orderForm()
     return {
-      id: orderForm.orderFormId,
+      items: orderForm.items,
+      storePreferencesData: orderForm.storePreferencesData,
+    }
+  },
+}
+
+export const mutations = {
+  updateItems: async (_: any, { orderItems }: { orderItems: ItemInput[]}, ctx: Context) => {
+    const { clients: { checkout }, vtex: { orderFormId } } = ctx
+    const orderForm = await checkout.updateItems(orderFormId!, orderItems)
+    return {
+      items: orderForm.items,
     }
   },
 }

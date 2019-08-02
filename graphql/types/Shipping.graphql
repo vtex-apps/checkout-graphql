@@ -1,3 +1,7 @@
+scalar Date
+scalar ItemIndex
+scalar NotDefined
+
 type Shipping {
   addresses: Addresses
   options: ShippingOptions
@@ -20,8 +24,6 @@ type DeliveryOptions {
   scheduled: DeliveryOption
   all: ExtendedDeliveryOption
 }
-
-scalar Date
 
 type Price {
   value: Int

@@ -2,9 +2,6 @@ type Query {
   cart: Cart @cacheControl(scope: PRIVATE) @withOrderFormId @withSegment
 }
 
-# type Mutation {
-#   updateAddress(address: AddressInput) : Cart
-#   selectAddress(address: AddressInput) : Cart
-#   selectDeliveryOption(option: Option) : Cart
-#   selectPickupOption(pickupId: ID, pcikupOptionId: ID) : Cart
-# }
+type Mutation {
+  updateItems(orderItems: [ItemInput]) : Cart @withOrderFormId
+}

@@ -1,14 +1,8 @@
-scalar NotDefined
-
-scalar ItemIndex
-
 type Cart {
-  id: ID
-  profile: NotDefined
-  items: [NotDefined]
-  shipping: Shipping
-  payment: NotDefined
-  coupon: NotDefined
-  totalizers: NotDefined
-  userAuth: NotDefined
+  items: [Item]
+  storePreferencesData: StorePreferencesData
+}
+
+type StorePreferencesData {
+  currencyCode: String
 }
