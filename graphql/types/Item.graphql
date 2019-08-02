@@ -1,0 +1,16 @@
+type Item {
+  detailUrl: String
+  id: ID
+  imageUrl: String
+  listPrice: Float
+  name: String
+  price: Float
+  productId: String
+  quantity: Float
+  sellingPrice: Float
+}
+
+input ItemInput {
+  index: Int
+  quantity: Float
+}
