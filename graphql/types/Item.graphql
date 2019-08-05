@@ -1,13 +1,26 @@
 type Item {
+  additionalInfo: ItemAdditionalInfo
   detailUrl: String
   id: ID
   imageUrl: String
   listPrice: Float
+  measurementUnit: String
   name: String
   price: Float
   productId: String
   quantity: Float
   sellingPrice: Float
+  skuName: String
+  variations: [Variation]
+}
+
+type ItemAdditionalInfo {
+  brandName: String
+}
+
+type Variation {
+  name: String @translatable
+  values: [String]
 }
 
 input ItemInput {

@@ -8,6 +8,9 @@
     "graphql": "1.x",
     "node": "4.x"
   },
+  "dependencies": {
+    "vtex.store-graphql": "2.x"
+  },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
   "registries": [
@@ -20,6 +23,9 @@
         "host": "portal.vtexcommercestable.com.br",
         "path": "/api/checkout/pub/*"
       }
+    },
+    {
+      "name": "vtex.store-graphql:resolve-graphql"
     }
   ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
