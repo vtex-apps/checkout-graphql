@@ -47,7 +47,7 @@ export const queries = {
 }
 
 export const mutations = {
-  updateItems: async (_: any, { orderItems }: { orderItems: ItemInput[] }, ctx: Context) => {
+  updateItems: async (_: any, { orderItems }: { orderItems: OrderFormItemInput[] }, ctx: Context) => {
     const { clients: { checkout, storeGraphQL }, vtex: { orderFormId } } = ctx
     const orderForm = await checkout.updateItems(orderFormId!, orderItems)
 

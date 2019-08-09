@@ -47,6 +47,7 @@ declare global {
     reference: string | null
     geoCoordinates: [number, number]
   }
+
   interface OrderFormItem {
     id: string
     name: string
@@ -82,6 +83,12 @@ declare global {
     sellerChain: string[]
     availability: string
     unitMultiplier: number
+    variations: Variation[]
+  }
+
+  interface Variation {
+    name: string
+    values: string[]
   }
 
   interface CompositionItem {
