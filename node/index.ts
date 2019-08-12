@@ -83,12 +83,12 @@ declare global {
     sellerChain: string[]
     availability: string
     unitMultiplier: number
-    variations: Variation[]
+    skuSpecifications: SKUSpecification[]
   }
 
-  interface Variation {
-    name: string
-    values: string[]
+  interface SKUSpecification {
+    fieldName: string
+    fieldValues: string[]
   }
 
   interface CompositionItem {

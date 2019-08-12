@@ -11,16 +11,16 @@ type Item {
   quantity: Float
   sellingPrice: Float
   skuName: String
-  variations: [Variation]
+  skuSpecifications: [SKUSpecification]
 }
 
 type ItemAdditionalInfo {
   brandName: String
 }
 
-type Variation {
-  name: String @translatable
-  values: [String]
+type SKUSpecification {
+  fieldName: String
+  fieldValues: [String]
 }
 
 input ItemInput {
