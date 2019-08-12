@@ -1,15 +1,14 @@
 import { map } from 'bluebird'
-import { find } from 'ramda'
 
 import { StoreGraphQL } from '../clients/storeGraphQL'
 import { fixImageUrl } from '../utils/image'
 
-const getItemVariations = (skuName: string, skuList: any[]) => {
-  const matchedSku = find((sku: any) => sku.name === skuName, skuList)
+const getSkuSpecifications = (skuId: string, skuList: any[]) => {
+  const matchedSku = skuList.find((sku: any) => sku.itemId === skuId)
   if (!matchedSku) {
     return []
   }
-  return matchedSku.variations
+  return matchedSku.skuSpecifications
 }
 
 const adjustItems = (items: OrderFormItem[], storeGraphQL: StoreGraphQL) =>
@@ -27,7 +26,7 @@ const adjustItems = (items: OrderFormItem[], storeGraphQL: StoreGraphQL) =>
       ...item,
       imageUrl: fixImageUrl(item.imageUrl),
       name: product.productName,
-      variations: getItemVariations(item.skuName, product.items),
+      skuSpecifications: getSkuSpecifications(item.id, product.items),
     }
   })
 

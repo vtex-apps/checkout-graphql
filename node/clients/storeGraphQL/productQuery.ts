@@ -2,6 +2,7 @@ export interface ProductResponse {
   product: {
     productName: string
     items: Array<{
+      itemId: string
       name: string
       variations: Array<{
         name: string
@@ -25,10 +26,11 @@ query Product($identifier: ProductUniqueIdentifier) {
   product(identifier: $identifier) {
     productName
     items {
+      itemId
       name
-      variations {
-        name
-        values
+      skuSpecifications {
+        fieldName
+        fieldValues
       }
     }
   }

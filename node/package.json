@@ -2,8 +2,7 @@
   "dependencies": {
     "bluebird": "^3.5.5",
     "graphql": "^0.13.2",
-    "graphql-tools": "^3.1.1",
-    "ramda": "^0.26.1"
+    "graphql-tools": "^3.1.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.25",
