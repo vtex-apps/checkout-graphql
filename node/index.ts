@@ -31,7 +31,7 @@ declare global {
     utmipage?: string
     marketingTags?: string
   }
-  
+
   interface CheckoutAddress {
     addressType: string
     receiverName: string
@@ -47,6 +47,7 @@ declare global {
     reference: string | null
     geoCoordinates: [number, number]
   }
+
   interface OrderFormItem {
     id: string
     name: string
@@ -82,6 +83,12 @@ declare global {
     sellerChain: string[]
     availability: string
     unitMultiplier: number
+    variations: Variation[]
+  }
+
+  interface Variation {
+    name: string
+    values: string[]
   }
 
   interface CompositionItem {
@@ -181,7 +188,7 @@ declare global {
           pickupStoreInfo: {
             isPickupStore: boolean
             friendlyName: string | null
-  
+
             address: CheckoutAddress | null
             additionalInfo: any | null
             dockId: string | null
@@ -302,7 +309,7 @@ declare global {
     subscriptionData: any | null
     itemsOrdination: any | null
   }
-  
+
   interface OrderFormItemInput {
     id?: number
     index?: number
@@ -310,7 +317,7 @@ declare global {
     seller?: string
     options?: AssemblyOptionInput[]
   }
-  
+
   interface AssemblyOptionInput {
     id: string
     quantity: number
@@ -323,6 +330,9 @@ declare global {
 const MAX_SEGMENT_CACHE = 10000
 const segmentCache = new LRUCache<string, any>({ max: MAX_SEGMENT_CACHE })
 metrics.trackCache('segment', segmentCache)
+
+const storeGraphQLCache = new LRUCache<string, any>({ max: 5000 })
+metrics.trackCache('storeGraphQL', storeGraphQLCache)
 
 export default new Service<Clients, void, CustomContext>({
   clients: {
@@ -337,6 +347,10 @@ export default new Service<Clients, void, CustomContext>({
       },
       segment: {
         memoryCache: segmentCache,
+        timeout: THREE_SECONDS_MS,
+      },
+      storeGraphQL: {
+        memoryCache: storeGraphQLCache,
         timeout: THREE_SECONDS_MS,
       },
     },
