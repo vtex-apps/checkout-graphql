@@ -1,11 +1,10 @@
 import { map } from 'bluebird'
-import { find } from 'ramda'
 
 import { StoreGraphQL } from '../clients/storeGraphQL'
 import { fixImageUrl } from '../utils/image'
 
 const getSkuSpecifications = (skuId: string, skuList: any[]) => {
-  const matchedSku = find((sku: any) => sku.itemId === skuId, skuList)
+  const matchedSku = skuList.find((sku: any) => sku.itemId === skuId)
   if (!matchedSku) {
     return []
   }
