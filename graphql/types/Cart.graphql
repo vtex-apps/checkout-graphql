@@ -1,8 +1,16 @@
 type Cart {
   items: [Item]
   storePreferencesData: StorePreferencesData
+  totalizers: [Totalizer]
+  value: Int
 }
 
 type StorePreferencesData {
   currencyCode: String
+}
+
+type Totalizer {
+  id: String
+  name: String
+  value: Int
 }

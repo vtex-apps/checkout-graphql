@@ -34,13 +34,15 @@ const adjustItems = (items: OrderFormItem[], storeGraphQL: StoreGraphQL) =>
 export const queries = {
   cart: async (_: any, __: any, ctx: Context) => {
     const { clients: { checkout, storeGraphQL } } = ctx
-    const { items, storePreferencesData } = await checkout.orderForm()
+    const { items, storePreferencesData, totalizers, value } = await checkout.orderForm()
 
     const adjustedItems = await adjustItems(items, storeGraphQL)
 
     return {
       items: adjustedItems,
       storePreferencesData,
+      totalizers,
+      value,
     }
   },
 }
