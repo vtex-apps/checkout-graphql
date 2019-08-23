@@ -18,6 +18,19 @@ type ShippingOptions {
   pickups: [Pickup]
 }
 
+type ShippingResponse {
+  countries: [String]
+  deliveryOptions: [DeliveryOptionResponse]
+  selectedAddress: [Address]
+}
+
+type DeliveryOptionResponse {
+  id: String
+  price: Int
+  estimate: String
+  isSelected: Boolean
+}
+
 type DeliveryOptions {
   cheapest: DeliveryOption
   fastest: DeliveryOption

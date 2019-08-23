@@ -8,5 +8,5 @@ type Query {
 type Mutation {
   updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
   insertCoupon(text: String): Coupon @withOrderFormId
-  estimateShipping(address: AddressInput): ShippingOptions @withOrderFormId
+  estimateShipping(address: AddressInput): ShippingResponse @withOrderFormId
 }

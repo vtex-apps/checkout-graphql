@@ -1,3 +1,6 @@
+import flatten from 'lodash/flatten'
+import uniq from 'lodash/uniq'
+
 export const queries = {}
 
 export const mutations = {
@@ -10,7 +13,7 @@ export const mutations = {
 
     const newOrderForm = await shipping.estimateShipping(orderForm.orderFormId, shippingData)
 
-    return newOrderForm
+    return getShippingInfo(newOrderForm)
   },
 }
 
@@ -29,4 +32,38 @@ const getShippingData = (address: AddressInput, logisticsInfo: LogisticsInfo[]) 
   }
 
   return requestPayload
+}
+
+const getShippingInfo = (orderForm: OrderForm) => {
+  const logisticsInfo = orderForm.shippingData && orderForm.shippingData.logisticsInfo
+
+  const countries = uniq(flatten(logisticsInfo ? logisticsInfo.map(item => item.shipsTo) : []))
+  const selectedAddress = orderForm.shippingData && orderForm.shippingData.selectedAddresses[0]
+  const deliveryOptions = uniq(flatten(logisticsInfo ? logisticsInfo.map(item => item.slas) : []))
+
+  const updatedDeliveryOptions = deliveryOptions.map(sla => {
+    let price = sla.price
+
+    const isSelected = logisticsInfo.find(li => li.selectedSla === sla.id)
+
+    logisticsInfo.forEach((li: LogisticsInfo) => {
+      const currentSla = li.slas.find(liSla => liSla.id === sla.id)
+
+      if (currentSla) {
+        price += currentSla.price
+      }
+    })
+
+    return {
+      ...sla,
+      isSelected,
+      price,
+    }
+  })
+
+  return {
+    countries,
+    deliveryOptions: updatedDeliveryOptions,
+    selectedAddress,
+  }
 }
