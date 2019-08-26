@@ -21,7 +21,7 @@ type ShippingOptions {
 type ShippingResponse {
   countries: [String]
   deliveryOptions: [DeliveryOptionResponse]
-  selectedAddress: [Address]
+  selectedAddress: Address
 }
 
 type DeliveryOptionResponse {
@@ -117,7 +117,7 @@ type Address {
   city: String
   complement: String
   country: String
-  geoCoordinates: [Int]
+  geoCoordinates: [Float]
   neighborhood: String
   number: String
   postalCode: String
@@ -130,10 +130,11 @@ type Address {
 input AddressInput {
   addressId: ID
   addressType: AddressType
+  addressQuery: String
   city: String
   complement: String
   country: String
-  geoCoordinates: [Int]
+  geoCoordinates: [Float]
   neighborhood: String
   number: String
   postalCode: String

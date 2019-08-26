@@ -3,8 +3,8 @@ import {
   IOContext,
   JanusClient,
   RequestConfig,
-} from '@vtex/api'
-import { checkoutCookieFormat, statusToError } from '../utils'
+} from "@vtex/api"
+import { checkoutCookieFormat, statusToError } from "../utils"
 
 export class Shipping extends JanusClient {
   public constructor(ctx: IOContext, options?: InstanceOptions) {
@@ -19,12 +19,16 @@ export class Shipping extends JanusClient {
     })
   }
 
-  public estimateShipping = (orderFormId: string, shippingData: ShippingDataRequest) =>
-    this.post<OrderForm>(
+  public estimateShipping = (
+    orderFormId: string,
+    shippingData: ShippingDataRequest
+  ) => {
+    return this.post<OrderForm>(
       this.routes.estimateShipping(orderFormId),
-      { shippingData },
-      { metric: 'shipping-estimate' }
+      shippingData,
+      { metric: "shipping-estimate" }
     )
+  }
 
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
@@ -46,19 +50,17 @@ export class Shipping extends JanusClient {
 
   private getCommonHeaders = () => {
     const { orderFormId } = this.context as CustomIOContext
-    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
+    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ""
     return {
-      Cookie: `${checkoutCookie}vtex_segment=${
-        this.context.segmentToken
-        };vtex_session=${this.context.sessionToken};`,
+      Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 
   private get routes() {
-    const base = '/api/checkout/pub'
+    const base = "/api/checkout/pub"
     return {
-      estimateShipping: (orderFormId: string) => `${base}/orderForm/${orderFormId}/attachments/shippingData`,
+      estimateShipping: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/attachments/shippingData`,
     }
   }
-
 }

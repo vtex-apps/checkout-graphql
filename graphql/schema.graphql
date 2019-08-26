@@ -3,6 +3,10 @@ type Query {
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
     @withSegment
+  shipping: ShippingResponse
+    @cacheControl(scope: PRIVATE)
+    @withOrderFormId
+    @withSegment
 }
 
 type Mutation {
