@@ -3,5 +3,6 @@ type Query {
 }
 
 type Mutation {
-  updateItems(orderItems: [ItemInput]) : Cart @withOrderFormId
+  updateItems(orderItems: [ItemInput]): Cart @withOrderFormId
+  insertCoupon(text: String): Coupon @withOrderFormId
 }

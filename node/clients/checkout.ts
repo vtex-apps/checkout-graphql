@@ -3,7 +3,7 @@ import {
   IOContext,
   IOResponse,
   JanusClient,
-  RequestConfig,
+  RequestConfig
 } from '@vtex/api'
 import { checkoutCookieFormat, statusToError } from '../utils'
 
@@ -24,8 +24,8 @@ export class Checkout extends JanusClient {
         ...(options && options.headers),
         ...(ctx.storeUserAuthToken
           ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
-          : null),
-      },
+          : null)
+      }
     })
   }
 
@@ -128,7 +128,7 @@ export class Checkout extends JanusClient {
 
   public updateOrderFormCheckin = (orderFormId: string, checkinPayload: any) =>
     this.post(this.routes.checkin(orderFormId), checkinPayload, {
-      metric: 'checkout-updateOrderFormCheckin',
+      metric: 'checkout-updateOrderFormCheckin'
     })
 
   public orderForm = () => {
@@ -155,14 +155,19 @@ export class Checkout extends JanusClient {
       this.routes.simulation(this.getChannelQueryString()),
       simulation,
       {
-        metric: 'checkout-simulation',
+        metric: 'checkout-simulation'
       }
     )
+
+  public insertCoupon = (orderFormId: string, coupon: string) =>
+    this.post<OrderForm>(this.routes.insertCoupon(orderFormId), {
+      text: coupon
+    })
 
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      ...this.getCommonHeaders()
     }
     return this.http.get<T>(url, config).catch(statusToError) as Promise<T>
   }
@@ -170,7 +175,7 @@ export class Checkout extends JanusClient {
   protected post = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      ...this.getCommonHeaders()
     }
     return this.http.post<T>(url, data, config).catch(statusToError) as Promise<
       T
@@ -184,7 +189,7 @@ export class Checkout extends JanusClient {
   ) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      ...this.getCommonHeaders()
     }
     return this.http
       .postRaw<T>(url, data, config)
@@ -194,7 +199,7 @@ export class Checkout extends JanusClient {
   protected delete = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      ...this.getCommonHeaders()
     }
     return this.http.delete<T>(url, config).catch(statusToError) as Promise<
       IOResponse<T>
@@ -208,7 +213,7 @@ export class Checkout extends JanusClient {
   ) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      ...this.getCommonHeaders()
     }
     return this.http
       .patch<T>(url, data, config)
@@ -218,7 +223,7 @@ export class Checkout extends JanusClient {
   protected put = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      ...this.getCommonHeaders()
     }
     return this.http.put<T>(url, data, config).catch(statusToError) as Promise<
       T
@@ -231,7 +236,7 @@ export class Checkout extends JanusClient {
     return {
       Cookie: `${checkoutCookie}vtex_segment=${
         this.context.segmentToken
-      };vtex_session=${this.context.sessionToken};`,
+      };vtex_session=${this.context.sessionToken};`
     }
   }
 
@@ -245,17 +250,35 @@ export class Checkout extends JanusClient {
   private get routes() {
     const base = '/api/checkout/pub'
     return {
-      addItem: (orderFormId: string, queryString: string) => `${base}/orderForm/${orderFormId}/items${queryString}`,
-      assemblyOptions: (orderFormId: string, itemId: string | number, assemblyOptionsId: string) => `${base}/orderForm/${orderFormId}/items/${itemId}/assemblyOptions/${assemblyOptionsId}`,
-      attachmentsData: (orderFormId: string, field: string) => `${base}/orderForm/${orderFormId}/attachments/${field}`,
-      cancelOrder: (orderFormId: string) => `${base}/orders/${orderFormId}/user-cancel-request`,
-      checkin: (orderFormId: string) => `${base}/orderForm/${orderFormId}/checkIn`,
+      addItem: (orderFormId: string, queryString: string) =>
+        `${base}/orderForm/${orderFormId}/items${queryString}`,
+      assemblyOptions: (
+        orderFormId: string,
+        itemId: string | number,
+        assemblyOptionsId: string
+      ) =>
+        `${base}/orderForm/${orderFormId}/items/${itemId}/assemblyOptions/${assemblyOptionsId}`,
+      attachmentsData: (orderFormId: string, field: string) =>
+        `${base}/orderForm/${orderFormId}/attachments/${field}`,
+      cancelOrder: (orderFormId: string) =>
+        `${base}/orders/${orderFormId}/user-cancel-request`,
+      checkin: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/checkIn`,
       orderForm: `${base}/orderForm`,
-      orderFormCustomData: (orderFormId: string, appId: string, field: string) => `${base}/orderForm/${orderFormId}/customData/${appId}/${field}`,
+      orderFormCustomData: (
+        orderFormId: string,
+        appId: string,
+        field: string
+      ) => `${base}/orderForm/${orderFormId}/customData/${appId}/${field}`,
       orders: `${base}/orders`,
-      profile: (orderFormId: string) => `${base}/orderForm/${orderFormId}/profile`,
-      simulation: (queryString: string) => `${base}/orderForms/simulation${queryString}`,
-      updateItems: (orderFormId: string) => `${base}/orderForm/${orderFormId}/items/update`,
+      profile: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/profile`,
+      simulation: (queryString: string) =>
+        `${base}/orderForms/simulation${queryString}`,
+      updateItems: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/items/update`,
+      insertCoupon: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/coupons`
     }
   }
 }
