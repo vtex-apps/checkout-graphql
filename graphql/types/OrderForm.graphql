@@ -1,7 +1,12 @@
 type OrderForm {
   items: [Item]
+  marketingData: MarketingData
   totalizers: [Totalizer]
   value: Int
+}
+
+type MarketingData {
+  coupon: String
 }
 
 type Totalizer {

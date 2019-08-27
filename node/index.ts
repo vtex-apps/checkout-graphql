@@ -328,6 +328,7 @@ declare global {
 
   interface OrderForm {
     items: OrderFormItem[]
+    marketingData: OrderFormMarketingData | null
     totalizers: Array<{
       id: string
       name: string
