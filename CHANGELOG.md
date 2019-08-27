@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Renamed `cart` query to `orderForm`.
+- All mutations now return an OrderForm.
+
 ## [0.5.0] - 2019-08-26
 
 ### Added
 
-- InsertCoupon mutation
+- InsertCoupon mutation.
 
 ## [0.4.0] - 2019-08-15
 
