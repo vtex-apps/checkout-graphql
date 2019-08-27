@@ -5,9 +5,9 @@ import { mutations as couponMutations } from './coupon'
 export const resolvers = {
   Mutation: {
     ...cartMutations,
-    ...couponMutations
+    ...couponMutations,
   },
   Query: {
-    ...cartQueries
-  }
+    ...cartQueries,
+  },
 }

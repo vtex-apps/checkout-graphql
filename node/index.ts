@@ -340,24 +340,24 @@ export default new Service<Clients, void, CustomContext>({
     implementation: Clients,
     options: {
       checkout: {
-        timeout: TEN_SECONDS_MS
+        timeout: TEN_SECONDS_MS,
       },
       default: {
         retries: 2,
-        timeout: THREE_SECONDS_MS
+        timeout: THREE_SECONDS_MS,
       },
       segment: {
         memoryCache: segmentCache,
-        timeout: THREE_SECONDS_MS
+        timeout: THREE_SECONDS_MS,
       },
       storeGraphQL: {
         memoryCache: storeGraphQLCache,
-        timeout: THREE_SECONDS_MS
-      }
-    }
+        timeout: THREE_SECONDS_MS,
+      },
+    },
   },
   graphql: {
     resolvers,
-    schemaDirectives
-  }
+    schemaDirectives,
+  },
 })
