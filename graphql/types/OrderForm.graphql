@@ -1,12 +1,7 @@
 type OrderForm {
   items: [Item]
-  storePreferencesData: StorePreferencesData
   totalizers: [Totalizer]
   value: Int
-}
-
-type StorePreferencesData {
-  currencyCode: String
 }
 
 type Totalizer {

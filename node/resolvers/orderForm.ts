@@ -24,20 +24,19 @@ const adjustItems = (items: OrderFormItem[], storeGraphQL: StoreGraphQL) =>
 
     return {
       ...item,
-      imageUrl: fixImageUrl(item.imageUrl),
+      imageUrl: fixImageUrl(item.imageUrl)!,
       name: product.productName,
       skuSpecifications: getSkuSpecifications(item.id, product.items),
     }
   })
 
 export const queries = {
-  orderForm: async (_: any, __: any, ctx: Context) => {
+  orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
     const {
       clients: { checkout, storeGraphQL },
     } = ctx
     const {
       items,
-      storePreferencesData,
       totalizers,
       value,
     } = await checkout.orderForm()
@@ -46,7 +45,6 @@ export const queries = {
 
     return {
       items: adjustedItems,
-      storePreferencesData,
       totalizers,
       value,
     }
@@ -58,7 +56,7 @@ export const mutations = {
     _: any,
     { orderItems }: { orderItems: OrderFormItemInput[] },
     ctx: Context
-  ) => {
+  ): Promise<OrderForm> => {
     const {
       clients: { checkout, storeGraphQL },
       vtex: { orderFormId },
@@ -68,6 +66,7 @@ export const mutations = {
     const adjustedItems = await adjustItems(orderForm.items, storeGraphQL)
 
     return {
+      ...orderForm,
       items: adjustedItems,
     }
   },

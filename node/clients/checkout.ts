@@ -30,7 +30,7 @@ export class Checkout extends JanusClient {
   }
 
   public addItem = (orderFormId: string, items: any) =>
-    this.post<OrderForm>(
+    this.post<CheckoutOrderForm>(
       this.routes.addItem(orderFormId, this.getChannelQueryString()),
       { orderItems: items },
       { metric: 'checkout-addItem' }
@@ -56,7 +56,7 @@ export class Checkout extends JanusClient {
     )
 
   public updateItems = (orderFormId: string, orderItems: any) =>
-    this.post<OrderForm>(
+    this.post<CheckoutOrderForm>(
       this.routes.updateItems(orderFormId),
       { orderItems },
       { metric: 'checkout-updateItems' }
@@ -132,7 +132,7 @@ export class Checkout extends JanusClient {
     })
 
   public orderForm = () => {
-    return this.post<OrderForm>(
+    return this.post<CheckoutOrderForm>(
       this.routes.orderForm,
       { expectedOrderFormSections: ['items'] },
       { metric: 'checkout-orderForm' }
@@ -140,7 +140,7 @@ export class Checkout extends JanusClient {
   }
 
   public orderFormRaw = () => {
-    return this.postRaw<OrderForm>(
+    return this.postRaw<CheckoutOrderForm>(
       this.routes.orderForm,
       { expectedOrderFormSections: ['items'] },
       { metric: 'checkout-orderForm' }
@@ -160,7 +160,7 @@ export class Checkout extends JanusClient {
     )
 
   public insertCoupon = (orderFormId: string, coupon: string) =>
-    this.post<OrderForm>(this.routes.insertCoupon(orderFormId), {
+    this.post<CheckoutOrderForm>(this.routes.insertCoupon(orderFormId), {
       text: coupon,
     })
 

@@ -139,7 +139,7 @@ declare global {
     removedQuantity: number
   }
 
-  interface OrderForm {
+  interface CheckoutOrderForm {
     orderFormId: string
     salesChannel: string
     loggedIn: boolean
@@ -324,6 +324,16 @@ declare global {
     quantity: number
     assemblyId: string
     seller: string
+  }
+
+  interface OrderForm {
+    items: OrderFormItem[]
+    totalizers: Array<{
+      id: string
+      name: string
+      value: number
+    }>
+    value: number
   }
 }
 
