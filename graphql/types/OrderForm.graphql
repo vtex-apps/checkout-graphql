@@ -1,4 +1,4 @@
-type Cart {
+type OrderForm {
   items: [Item]
   storePreferencesData: StorePreferencesData
   totalizers: [Totalizer]

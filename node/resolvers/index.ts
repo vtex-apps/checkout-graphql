@@ -1,13 +1,13 @@
-import { mutations as cartMutations, queries as cartQueries } from './cart'
+import { mutations as orderFormMutations, queries as orderFormQueries } from './orderForm'
 
 import { mutations as couponMutations } from './coupon'
 
 export const resolvers = {
   Mutation: {
-    ...cartMutations,
     ...couponMutations,
+    ...orderFormMutations,
   },
   Query: {
-    ...cartQueries,
+    ...orderFormQueries,
   },
 }
