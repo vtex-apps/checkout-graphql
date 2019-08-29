@@ -1,8 +1,8 @@
 type Query {
-  cart: Cart @cacheControl(scope: PRIVATE) @withOrderFormId @withSegment
+  orderForm: OrderForm @cacheControl(scope: PRIVATE) @withOrderFormId @withSegment
 }
 
 type Mutation {
-  updateItems(orderItems: [ItemInput]): Cart @withOrderFormId
+  updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
   insertCoupon(text: String): Coupon @withOrderFormId
 }

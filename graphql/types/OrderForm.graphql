@@ -1,12 +1,12 @@
-type Cart {
+type OrderForm {
   items: [Item]
-  storePreferencesData: StorePreferencesData
+  marketingData: MarketingData
   totalizers: [Totalizer]
   value: Int
 }
 
-type StorePreferencesData {
-  currencyCode: String
+type MarketingData {
+  coupon: String
 }
 
 type Totalizer {

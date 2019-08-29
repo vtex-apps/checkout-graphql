@@ -139,7 +139,7 @@ declare global {
     removedQuantity: number
   }
 
-  interface OrderForm {
+  interface CheckoutOrderForm {
     orderFormId: string
     salesChannel: string
     loggedIn: boolean
@@ -325,6 +325,17 @@ declare global {
     assemblyId: string
     seller: string
   }
+
+  interface OrderForm {
+    items: OrderFormItem[]
+    marketingData: OrderFormMarketingData | null
+    totalizers: Array<{
+      id: string
+      name: string
+      value: number
+    }>
+    value: number
+  }
 }
 
 // Segments are small and immutable.
@@ -340,24 +351,24 @@ export default new Service<Clients, void, CustomContext>({
     implementation: Clients,
     options: {
       checkout: {
-        timeout: TEN_SECONDS_MS
+        timeout: TEN_SECONDS_MS,
       },
       default: {
         retries: 2,
-        timeout: THREE_SECONDS_MS
+        timeout: THREE_SECONDS_MS,
       },
       segment: {
         memoryCache: segmentCache,
-        timeout: THREE_SECONDS_MS
+        timeout: THREE_SECONDS_MS,
       },
       storeGraphQL: {
         memoryCache: storeGraphQLCache,
-        timeout: THREE_SECONDS_MS
-      }
-    }
+        timeout: THREE_SECONDS_MS,
+      },
+    },
   },
   graphql: {
     resolvers,
-    schemaDirectives
-  }
+    schemaDirectives,
+  },
 })

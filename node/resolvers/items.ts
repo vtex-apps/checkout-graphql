@@ -11,64 +11,42 @@ const getSkuSpecifications = (skuId: string, skuList: any[]) => {
   return matchedSku.skuSpecifications
 }
 
-const adjustItems = (items: OrderFormItem[], storeGraphQL: StoreGraphQL) =>
+export const adjustItems = (items: OrderFormItem[], storeGraphQL: StoreGraphQL) =>
   map(items, async (item: OrderFormItem) => {
     const response = await storeGraphQL.product({
       identifier: {
         field: 'id',
-        value: item.productId
-      }
+        value: item.productId,
+      },
     })
 
     const { product } = response.data!
 
     return {
       ...item,
-      imageUrl: fixImageUrl(item.imageUrl),
+      imageUrl: fixImageUrl(item.imageUrl)!,
       name: product.productName,
-      skuSpecifications: getSkuSpecifications(item.id, product.items)
+      skuSpecifications: getSkuSpecifications(item.id, product.items),
     }
   })
-
-export const queries = {
-  cart: async (_: any, __: any, ctx: Context) => {
-    const {
-      clients: { checkout, storeGraphQL }
-    } = ctx
-    const {
-      items,
-      storePreferencesData,
-      totalizers,
-      value
-    } = await checkout.orderForm()
-
-    const adjustedItems = await adjustItems(items, storeGraphQL)
-
-    return {
-      items: adjustedItems,
-      storePreferencesData,
-      totalizers,
-      value
-    }
-  }
-}
 
 export const mutations = {
   updateItems: async (
     _: any,
     { orderItems }: { orderItems: OrderFormItemInput[] },
     ctx: Context
-  ) => {
+  ): Promise<OrderForm> => {
     const {
       clients: { checkout, storeGraphQL },
-      vtex: { orderFormId }
+      vtex: { orderFormId },
     } = ctx
     const orderForm = await checkout.updateItems(orderFormId!, orderItems)
 
     const adjustedItems = await adjustItems(orderForm.items, storeGraphQL)
 
     return {
-      items: adjustedItems
+      ...orderForm,
+      items: adjustedItems,
     }
-  }
+  },
 }

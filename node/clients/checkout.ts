@@ -24,13 +24,13 @@ export class Checkout extends JanusClient {
         ...(options && options.headers),
         ...(ctx.storeUserAuthToken
           ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
-          : null)
-      }
+          : null),
+      },
     })
   }
 
   public addItem = (orderFormId: string, items: any) =>
-    this.post<OrderForm>(
+    this.post<CheckoutOrderForm>(
       this.routes.addItem(orderFormId, this.getChannelQueryString()),
       { orderItems: items },
       { metric: 'checkout-addItem' }
@@ -56,7 +56,7 @@ export class Checkout extends JanusClient {
     )
 
   public updateItems = (orderFormId: string, orderItems: any) =>
-    this.post<OrderForm>(
+    this.post<CheckoutOrderForm>(
       this.routes.updateItems(orderFormId),
       { orderItems },
       { metric: 'checkout-updateItems' }
@@ -128,11 +128,11 @@ export class Checkout extends JanusClient {
 
   public updateOrderFormCheckin = (orderFormId: string, checkinPayload: any) =>
     this.post(this.routes.checkin(orderFormId), checkinPayload, {
-      metric: 'checkout-updateOrderFormCheckin'
+      metric: 'checkout-updateOrderFormCheckin',
     })
 
   public orderForm = () => {
-    return this.post<OrderForm>(
+    return this.post<CheckoutOrderForm>(
       this.routes.orderForm,
       { expectedOrderFormSections: ['items'] },
       { metric: 'checkout-orderForm' }
@@ -140,7 +140,7 @@ export class Checkout extends JanusClient {
   }
 
   public orderFormRaw = () => {
-    return this.postRaw<OrderForm>(
+    return this.postRaw<CheckoutOrderForm>(
       this.routes.orderForm,
       { expectedOrderFormSections: ['items'] },
       { metric: 'checkout-orderForm' }
@@ -155,19 +155,19 @@ export class Checkout extends JanusClient {
       this.routes.simulation(this.getChannelQueryString()),
       simulation,
       {
-        metric: 'checkout-simulation'
+        metric: 'checkout-simulation',
       }
     )
 
   public insertCoupon = (orderFormId: string, coupon: string) =>
-    this.post<OrderForm>(this.routes.insertCoupon(orderFormId), {
-      text: coupon
+    this.post<CheckoutOrderForm>(this.routes.insertCoupon(orderFormId), {
+      text: coupon,
     })
 
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders()
+      ...this.getCommonHeaders(),
     }
     return this.http.get<T>(url, config).catch(statusToError) as Promise<T>
   }
@@ -175,7 +175,7 @@ export class Checkout extends JanusClient {
   protected post = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders()
+      ...this.getCommonHeaders(),
     }
     return this.http.post<T>(url, data, config).catch(statusToError) as Promise<
       T
@@ -189,7 +189,7 @@ export class Checkout extends JanusClient {
   ) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders()
+      ...this.getCommonHeaders(),
     }
     return this.http
       .postRaw<T>(url, data, config)
@@ -199,7 +199,7 @@ export class Checkout extends JanusClient {
   protected delete = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders()
+      ...this.getCommonHeaders(),
     }
     return this.http.delete<T>(url, config).catch(statusToError) as Promise<
       IOResponse<T>
@@ -213,7 +213,7 @@ export class Checkout extends JanusClient {
   ) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders()
+      ...this.getCommonHeaders(),
     }
     return this.http
       .patch<T>(url, data, config)
@@ -223,7 +223,7 @@ export class Checkout extends JanusClient {
   protected put = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders()
+      ...this.getCommonHeaders(),
     }
     return this.http.put<T>(url, data, config).catch(statusToError) as Promise<
       T
@@ -236,7 +236,7 @@ export class Checkout extends JanusClient {
     return {
       Cookie: `${checkoutCookie}vtex_segment=${
         this.context.segmentToken
-      };vtex_session=${this.context.sessionToken};`
+      };vtex_session=${this.context.sessionToken};`,
     }
   }
 
@@ -264,6 +264,8 @@ export class Checkout extends JanusClient {
         `${base}/orders/${orderFormId}/user-cancel-request`,
       checkin: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/checkIn`,
+      insertCoupon: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/coupons`,
       orderForm: `${base}/orderForm`,
       orderFormCustomData: (
         orderFormId: string,
@@ -277,8 +279,6 @@ export class Checkout extends JanusClient {
         `${base}/orderForms/simulation${queryString}`,
       updateItems: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/items/update`,
-      insertCoupon: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/coupons`
     }
   }
 }

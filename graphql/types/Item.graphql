@@ -12,6 +12,7 @@ type Item {
   sellingPrice: Float
   skuName: String
   skuSpecifications: [SKUSpecification]
+  uniqueId: String
 }
 
 type ItemAdditionalInfo {
