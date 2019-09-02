@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2019-09-02
+
 ### Changed
 
 - `updateItems` mutation now supports receiving an item's `uniqueId` instead of its `index`.
