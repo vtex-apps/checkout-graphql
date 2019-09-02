@@ -25,6 +25,7 @@ type SKUSpecification {
 }
 
 input ItemInput {
+  uniqueId: String
   index: Int
   quantity: Float
 }

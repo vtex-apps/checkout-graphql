@@ -316,6 +316,7 @@ declare global {
     index?: number
     quantity?: number
     seller?: string
+    uniqueId?: string
     options?: AssemblyOptionInput[]
   }
 
