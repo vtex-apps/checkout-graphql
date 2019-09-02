@@ -40,12 +40,31 @@ export const mutations = {
       clients: { checkout, storeGraphQL },
       vtex: { orderFormId },
     } = ctx
-    const orderForm = await checkout.updateItems(orderFormId!, orderItems)
 
-    const adjustedItems = await adjustItems(orderForm.items, storeGraphQL)
+    if (orderItems.some((item: OrderFormItemInput) => !item.index)) {
+      const orderForm = await checkout.orderForm()
+
+      const idToIndex = orderForm.items.reduce(
+        (acc: Record<string, number>, item: OrderFormItem, index: number) => {
+          acc[item.uniqueId] = index
+          return acc
+        },
+        {} as Record<string, number>
+      )
+
+      orderItems.forEach((item: OrderFormItemInput) => {
+        if (!item.index && item.uniqueId) {
+          item.index = idToIndex[item.uniqueId]
+        }
+      })
+    }
+
+    const newOrderForm = await checkout.updateItems(orderFormId!, orderItems)
+
+    const adjustedItems = await adjustItems(newOrderForm.items, storeGraphQL)
 
     return {
-      ...orderForm,
+      ...newOrderForm,
       items: adjustedItems,
     }
   },
