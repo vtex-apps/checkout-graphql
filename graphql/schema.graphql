@@ -3,14 +3,10 @@ type Query {
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
     @withSegment
-  shipping: ShippingResponse
-    @cacheControl(scope: PRIVATE)
-    @withOrderFormId
-    @withSegment
 }
 
 type Mutation {
   updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
   insertCoupon(text: String): Coupon @withOrderFormId
-  estimateShipping(address: AddressInput): ShippingResponse @withOrderFormId
+  estimateShipping(address: AddressInput): OrderForm @withOrderFormId
 }
