@@ -1,42 +1,6 @@
 import flatten from "lodash/flatten"
 import uniq from "lodash/uniq"
-
-export const queries = {
-  shipping: async (_: any, __: any, ctx: Context) => {
-    const {
-      clients: { checkout },
-    } = ctx
-
-    const orderForm = await checkout.orderForm()
-
-    return getShippingInfo(orderForm)
-  },
-}
-
-export const mutations = {
-  estimateShipping: async (
-    _: any,
-    { address }: { address: AddressInput },
-    ctx: Context
-  ) => {
-    const {
-      clients: { checkout, shipping },
-      vtex: { orderFormId },
-    } = ctx
-
-    const orderForm = await checkout.orderForm()
-    const logisticsInfo =
-      orderForm.shippingData && orderForm.shippingData.logisticsInfo
-    const shippingData = getShippingData(address, logisticsInfo)
-
-    const newOrderForm = await shipping.estimateShipping(
-      orderFormId!,
-      shippingData
-    )
-
-    return getShippingInfo(newOrderForm)
-  },
-}
+import { getNewOrderForm } from "./orderForm"
 
 const getShippingData = (
   address: AddressInput,
@@ -59,7 +23,7 @@ const getShippingData = (
   return requestPayload
 }
 
-const getShippingInfo = (orderForm: OrderForm) => {
+export const getShippingInfo = (orderForm: CheckoutOrderForm) => {
   const logisticsInfo =
     orderForm.shippingData && orderForm.shippingData.logisticsInfo
 
@@ -99,4 +63,32 @@ const getShippingInfo = (orderForm: OrderForm) => {
     deliveryOptions: updatedDeliveryOptions,
     selectedAddress,
   }
+}
+
+export const mutations = {
+  estimateShipping: async (
+    _: any,
+    { address }: { address: AddressInput },
+    ctx: Context
+  ) => {
+    const {
+      clients: { checkout, shipping, storeGraphQL },
+      vtex: { orderFormId },
+    } = ctx
+
+    const orderForm = await checkout.orderForm()
+    const logisticsInfo =
+      orderForm.shippingData && orderForm.shippingData.logisticsInfo
+    const shippingData = getShippingData(address, logisticsInfo)
+
+    const newOrderForm = await shipping.estimateShipping(
+      orderFormId!,
+      shippingData
+    )
+
+    return getNewOrderForm({
+      newOrderForm,
+      storeGraphQL,
+    })
+  },
 }
