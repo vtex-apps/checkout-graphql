@@ -23,7 +23,7 @@ export class Shipping extends JanusClient {
     orderFormId: string,
     shippingData: ShippingDataRequest
   ) => {
-    return this.post<OrderForm>(
+    return this.post<CheckoutOrderForm>(
       this.routes.estimateShipping(orderFormId),
       shippingData,
       { metric: "shipping-estimate" }
