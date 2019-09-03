@@ -345,6 +345,7 @@ declare global {
 
   interface OrderForm {
     items: OrderFormItem[]
+    shipping: Shipping
     marketingData: OrderFormMarketingData | null
     totalizers: Array<{
       id: string
@@ -353,31 +354,44 @@ declare global {
     }>
     value: number
   }
-}
 
-interface AddressInput {
-  addressId: string
-  addressType: AddressType
-  city: string
-  complement: string
-  country: string
-  geoCoordinates: number[]
-  neighborhood: string
-  number: string
-  postalCode: string
-  receiverName: string
-  reference: string
-  state: string
-  street: string
-}
+  interface Shipping {
+    countries: string[]
+    deliveryOptions: DeliveryOption[]
+    selectedAddress: CheckoutAddress
+  }
 
-enum AddressType {
-  residential,
-  commercial,
-  instore,
-  giftRegistry,
-  pickup,
-  search,
+  interface DeliveryOption {
+    id: string
+    price: number
+    estimate: string
+    isSelected: boolean
+  }
+
+  interface AddressInput {
+    addressId: string
+    addressType: AddressType
+    city: string
+    complement: string
+    country: string
+    geoCoordinates: number[]
+    neighborhood: string
+    number: string
+    postalCode: string
+    receiverName: string
+    reference: string
+    state: string
+    street: string
+  }
+
+  enum AddressType {
+    residential,
+    commercial,
+    instore,
+    giftRegistry,
+    pickup,
+    search,
+  }
 }
 
 // Segments are small and immutable.
