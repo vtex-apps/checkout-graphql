@@ -1,14 +1,13 @@
-import { adjustItems } from "./items"
-import { getShippingInfo } from "./shipping"
+import { StoreGraphQL } from '../clients/storeGraphQL'
+import { adjustItems } from './items'
+import { getShippingInfo } from './shipping'
 
 export const getNewOrderForm = async ({
   newOrderForm,
   storeGraphQL,
 }: {
   newOrderForm: CheckoutOrderForm
-  items?: OrderFormItem[]
-  shipping?: Shipping
-  storeGraphQL: any
+  storeGraphQL: StoreGraphQL
 }) => {
   return {
     items: await adjustItems(newOrderForm.items, storeGraphQL),

@@ -4,8 +4,8 @@ import {
   IOResponse,
   JanusClient,
   RequestConfig,
-} from "@vtex/api"
-import { checkoutCookieFormat, statusToError } from "../utils"
+} from '@vtex/api'
+import { checkoutCookieFormat, statusToError } from '../utils'
 
 export interface SimulationData {
   country: string
@@ -33,14 +33,14 @@ export class Checkout extends JanusClient {
     this.post<CheckoutOrderForm>(
       this.routes.addItem(orderFormId, this.getChannelQueryString()),
       { orderItems: items },
-      { metric: "checkout-addItem" }
+      { metric: 'checkout-addItem' }
     )
 
   public cancelOrder = (orderFormId: string, reason: string) =>
     this.post(
       this.routes.cancelOrder(orderFormId),
       { reason },
-      { metric: "checkout-cancelOrder" }
+      { metric: 'checkout-cancelOrder' }
     )
 
   public setOrderFormCustomData = (
@@ -52,14 +52,14 @@ export class Checkout extends JanusClient {
     this.put(
       this.routes.orderFormCustomData(orderFormId, appId, field),
       { value },
-      { metric: "checkout-setOrderFormCustomData" }
+      { metric: 'checkout-setOrderFormCustomData' }
     )
 
   public updateItems = (orderFormId: string, orderItems: any) =>
     this.post<CheckoutOrderForm>(
       this.routes.updateItems(orderFormId),
       { orderItems },
-      { metric: "checkout-updateItems" }
+      { metric: 'checkout-updateItems' }
     )
 
   public updateOrderFormIgnoreProfile = (
@@ -69,28 +69,28 @@ export class Checkout extends JanusClient {
     this.patch(
       this.routes.profile(orderFormId),
       { ignoreProfileData },
-      { metric: "checkout-updateOrderFormIgnoreProfile" }
+      { metric: 'checkout-updateOrderFormIgnoreProfile' }
     )
 
   public updateOrderFormPayment = (orderFormId: string, payments: any) =>
     this.post(
-      this.routes.attachmentsData(orderFormId, "paymentData"),
+      this.routes.attachmentsData(orderFormId, 'paymentData'),
       { payments },
-      { metric: "checkout-updateOrderFormPayment" }
+      { metric: 'checkout-updateOrderFormPayment' }
     )
 
   public updateOrderFormProfile = (orderFormId: string, fields: any) =>
     this.post(
-      this.routes.attachmentsData(orderFormId, "clientProfileData"),
+      this.routes.attachmentsData(orderFormId, 'clientProfileData'),
       fields,
-      { metric: "checkout-updateOrderFormProfile" }
+      { metric: 'checkout-updateOrderFormProfile' }
     )
 
   public updateOrderFormShipping = (orderFormId: string, shipping: any) =>
     this.post(
-      this.routes.attachmentsData(orderFormId, "shippingData"),
+      this.routes.attachmentsData(orderFormId, 'shippingData'),
       shipping,
-      { metric: "checkout-updateOrderFormShipping" }
+      { metric: 'checkout-updateOrderFormShipping' }
     )
 
   public updateOrderFormMarketingData = (
@@ -98,9 +98,9 @@ export class Checkout extends JanusClient {
     marketingData: any
   ) =>
     this.post(
-      this.routes.attachmentsData(orderFormId, "marketingData"),
+      this.routes.attachmentsData(orderFormId, 'marketingData'),
       marketingData,
-      { metric: "checkout-updateOrderFormMarketingData" }
+      { metric: 'checkout-updateOrderFormMarketingData' }
     )
 
   public addAssemblyOptions = async (
@@ -112,7 +112,7 @@ export class Checkout extends JanusClient {
     this.post(
       this.routes.assemblyOptions(orderFormId, itemId, assemblyOptionsId),
       body,
-      { metric: "checkout-addAssemblyOptions" }
+      { metric: 'checkout-addAssemblyOptions' }
     )
 
   public removeAssemblyOptions = async (
@@ -123,19 +123,19 @@ export class Checkout extends JanusClient {
   ) =>
     this.delete(
       this.routes.assemblyOptions(orderFormId, itemId, assemblyOptionsId),
-      { metric: "checkout-removeAssemblyOptions", data: body }
+      { metric: 'checkout-removeAssemblyOptions', data: body }
     )
 
   public updateOrderFormCheckin = (orderFormId: string, checkinPayload: any) =>
     this.post(this.routes.checkin(orderFormId), checkinPayload, {
-      metric: "checkout-updateOrderFormCheckin",
+      metric: 'checkout-updateOrderFormCheckin',
     })
 
   public orderForm = () => {
     return this.post<CheckoutOrderForm>(
       this.routes.orderForm,
       {},
-      { metric: "checkout-orderForm" }
+      { metric: 'checkout-orderForm' }
     )
   }
 
@@ -143,19 +143,19 @@ export class Checkout extends JanusClient {
     return this.postRaw<CheckoutOrderForm>(
       this.routes.orderForm,
       {},
-      { metric: "checkout-orderForm" }
+      { metric: 'checkout-orderForm' }
     )
   }
 
   public orders = () =>
-    this.get(this.routes.orders, { metric: "checkout-orders" })
+    this.get(this.routes.orders, { metric: 'checkout-orders' })
 
   public simulation = (simulation: SimulationData) =>
     this.post(
       this.routes.simulation(this.getChannelQueryString()),
       simulation,
       {
-        metric: "checkout-simulation",
+        metric: 'checkout-simulation',
       }
     )
 
@@ -232,7 +232,7 @@ export class Checkout extends JanusClient {
 
   private getCommonHeaders = () => {
     const { orderFormId } = this.context as CustomIOContext
-    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ""
+    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     return {
       Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
@@ -241,12 +241,12 @@ export class Checkout extends JanusClient {
   private getChannelQueryString = () => {
     const { segment } = this.context as CustomIOContext
     const channel = segment && segment.channel
-    const queryString = channel ? `?sc=${channel}` : ""
+    const queryString = channel ? `?sc=${channel}` : ''
     return queryString
   }
 
   private get routes() {
-    const base = "/api/checkout/pub"
+    const base = '/api/checkout/pub'
     return {
       addItem: (orderFormId: string, queryString: string) =>
         `${base}/orderForm/${orderFormId}/items${queryString}`,

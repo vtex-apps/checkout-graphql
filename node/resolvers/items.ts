@@ -1,8 +1,8 @@
-import { map } from "bluebird"
+import { map } from 'bluebird'
 
-import { StoreGraphQL } from "../clients/storeGraphQL"
-import { fixImageUrl } from "../utils/image"
-import { getNewOrderForm } from "./orderForm"
+import { StoreGraphQL } from '../clients/storeGraphQL'
+import { fixImageUrl } from '../utils/image'
+import { getNewOrderForm } from './orderForm'
 
 const getSkuSpecifications = (skuId: string, skuList: any[]) => {
   const matchedSku = skuList.find((sku: any) => sku.itemId === skuId)
@@ -19,7 +19,7 @@ export const adjustItems = (
   map(items, async (item: OrderFormItem) => {
     const response = await storeGraphQL.product({
       identifier: {
-        field: "id",
+        field: 'id',
         value: item.productId,
       },
     })

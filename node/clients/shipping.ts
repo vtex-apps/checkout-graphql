@@ -3,8 +3,8 @@ import {
   IOContext,
   JanusClient,
   RequestConfig,
-} from "@vtex/api"
-import { checkoutCookieFormat, statusToError } from "../utils"
+} from '@vtex/api'
+import { checkoutCookieFormat, statusToError } from '../utils'
 
 export class Shipping extends JanusClient {
   public constructor(ctx: IOContext, options?: InstanceOptions) {
@@ -26,7 +26,7 @@ export class Shipping extends JanusClient {
     return this.post<CheckoutOrderForm>(
       this.routes.estimateShipping(orderFormId),
       shippingData,
-      { metric: "shipping-estimate" }
+      { metric: 'shipping-estimate' }
     )
   }
 
@@ -50,14 +50,14 @@ export class Shipping extends JanusClient {
 
   private getCommonHeaders = () => {
     const { orderFormId } = this.context as CustomIOContext
-    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ""
+    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     return {
       Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 
   private get routes() {
-    const base = "/api/checkout/pub"
+    const base = '/api/checkout/pub'
     return {
       estimateShipping: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/attachments/shippingData`,

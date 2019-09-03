@@ -1,6 +1,6 @@
-import flatten from "lodash/flatten"
-import uniq from "lodash/uniq"
-import { getNewOrderForm } from "./orderForm"
+import flatten from 'lodash/flatten'
+import uniq from 'lodash/uniq'
+import { getNewOrderForm } from './orderForm'
 
 const getShippingData = (
   address: AddressInput,

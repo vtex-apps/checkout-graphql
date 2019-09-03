@@ -1,8 +1,8 @@
-import { LRUCache, SegmentData, Service, ServiceContext } from "@vtex/api"
+import { LRUCache, SegmentData, Service, ServiceContext } from '@vtex/api'
 
-import { Clients } from "./clients"
-import { schemaDirectives } from "./directives"
-import { resolvers } from "./resolvers"
+import { Clients } from './clients'
+import { schemaDirectives } from './directives'
+import { resolvers } from './resolvers'
 
 const THREE_SECONDS_MS = 3 * 1000
 const TEN_SECONDS_MS = 10 * 1000
@@ -397,10 +397,10 @@ declare global {
 // Segments are small and immutable.
 const MAX_SEGMENT_CACHE = 10000
 const segmentCache = new LRUCache<string, any>({ max: MAX_SEGMENT_CACHE })
-metrics.trackCache("segment", segmentCache)
+metrics.trackCache('segment', segmentCache)
 
 const storeGraphQLCache = new LRUCache<string, any>({ max: 5000 })
-metrics.trackCache("storeGraphQL", storeGraphQLCache)
+metrics.trackCache('storeGraphQL', storeGraphQLCache)
 
 export default new Service<Clients, void, CustomContext>({
   clients: {
