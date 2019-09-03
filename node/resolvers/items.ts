@@ -65,10 +65,7 @@ export const mutations = {
 
     const newOrderForm = await checkout.updateItems(orderFormId!, orderItems)
 
-    const adjustedItems = await adjustItems(newOrderForm.items, storeGraphQL)
-
     return getNewOrderForm({
-      items: adjustedItems,
       newOrderForm,
       storeGraphQL,
     })

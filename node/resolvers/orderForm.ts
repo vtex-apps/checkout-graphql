@@ -3,8 +3,6 @@ import { getShippingInfo } from "./shipping"
 
 export const getNewOrderForm = async ({
   newOrderForm,
-  items,
-  shipping,
   storeGraphQL,
 }: {
   newOrderForm: CheckoutOrderForm
@@ -13,9 +11,9 @@ export const getNewOrderForm = async ({
   storeGraphQL: any
 }) => {
   return {
-    items: items || (await adjustItems(newOrderForm.items, storeGraphQL)),
+    items: await adjustItems(newOrderForm.items, storeGraphQL),
     marketingData: newOrderForm.marketingData,
-    shipping: shipping || getShippingInfo(newOrderForm),
+    shipping: getShippingInfo(newOrderForm),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
   }
@@ -27,12 +25,10 @@ export const queries = {
       clients: { checkout, storeGraphQL },
     } = ctx
 
-    const orderForm = await checkout.orderForm()
+    const newOrderForm = await checkout.orderForm()
 
     return getNewOrderForm({
-      items: await adjustItems(orderForm.items, storeGraphQL),
-      newOrderForm: orderForm,
-      shipping: getShippingInfo(orderForm),
+      newOrderForm,
       storeGraphQL,
     })
   },

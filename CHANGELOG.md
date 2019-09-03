@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- `estimateShipping` mutation to calculate delivery options
+- `getNewOrderForm` to unify getting and returning a new orderForm
+- Shipping information orderForm returned
+
 ## [0.7.0] - 2019-09-02
 
 ### Changed
