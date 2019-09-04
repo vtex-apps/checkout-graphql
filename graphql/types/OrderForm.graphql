@@ -1,5 +1,6 @@
 type OrderForm {
   items: [Item]
+  shipping: Shipping
   marketingData: MarketingData
   totalizers: [Totalizer]
   value: Int

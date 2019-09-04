@@ -3,7 +3,7 @@ import {
   IOContext,
   IOResponse,
   JanusClient,
-  RequestConfig
+  RequestConfig,
 } from '@vtex/api'
 import { checkoutCookieFormat, statusToError } from '../utils'
 
@@ -134,7 +134,7 @@ export class Checkout extends JanusClient {
   public orderForm = () => {
     return this.post<CheckoutOrderForm>(
       this.routes.orderForm,
-      { expectedOrderFormSections: ['items'] },
+      {},
       { metric: 'checkout-orderForm' }
     )
   }
@@ -142,7 +142,7 @@ export class Checkout extends JanusClient {
   public orderFormRaw = () => {
     return this.postRaw<CheckoutOrderForm>(
       this.routes.orderForm,
-      { expectedOrderFormSections: ['items'] },
+      {},
       { metric: 'checkout-orderForm' }
     )
   }
@@ -234,9 +234,7 @@ export class Checkout extends JanusClient {
     const { orderFormId } = this.context as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     return {
-      Cookie: `${checkoutCookie}vtex_segment=${
-        this.context.segmentToken
-      };vtex_session=${this.context.sessionToken};`,
+      Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 

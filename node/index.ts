@@ -160,62 +160,7 @@ declare global {
       name: string
       value: number
     }>
-    shippingData: {
-      address: CheckoutAddress
-      logisticsInfo: Array<{
-        itemIndex: number
-        selectedSla: string
-        selectedDeliveryChannel: string
-        addressId: string
-        slas: Array<{
-          id: string
-          deliveryChannel: string
-          name: string
-          deliveryIds: Array<{
-            courierId: string
-            warehouseId: string
-            dockId: string
-            courierName: string
-            quantity: number
-          }>
-          shippingEstimate: string
-          shippingEstimateDate: string | null
-          lockTTL: string | null
-          availableDeliveryWindows: any[]
-          deliveryWindow: string | null
-          price: number
-          listPrice: number
-          tax: number
-          pickupStoreInfo: {
-            isPickupStore: boolean
-            friendlyName: string | null
-
-            address: CheckoutAddress | null
-            additionalInfo: any | null
-            dockId: string | null
-          }
-          pickupPointId: string | null
-          pickupDistance: number
-          polygonName: string | null
-        }>
-        shipsTo: string[]
-        itemId: string
-        deliveryChannels: Array<{ id: string }>
-      }>
-      selectedAddresses: CheckoutAddress[]
-      availableAddresses: CheckoutAddress[]
-      pickupPoints: Array<{
-        friendlyName: string
-        address: CheckoutAddress
-        additionalInfo: string
-        id: string
-        businessHours: Array<{
-          DayOfWeek: number
-          OpeningTime: string
-          ClosingTime: string
-        }>
-      }>
-    }
+    shippingData: ShippingData
     clientProfileData: any | null
     paymentData: {
       installmentOptions: Array<{
@@ -310,6 +255,77 @@ declare global {
     subscriptionData: any | null
     itemsOrdination: any | null
   }
+  interface ShippingData {
+    address: CheckoutAddress
+    logisticsInfo: LogisticsInfo[]
+    selectedAddresses: CheckoutAddress[]
+    availableAddresses: CheckoutAddress[]
+    pickupPoints: Array<{
+      friendlyName: string
+      address: CheckoutAddress
+      additionalInfo: string
+      id: string
+      businessHours: Array<{
+        DayOfWeek: number
+        OpeningTime: string
+        ClosingTime: string
+      }>
+    }>
+  }
+
+  interface LogisticsInfo {
+    itemIndex: number
+    selectedSla: string
+    selectedDeliveryChannel: string
+    addressId: string
+    slas: SLA[]
+    shipsTo: string[]
+    itemId: string
+    deliveryChannels: DeliveryChannel[]
+  }
+
+  interface DeliveryChannel {
+    id: string
+  }
+
+  interface SLA {
+    id: string
+    deliveryChannel: string
+    name: string
+    deliveryIds: DeliveryId[]
+    shippingEstimate: string
+    shippingEstimateDate: string | null
+    lockTTL: string | null
+    availableDeliveryWindows: any[]
+    deliveryWindow: string | null
+    price: number
+    listPrice: number
+    tax: number
+    pickupStoreInfo: {
+      isPickupStore: boolean
+      friendlyName: string | null
+      address: CheckoutAddress | null
+      additionalInfo: any | null
+      dockId: string | null
+    }
+    pickupPointId: string | null
+    pickupDistance: number
+    polygonName: string | null
+  }
+
+  interface DeliveryId {
+    courierId: string
+    warehouseId: string
+    dockId: string
+    courierName: string
+    quantity: number
+  }
+
+  interface ShippingDataRequest {
+    logisticsInfo: LogisticsInfo[]
+    selectedAddresses: AddressInput[]
+    clearAddressIfPostalCodeNotFound?: boolean
+  }
 
   interface OrderFormItemInput {
     id?: number
@@ -329,6 +345,7 @@ declare global {
 
   interface OrderForm {
     items: OrderFormItem[]
+    shipping: Shipping
     marketingData: OrderFormMarketingData | null
     totalizers: Array<{
       id: string
@@ -336,6 +353,44 @@ declare global {
       value: number
     }>
     value: number
+  }
+
+  interface Shipping {
+    countries: string[]
+    deliveryOptions: DeliveryOption[]
+    selectedAddress: CheckoutAddress
+  }
+
+  interface DeliveryOption {
+    id: string
+    price: number
+    estimate: string
+    isSelected: boolean
+  }
+
+  interface AddressInput {
+    addressId: string
+    addressType: AddressType
+    city: string
+    complement: string
+    country: string
+    geoCoordinates: number[]
+    neighborhood: string
+    number: string
+    postalCode: string
+    receiverName: string
+    reference: string
+    state: string
+    street: string
+  }
+
+  enum AddressType {
+    residential,
+    commercial,
+    instore,
+    giftRegistry,
+    pickup,
+    search,
   }
 }
 
