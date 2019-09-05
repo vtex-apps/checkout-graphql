@@ -1,5 +1,9 @@
 import { getNewOrderForm } from './orderForm'
 
+export const getMarketingData = (marketingData: any) => {
+  return marketingData || { coupon: '' }
+}
+
 export const mutations = {
   insertCoupon: async (_: any, args: any, ctx: Context) => {
     const {
