@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `availability` field to the `Item` GraphQL type.
+
 ## [0.8.2] - 2019-09-05
 
 ## Fixed

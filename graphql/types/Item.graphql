@@ -1,5 +1,6 @@
 type Item {
   additionalInfo: ItemAdditionalInfo
+  availability: String
   detailUrl: String
   id: ID
   imageUrl: String
