@@ -1,6 +1,7 @@
 import { StoreGraphQL } from '../clients/storeGraphQL'
 import { adjustItems } from './items'
 import { getShippingInfo } from './shipping'
+import { getMarketingData } from './coupon'
 
 export const getNewOrderForm = async ({
   newOrderForm,
@@ -11,7 +12,7 @@ export const getNewOrderForm = async ({
 }) => {
   return {
     items: await adjustItems(newOrderForm.items, storeGraphQL),
-    marketingData: newOrderForm.marketingData,
+    marketingData: getMarketingData(newOrderForm.marketingData),
     shipping: getShippingInfo(newOrderForm),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,

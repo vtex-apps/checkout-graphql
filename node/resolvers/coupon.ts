@@ -14,3 +14,7 @@ export const mutations = {
     })
   },
 }
+
+export const getMarketingData = (marketingData: any) => {
+  return marketingData || { coupon: '' }
+}
