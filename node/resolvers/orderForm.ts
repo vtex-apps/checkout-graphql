@@ -3,6 +3,14 @@ import { adjustItems } from './items'
 import { getShippingInfo } from './shipping'
 import { getMarketingData } from './coupon'
 
+export const getLastOrderFormMessage = (messages: any[]) => {
+  const lastMessage = messages.length
+    ? messages.pop()
+    : { status: '', text: '' }
+
+  return lastMessage
+}
+
 export const getNewOrderForm = async ({
   newOrderForm,
   storeGraphQL,
@@ -12,7 +20,7 @@ export const getNewOrderForm = async ({
 }) => {
   return {
     items: await adjustItems(newOrderForm.items, storeGraphQL),
-    marketingData: getMarketingData(newOrderForm.marketingData),
+    marketingData: getMarketingData(newOrderForm),
     shipping: getShippingInfo(newOrderForm),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,

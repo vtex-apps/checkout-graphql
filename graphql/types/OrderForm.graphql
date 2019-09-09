@@ -8,10 +8,16 @@ type OrderForm {
 
 type MarketingData {
   coupon: String
+  message: Message
 }
 
 type Totalizer {
   id: String
   name: String
   value: Int
+}
+
+type Message {
+  status: String
+  text: String
 }
