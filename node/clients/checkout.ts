@@ -164,6 +164,9 @@ export class Checkout extends JanusClient {
       text: coupon,
     })
 
+  public clearMessages = (orderFormId: string) =>
+    this.post<CheckoutOrderForm>(this.routes.clearMessages(orderFormId), {})
+
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
@@ -264,6 +267,8 @@ export class Checkout extends JanusClient {
         `${base}/orderForm/${orderFormId}/checkIn`,
       insertCoupon: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/coupons`,
+      clearMessages: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/messages/clear`,
       orderForm: `${base}/orderForm`,
       orderFormCustomData: (
         orderFormId: string,
