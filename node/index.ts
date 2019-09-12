@@ -353,7 +353,7 @@ declare global {
       value: number
     }>
     value: number
-    messages: OrderFormMessage
+    messages: OrderFormMessages
   }
 
   interface Shipping {
@@ -385,7 +385,7 @@ declare global {
     street: string
   }
 
-  interface OrderFormMessage {
+  interface OrderFormMessages {
     couponMessages: Message[]
   }
 
