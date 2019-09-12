@@ -39,7 +39,7 @@ export const mutations = {
     _: any,
     { orderItems }: { orderItems: OrderFormItemInput[] },
     ctx: Context
-  ): Promise<OrderForm> => {
+  ): Promise<Partial<OrderForm>> => {
     const {
       clients: { checkout, storeGraphQL },
       vtex: { orderFormId },

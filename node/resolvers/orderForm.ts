@@ -1,7 +1,6 @@
 import { StoreGraphQL } from '../clients/storeGraphQL'
 import { adjustItems } from './items'
 import { getShippingInfo } from './shipping'
-import { getMarketingData } from './coupon'
 import { fillMessages } from './messages'
 
 export const getNewOrderForm = async ({
@@ -11,20 +10,24 @@ export const getNewOrderForm = async ({
   newOrderForm: CheckoutOrderForm
   storeGraphQL: StoreGraphQL
 }) => {
-  const { couponMessages } = fillMessages(newOrderForm)
+  const messages = fillMessages(newOrderForm)
 
   return {
     items: await adjustItems(newOrderForm.items, storeGraphQL),
-    marketingData: getMarketingData(newOrderForm),
     shipping: getShippingInfo(newOrderForm),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
-    couponMessages,
+    marketingData: newOrderForm.marketingData,
+    messages,
   }
 }
 
 export const queries = {
-  orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
+  orderForm: async (
+    _: any,
+    __: any,
+    ctx: Context
+  ): Promise<Partial<OrderForm>> => {
     const {
       clients: { checkout, storeGraphQL },
     } = ctx
