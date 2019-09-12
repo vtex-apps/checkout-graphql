@@ -1,16 +1,16 @@
-import { StoreGraphQL } from '../clients/storeGraphQL'
 import { Checkout } from '../clients/checkout'
+import { StoreGraphQL } from '../clients/storeGraphQL'
 import { adjustItems } from './items'
-import { getShippingInfo } from './shipping'
 import { fillMessages } from './messages'
+import { getShippingInfo } from './shipping'
 
 export const getNewOrderForm = async ({
-  newOrderForm,
   checkout,
+  newOrderForm,
   storeGraphQL,
 }: {
-  newOrderForm: CheckoutOrderForm
   checkout: Checkout
+  newOrderForm: CheckoutOrderForm
   storeGraphQL: StoreGraphQL
 }) => {
   const { orderFormId, messages } = newOrderForm
@@ -23,11 +23,11 @@ export const getNewOrderForm = async ({
 
   return {
     items: await adjustItems(newOrderForm.items, storeGraphQL),
+    marketingData: newOrderForm.marketingData,
+    messages: newMessages,
     shipping: getShippingInfo(newOrderForm),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
-    marketingData: newOrderForm.marketingData,
-    messages: newMessages,
   }
 }
 
@@ -40,8 +40,8 @@ export const queries = {
     const newOrderForm = await checkout.orderForm()
 
     return getNewOrderForm({
-      newOrderForm,
       checkout,
+      newOrderForm,
       storeGraphQL,
     })
   },

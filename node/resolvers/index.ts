@@ -4,22 +4,22 @@ import { queries as orderFormQueries } from './orderForm'
 import { mutations as shippingMutations } from './shipping'
 
 export const resolvers = {
+  MarketingData: {
+    coupon: (marketingData: OrderFormMarketingData) => {
+      return marketingData.coupon || ''
+    },
+  },
   Mutation: {
     ...couponMutations,
     ...itemMutations,
     ...shippingMutations,
-  },
-  Query: {
-    ...orderFormQueries,
   },
   OrderForm: {
     marketingData: (orderForm: OrderForm) => {
       return orderForm.marketingData || {}
     },
   },
-  MarketingData: {
-    coupon: (marketingData: OrderFormMarketingData) => {
-      return marketingData.coupon || ''
-    },
+  Query: {
+    ...orderFormQueries,
   },
 }

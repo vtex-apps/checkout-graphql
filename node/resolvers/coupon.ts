@@ -9,8 +9,8 @@ export const mutations = {
     const newOrderForm = await checkout.insertCoupon(orderFormId!, args.text)
 
     return getNewOrderForm({
-      newOrderForm,
       checkout,
+      newOrderForm,
       storeGraphQL,
     })
   },
