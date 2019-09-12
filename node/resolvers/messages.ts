@@ -3,8 +3,7 @@ const COUPON_NOT_FOUND = 'couponNotFound'
 
 const COUPON_CODES = [COUPON_EXPIRED, COUPON_NOT_FOUND]
 
-export const fillMessages = (orderForm: CheckoutOrderForm) => {
-  const messages = orderForm.messages
+export const fillMessages = ({ messages }: CheckoutOrderForm) => {
   let couponMessages: Message[] = []
 
   messages.forEach(message => {
