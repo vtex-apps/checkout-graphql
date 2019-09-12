@@ -23,11 +23,7 @@ export const getNewOrderForm = async ({
 }
 
 export const queries = {
-  orderForm: async (
-    _: any,
-    __: any,
-    ctx: Context
-  ): Promise<Partial<OrderForm>> => {
+  orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
     const {
       clients: { checkout, storeGraphQL },
     } = ctx

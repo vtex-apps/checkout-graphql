@@ -13,7 +13,7 @@ export const resolvers = {
     ...orderFormQueries,
   },
   OrderForm: {
-    marketingData: (orderForm: CheckoutOrderForm) => {
+    marketingData: (orderForm: OrderForm) => {
       return orderForm.marketingData || {}
     },
   },
