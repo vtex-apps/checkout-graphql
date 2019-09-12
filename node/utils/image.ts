@@ -1,5 +1,4 @@
 const DEFAULT_WIDTH = 96
-const DEFAULT_HEIGHT = 96
 const DEFAULT_HDF = 1
 
 const baseUrlRegex = new RegExp(/.+ids\/(\d+)(?:-(\d+)-(\d+)|)\//)
@@ -26,17 +25,14 @@ const cleanImageUrl = (imageUrl: string) => {
 const changeImageUrlSize = (
   imageUrl: string | undefined,
   width = DEFAULT_WIDTH,
-  height = DEFAULT_HEIGHT,
   highDensityFactor = DEFAULT_HDF
 ) => {
-  // imageUrl example http://omniera.vteximg.com.br/arquivos/ids/155401-135-135/CAN-09-04--1-.jpg
-  if (!imageUrl || !width || !height) {
+  if (!imageUrl) {
     return undefined
   }
   const widthCalc = width * highDensityFactor
-  const heightCalc = height * highDensityFactor
   const resizedImageUrl = imageUrl.slice(0, -1) // Remove last "/"
-  return `${resizedImageUrl}-${widthCalc}-${heightCalc}`
+  return `${resizedImageUrl}-${widthCalc}-auto`
 }
 
 const replaceHttpToRelativeProtocol = (url: string | undefined) => {

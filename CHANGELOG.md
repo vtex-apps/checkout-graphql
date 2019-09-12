@@ -7,13 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Image height is not fixed to 96 pixels anymore.
+
 ## [0.10.0] - 2019-09-12
 
-## Added
+### Added
 
-- `messages` field to `OrderForm`
-- `marketingData` field resolver
-- `OrderForm` messages being mapped to the proper Checkout OrderForm message fields
+- `messages` field to `OrderForm`;
+- `marketingData` field resolver;
+- `OrderForm` messages being mapped to the proper Checkout OrderForm message fields.
 
 ## [0.9.0] - 2019-09-05
 
@@ -23,19 +27,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.2] - 2019-09-05
 
-## Fixed
+### Fixed
 
 - OrderForm's `marketingData` now can not be null.
 
 ## [0.8.1] - 2019-09-05
 
-## Changed
+### Changed
 
-- insertCoupon returns the entire OrderForm
+- insertCoupon returns the entire OrderForm.
 
 ## [0.8.0] - 2019-09-04
 
-## Added
+### Added
 
 - `estimateShipping` mutation to calculate delivery options;
 - `getNewOrderForm` to unify getting and returning a new orderForm;
