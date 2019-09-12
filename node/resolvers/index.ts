@@ -12,4 +12,14 @@ export const resolvers = {
   Query: {
     ...orderFormQueries,
   },
+  OrderForm: {
+    marketingData: (orderForm: CheckoutOrderForm) => {
+      return orderForm.marketingData || {}
+    },
+  },
+  MarketingData: {
+    coupon: (marketingData: OrderFormMarketingData) => {
+      return (marketingData && marketingData.coupon) || ''
+    },
+  },
 }
