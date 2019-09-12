@@ -353,6 +353,7 @@ declare global {
       value: number
     }>
     value: number
+    messages: OrderFormMessages
   }
 
   interface Shipping {
@@ -382,6 +383,16 @@ declare global {
     reference: string
     state: string
     street: string
+  }
+
+  interface OrderFormMessages {
+    couponMessages: Message[]
+  }
+
+  interface Message {
+    code: string
+    text: string
+    status: string
   }
 
   enum AddressType {
