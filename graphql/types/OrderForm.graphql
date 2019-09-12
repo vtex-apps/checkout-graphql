@@ -4,7 +4,7 @@ type OrderForm {
   marketingData: MarketingData
   totalizers: [Totalizer]
   value: Int
-  couponMessages: [Message]
+  messages: OrderFormMessages
 }
 
 type MarketingData {
@@ -15,6 +15,10 @@ type Totalizer {
   id: String
   name: String
   value: Int
+}
+
+type OrderFormMessages {
+  couponMessages: [Message]
 }
 
 type Message {

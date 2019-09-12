@@ -353,7 +353,7 @@ declare global {
       value: number
     }>
     value: number
-    couponMessages: Message[]
+    messages: OrderFormMessage
   }
 
   interface Shipping {
@@ -383,6 +383,10 @@ declare global {
     reference: string
     state: string
     street: string
+  }
+
+  interface OrderFormMessage {
+    couponMessages: Message[]
   }
 
   interface Message {
