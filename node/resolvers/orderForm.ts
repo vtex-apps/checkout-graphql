@@ -15,7 +15,7 @@ export const getNewOrderForm = async ({
 }) => {
   const { orderFormId, messages } = newOrderForm
 
-  const newMessages = fillMessages(newOrderForm)
+  const newMessages = fillMessages(messages)
 
   if (messages.length) {
     checkout.clearMessages(orderFormId)
