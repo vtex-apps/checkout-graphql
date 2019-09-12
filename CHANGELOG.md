@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 
-- `couponMessages` field to `OrderForm`
+- `messages` field to `OrderForm`
+- `marketingData` field resolver
+- `OrderForm` messages being mapped to the proper Checkout OrderForm message fields
 
 ## [0.9.0] - 2019-09-05
 
