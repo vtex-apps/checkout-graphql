@@ -7,12 +7,10 @@ export const mutations = {
       vtex: { orderFormId },
     } = ctx
     const newOrderForm = await checkout.insertCoupon(orderFormId!, args.text)
-    if (newOrderForm.messages.length) {
-      checkout.clearMessages(orderFormId!)
-    }
 
     return getNewOrderForm({
       newOrderForm,
+      checkout,
       storeGraphQL,
     })
   },

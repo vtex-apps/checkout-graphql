@@ -88,6 +88,7 @@ export const mutations = {
 
     return getNewOrderForm({
       newOrderForm,
+      checkout,
       storeGraphQL,
     })
   },
