@@ -1,12 +1,7 @@
-import { getNewOrderForm, getLastOrderFormMessage } from './orderForm'
+import { getNewOrderForm } from './orderForm'
 
 export const getMarketingData = (orderForm: any) => {
-  const newMarketingData = orderForm.marketingData || { coupon: '' }
-
-  return {
-    ...newMarketingData,
-    message: getLastOrderFormMessage(orderForm.messages),
-  }
+  return orderForm.marketingData || { coupon: '' }
 }
 
 export const mutations = {

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- `couponMessages` field to `OrderForm`
+
 ## [0.9.0] - 2019-09-05
 
 ### Added

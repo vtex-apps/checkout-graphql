@@ -2,14 +2,7 @@ import { StoreGraphQL } from '../clients/storeGraphQL'
 import { adjustItems } from './items'
 import { getShippingInfo } from './shipping'
 import { getMarketingData } from './coupon'
-
-export const getLastOrderFormMessage = (messages: any[]) => {
-  const lastMessage = messages.length
-    ? messages.pop()
-    : { status: '', text: '' }
-
-  return lastMessage
-}
+import { fillMessages } from './messages'
 
 export const getNewOrderForm = async ({
   newOrderForm,
@@ -18,12 +11,15 @@ export const getNewOrderForm = async ({
   newOrderForm: CheckoutOrderForm
   storeGraphQL: StoreGraphQL
 }) => {
+  const { couponMessages } = fillMessages(newOrderForm)
+
   return {
     items: await adjustItems(newOrderForm.items, storeGraphQL),
     marketingData: getMarketingData(newOrderForm),
     shipping: getShippingInfo(newOrderForm),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
+    couponMessages,
   }
 }
 
