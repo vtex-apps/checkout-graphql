@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.2] - 2019-09-18
+
 ### Changed
 
 - `search-graphql` is used instead of `store-graphql` for the `product` query.
