@@ -3,7 +3,7 @@ import { getNewOrderForm } from './orderForm'
 export const mutations = {
   insertCoupon: async (_: any, args: any, ctx: Context) => {
     const {
-      clients: { checkout, storeGraphQL },
+      clients: { checkout, searchGraphQL },
       vtex: { orderFormId },
     } = ctx
     const newOrderForm = await checkout.insertCoupon(orderFormId!, args.text)
@@ -11,7 +11,7 @@ export const mutations = {
     return getNewOrderForm({
       checkout,
       newOrderForm,
-      storeGraphQL,
+      searchGraphQL,
     })
   },
 }

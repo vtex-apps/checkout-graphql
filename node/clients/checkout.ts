@@ -265,10 +265,10 @@ export class Checkout extends JanusClient {
         `${base}/orders/${orderFormId}/user-cancel-request`,
       checkin: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/checkIn`,
-      insertCoupon: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/coupons`,
       clearMessages: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/messages/clear`,
+      insertCoupon: (orderFormId: string) =>
+        `${base}/orderForm/${orderFormId}/coupons`,
       orderForm: `${base}/orderForm`,
       orderFormCustomData: (
         orderFormId: string,
