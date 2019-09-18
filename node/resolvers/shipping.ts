@@ -72,7 +72,7 @@ export const mutations = {
     ctx: Context
   ) => {
     const {
-      clients: { checkout, shipping, storeGraphQL },
+      clients: { checkout, shipping, searchGraphQL },
       vtex: { orderFormId },
     } = ctx
 
@@ -89,7 +89,7 @@ export const mutations = {
     return getNewOrderForm({
       checkout,
       newOrderForm,
-      storeGraphQL,
+      searchGraphQL,
     })
   },
 }

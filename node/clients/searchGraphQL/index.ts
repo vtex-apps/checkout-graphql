@@ -2,9 +2,9 @@ import { AppGraphQLClient, InstanceOptions, IOContext, Serializable } from '@vte
 
 import { ProductArgs, ProductResponse, query as productQuery } from './productQuery'
 
-export class StoreGraphQL extends AppGraphQLClient {
+export class SearchGraphQL extends AppGraphQLClient {
   constructor(ctx: IOContext, opts?: InstanceOptions) {
-    super('vtex.store-graphql', ctx, opts)
+    super('vtex.search-graphql', ctx, opts)
   }
 
   public product = <T extends Serializable = ProductResponse>(

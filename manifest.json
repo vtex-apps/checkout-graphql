@@ -9,7 +9,7 @@
     "node": "4.x"
   },
   "dependencies": {
-    "vtex.store-graphql": "2.x"
+    "vtex.search-graphql": "0.x"
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "name": "vtex.store-graphql:resolve-graphql"
+      "name": "vtex.search-graphql:resolve-graphql"
     }
   ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"

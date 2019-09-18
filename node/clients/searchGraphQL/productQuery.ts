@@ -28,9 +28,9 @@ query Product($identifier: ProductUniqueIdentifier) {
     items {
       itemId
       name
-      skuSpecifications {
-        fieldName
-        fieldValues
+      variations {
+        name
+        values
       }
     }
   }

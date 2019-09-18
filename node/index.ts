@@ -12,7 +12,7 @@ declare global {
 
   interface CustomContext {
     cookie: string
-    dataSources: StoreGraphQLDataSources
+    dataSources: SearchGraphQLDataSources
     originalPath: string
     vtex: CustomIOContext
   }
@@ -410,8 +410,8 @@ const MAX_SEGMENT_CACHE = 10000
 const segmentCache = new LRUCache<string, any>({ max: MAX_SEGMENT_CACHE })
 metrics.trackCache('segment', segmentCache)
 
-const storeGraphQLCache = new LRUCache<string, any>({ max: 5000 })
-metrics.trackCache('storeGraphQL', storeGraphQLCache)
+const searchGraphQLCache = new LRUCache<string, any>({ max: 5000 })
+metrics.trackCache('searchGraphQL', searchGraphQLCache)
 
 export default new Service<Clients, void, CustomContext>({
   clients: {
@@ -424,12 +424,12 @@ export default new Service<Clients, void, CustomContext>({
         retries: 2,
         timeout: THREE_SECONDS_MS,
       },
-      segment: {
-        memoryCache: segmentCache,
+      searchGraphQL: {
+        memoryCache: searchGraphQLCache,
         timeout: THREE_SECONDS_MS,
       },
-      storeGraphQL: {
-        memoryCache: storeGraphQLCache,
+      segment: {
+        memoryCache: segmentCache,
         timeout: THREE_SECONDS_MS,
       },
     },

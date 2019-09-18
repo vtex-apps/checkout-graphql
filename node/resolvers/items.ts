@@ -1,23 +1,26 @@
 import { map } from 'bluebird'
 
-import { StoreGraphQL } from '../clients/storeGraphQL'
+import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { getNewOrderForm } from './orderForm'
 
-const getSkuSpecifications = (skuId: string, skuList: any[]) => {
+const getVariations = (skuId: string, skuList: any[]) => {
   const matchedSku = skuList.find((sku: any) => sku.itemId === skuId)
   if (!matchedSku) {
     return []
   }
-  return matchedSku.skuSpecifications
+  return matchedSku.variations.map((variation: any) => ({
+    fieldName: variation.name,
+    fieldValues: variation.values,
+  }))
 }
 
 export const adjustItems = (
   items: OrderFormItem[],
-  storeGraphQL: StoreGraphQL
+  searchGraphQL: SearchGraphQL
 ) =>
   map(items, async (item: OrderFormItem) => {
-    const response = await storeGraphQL.product({
+    const response = await searchGraphQL.product({
       identifier: {
         field: 'id',
         value: item.productId,
@@ -30,7 +33,7 @@ export const adjustItems = (
       ...item,
       imageUrl: fixImageUrl(item.imageUrl)!,
       name: product.productName,
-      skuSpecifications: getSkuSpecifications(item.id, product.items),
+      skuSpecifications: getVariations(item.id, product.items),
     }
   })
 
@@ -41,7 +44,7 @@ export const mutations = {
     ctx: Context
   ): Promise<OrderForm> => {
     const {
-      clients: { checkout, storeGraphQL },
+      clients: { checkout, searchGraphQL },
       vtex: { orderFormId },
     } = ctx
 
@@ -68,7 +71,7 @@ export const mutations = {
     return getNewOrderForm({
       checkout,
       newOrderForm,
-      storeGraphQL,
+      searchGraphQL,
     })
   },
 }

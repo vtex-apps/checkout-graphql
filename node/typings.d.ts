@@ -19,11 +19,11 @@ declare global {
 
   interface ServiceContext extends KoaContext {
     vtex: IOContext
-    dataSources: StoreGraphQLDataSources
+    dataSources: SearchGraphQLDataSources
     originalPath: string
   }
 
-  interface StoreGraphQLDataSources {
+  interface SearchGraphQLDataSources {
     checkout: CheckoutDataSource
   }
 

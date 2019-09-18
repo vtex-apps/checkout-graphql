@@ -1,5 +1,5 @@
 import { Checkout } from '../clients/checkout'
-import { StoreGraphQL } from '../clients/storeGraphQL'
+import { SearchGraphQL } from '../clients/searchGraphQL'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping'
@@ -7,11 +7,11 @@ import { getShippingInfo } from './shipping'
 export const getNewOrderForm = async ({
   checkout,
   newOrderForm,
-  storeGraphQL,
+  searchGraphQL,
 }: {
   checkout: Checkout
   newOrderForm: CheckoutOrderForm
-  storeGraphQL: StoreGraphQL
+  searchGraphQL: SearchGraphQL
 }) => {
   const { orderFormId, messages } = newOrderForm
 
@@ -22,7 +22,7 @@ export const getNewOrderForm = async ({
   }
 
   return {
-    items: await adjustItems(newOrderForm.items, storeGraphQL),
+    items: await adjustItems(newOrderForm.items, searchGraphQL),
     marketingData: newOrderForm.marketingData,
     messages: newMessages,
     shipping: getShippingInfo(newOrderForm),
@@ -34,7 +34,7 @@ export const getNewOrderForm = async ({
 export const queries = {
   orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
     const {
-      clients: { checkout, storeGraphQL },
+      clients: { checkout, searchGraphQL },
     } = ctx
 
     const newOrderForm = await checkout.orderForm()
@@ -42,7 +42,7 @@ export const queries = {
     return getNewOrderForm({
       checkout,
       newOrderForm,
-      storeGraphQL,
+      searchGraphQL,
     })
   },
 }
