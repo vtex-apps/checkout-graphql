@@ -1,7 +1,7 @@
 export const ADDRESS_TYPES = {
   COMMERCIAL: 'commercial',
   GIFT_REGISTRY: 'giftRegistry',
-  INSTORE: 'instore',
+  INSTORE: 'inStore',
   PICKUP: 'pickup',
   RESIDENTIAL: 'residential',
   SEARCH: 'search',
