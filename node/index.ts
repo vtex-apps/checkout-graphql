@@ -359,7 +359,7 @@ declare global {
   interface Shipping {
     countries: string[]
     deliveryOptions: DeliveryOption[]
-    selectedAddress: CheckoutAddress
+    selectedAddresses: [CheckoutAddress]
   }
 
   interface DeliveryOption {
