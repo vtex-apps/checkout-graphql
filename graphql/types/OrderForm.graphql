@@ -19,6 +19,7 @@ type Totalizer {
 
 type OrderFormMessages {
   couponMessages: [Message]
+  generalMessages: [Message]
 }
 
 type Message {

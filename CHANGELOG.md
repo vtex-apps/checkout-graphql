@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `generalMessages` field to the `OrderFormMessages` type.
+
 ## [0.10.2] - 2019-09-18
 
 ### Changed
