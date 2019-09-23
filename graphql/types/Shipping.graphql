@@ -2,7 +2,7 @@ type Shipping {
   countries: [String]
   deliveryOptions: [DeliveryOption]
   selectedAddress: Address
-  availableAdresses: [Address]
+  availableAddresses: [Address]
 }
 
 type DeliveryOption {
