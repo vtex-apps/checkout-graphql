@@ -387,6 +387,7 @@ declare global {
 
   interface OrderFormMessages {
     couponMessages: Message[]
+    generalMessages: Message[]
   }
 
   interface Message {
