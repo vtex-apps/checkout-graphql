@@ -46,7 +46,7 @@ declare global {
     neighborhood: string
     complement: string
     reference: string | null
-    geoCoordinates: [number, number]
+    geoCoordinates: number[]
   }
 
   interface OrderFormItem {
@@ -160,7 +160,7 @@ declare global {
       name: string
       value: number
     }>
-    shippingData: ShippingData
+    shippingData: ShippingData | null
     clientProfileData: any | null
     paymentData: {
       installmentOptions: Array<{
@@ -227,11 +227,7 @@ declare global {
     commercialConditionData: any | null
     storePreferencesData: {
       countryCode: string
-      saveUserData: boolean
-      timeZone: string
       currencyCode: string
-      currencyLocale: number
-      currencySymbol: string
       currencyFormatInfo: {
         currencyDecimalDigits: number
         currencyDecimalSeparator: string
@@ -239,6 +235,10 @@ declare global {
         currencyGroupSize: number
         startsWithCurrencySymbol: boolean
       }
+      currencyLocale: string
+      currencySymbol: string
+      saveUserData: boolean
+      timeZone: string
     }
     giftRegistryData: any | null
     openTextField: any | null
@@ -256,7 +256,7 @@ declare global {
     itemsOrdination: any | null
   }
   interface ShippingData {
-    address: CheckoutAddress
+    address: CheckoutAddress | null
     logisticsInfo: LogisticsInfo[]
     selectedAddresses: CheckoutAddress[]
     availableAddresses: CheckoutAddress[]
@@ -274,14 +274,14 @@ declare global {
   }
 
   interface LogisticsInfo {
-    itemIndex: number
-    selectedSla: string
-    selectedDeliveryChannel: string
-    addressId: string
-    slas: SLA[]
-    shipsTo: string[]
-    itemId: string
+    addressId: string | null
     deliveryChannels: DeliveryChannel[]
+    itemId: string
+    itemIndex: number
+    shipsTo: string[]
+    slas: SLA[]
+    selectedDeliveryChannel: string | null
+    selectedSla: string | null
   }
 
   interface DeliveryChannel {
@@ -309,7 +309,7 @@ declare global {
       dockId: string | null
     }
     pickupPointId: string | null
-    pickupDistance: number
+    pickupDistance: number | null
     polygonName: string | null
   }
 
@@ -357,9 +357,10 @@ declare global {
   }
 
   interface Shipping {
+    availableAddresses: CheckoutAddress[]
     countries: string[]
     deliveryOptions: DeliveryOption[]
-    selectedAddress: CheckoutAddress
+    selectedAddress: CheckoutAddress | null
   }
 
   interface DeliveryOption {
@@ -399,7 +400,7 @@ declare global {
   enum AddressType {
     residential,
     commercial,
-    instore,
+    inStore,
     giftRegistry,
     pickup,
     search,

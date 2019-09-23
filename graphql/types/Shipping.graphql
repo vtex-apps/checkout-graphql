@@ -2,6 +2,7 @@ type Shipping {
   countries: [String]
   deliveryOptions: [DeliveryOption]
   selectedAddress: Address
+  availableAdresses: [Address]
 }
 
 type DeliveryOption {
@@ -47,7 +48,7 @@ input AddressInput {
 enum AddressType {
   residential
   commercial
-  instore
+  inStore
   giftRegistry
   pickup
   search

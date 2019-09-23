@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@types/lodash": "^4.14.137",
     "bluebird": "^3.5.5",
     "graphql": "^0.13.2",
     "graphql-tools": "^3.1.1",
@@ -9,14 +8,19 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.25",
     "@types/graphql": "0.13.x",
+    "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.138",
     "@types/node": "^10.12.17",
     "@types/ramda": "types/npm-ramda#dist",
     "@vtex/api": "^3.8.1",
+    "@vtex/test-tools": "^1.2.0",
+    "@vtex/tsconfig": "^0.2.0",
     "tslint": "^5.12.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "3.5.2"
   },
   "scripts": {
-    "lint": "tsc --noEmit && tslint -c tslint.json './**/*.ts'"
+    "lint": "tsc --noEmit && tslint -c tslint.json './**/*.ts'",
+    "test": "vtex-test-tools test"
   }
 }
