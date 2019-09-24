@@ -34,19 +34,19 @@ declare global {
   }
 
   interface CheckoutAddress {
-    addressType: string
-    receiverName: string
     addressId: string
-    postalCode: string
-    city: string
-    state: string
+    addressType: string
+    city: string | null
+    complement: string | null
     country: string
-    street: string
-    number: string
-    neighborhood: string
-    complement: string
-    reference: string | null
     geoCoordinates: number[]
+    neighborhood: string | null
+    number: string | null
+    postalCode: string | null
+    receiverName: string | null
+    reference: string | null
+    state: string | null
+    street: string | null
   }
 
   interface OrderFormItem {
@@ -160,7 +160,7 @@ declare global {
       name: string
       value: number
     }>
-    shippingData: ShippingData | null
+    shippingData: ShippingData
     clientProfileData: any | null
     paymentData: {
       installmentOptions: Array<{
@@ -323,7 +323,7 @@ declare global {
 
   interface ShippingDataRequest {
     logisticsInfo: LogisticsInfo[]
-    selectedAddresses: AddressInput[]
+    selectedAddresses: CheckoutAddress[]
     clearAddressIfPostalCodeNotFound?: boolean
   }
 
@@ -368,22 +368,6 @@ declare global {
     price: number
     estimate: string
     isSelected: boolean
-  }
-
-  interface AddressInput {
-    addressId: string
-    addressType: AddressType
-    city: string
-    complement: string
-    country: string
-    geoCoordinates: number[]
-    neighborhood: string
-    number: string
-    postalCode: string
-    receiverName: string
-    reference: string
-    state: string
-    street: string
   }
 
   interface OrderFormMessages {
