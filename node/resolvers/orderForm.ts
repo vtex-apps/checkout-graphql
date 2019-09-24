@@ -2,7 +2,7 @@ import { Checkout } from '../clients/checkout'
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
-import { getShippingInfo } from './shipping'
+import { getShippingInfo } from './shipping/utils/shipping'
 
 export const getNewOrderForm = async ({
   checkout,
