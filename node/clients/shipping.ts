@@ -19,12 +19,12 @@ export class Shipping extends JanusClient {
     })
   }
 
-  public estimateShipping = (
+  public shippingAttachmentRequest = (
     orderFormId: string,
     shippingData: ShippingDataRequest
   ) => {
     return this.post<CheckoutOrderForm>(
-      this.routes.estimateShipping(orderFormId),
+      this.routes.shippingAttachmentRequest(orderFormId),
       shippingData,
       { metric: 'shipping-estimate' }
     )
@@ -59,7 +59,7 @@ export class Shipping extends JanusClient {
   private get routes() {
     const base = '/api/checkout/pub'
     return {
-      estimateShipping: (orderFormId: string) =>
+      shippingAttachmentRequest: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/attachments/shippingData`,
     }
   }

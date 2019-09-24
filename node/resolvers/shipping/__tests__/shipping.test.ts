@@ -6,8 +6,8 @@ import {
   ORDER_FORM_WITH_PICKUPS,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
-} from '../__mocks__/shippping'
-import { getShippingInfo } from '../shipping'
+} from '../../__mocks__/shippping'
+import { getShippingInfo } from '../utils/shipping'
 
 describe('Shipping Resolvers', () => {
   describe('getShippingInfo', () => {

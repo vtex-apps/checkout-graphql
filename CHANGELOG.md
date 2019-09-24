@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `SelectDeliveryOption` mutation.
+
+### Changed
+
+- `Shipping` resolver refactor and utility functions
+
 ## [0.12.1] - 2019-09-23
 
 ### Fixed
