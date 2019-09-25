@@ -13,9 +13,10 @@ describe('Shipping Resolvers', () => {
   describe('getShippingInfo', () => {
     it('should get shipping info handling empty shippingData', () => {
       const expectedResult = {
+        availableAddresses: [],
         countries: [],
         deliveryOptions: [],
-        selectedAddresses: [],
+        selectedAddress: undefined,
       }
 
       expect(getShippingInfo(ORDER_FORM_WITH_EMPTY_SHIPPING_DATA)).toEqual(
@@ -25,9 +26,10 @@ describe('Shipping Resolvers', () => {
 
     it('should get shipping info handling empty logisticsInfo', () => {
       const expectedResult = {
+        availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [],
-        selectedAddresses: [deliveryAddress],
+        selectedAddress: deliveryAddress,
       }
 
       expect(getShippingInfo(ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO)).toEqual(
@@ -37,6 +39,7 @@ describe('Shipping Resolvers', () => {
 
     it('should get shipping info removing pickup point SLAs', () => {
       const expectedResult = {
+        availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
@@ -46,7 +49,7 @@ describe('Shipping Resolvers', () => {
             price: 100,
           },
         ],
-        selectedAddresses: [deliveryAddress],
+        selectedAddress: deliveryAddress,
       }
 
       expect(getShippingInfo(ORDER_FORM_WITH_PICKUPS)).toEqual(expectedResult)
@@ -54,6 +57,7 @@ describe('Shipping Resolvers', () => {
 
     it('should get shipping info removing scheduled delivery SLAs', () => {
       const expectedResult = {
+        availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
@@ -63,7 +67,7 @@ describe('Shipping Resolvers', () => {
             price: 100,
           },
         ],
-        selectedAddresses: [deliveryAddress],
+        selectedAddress: deliveryAddress,
       }
 
       expect(getShippingInfo(ORDER_FORM_WITH_SCHEDULED_DELIVERY)).toEqual(
@@ -73,6 +77,7 @@ describe('Shipping Resolvers', () => {
 
     it('should get shipping info removing scheduled delivery and pickup SLAs', () => {
       const expectedResult = {
+        availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
@@ -82,7 +87,7 @@ describe('Shipping Resolvers', () => {
             price: 100,
           },
         ],
-        selectedAddresses: [deliveryAddress],
+        selectedAddress: deliveryAddress,
       }
 
       expect(
@@ -92,6 +97,7 @@ describe('Shipping Resolvers', () => {
 
     it('should get shipping info removing SLAs which does not exist in all logisticsInfo', () => {
       const expectedResult = {
+        availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
@@ -101,7 +107,7 @@ describe('Shipping Resolvers', () => {
             price: 200,
           },
         ],
-        selectedAddresses: [deliveryAddress],
+        selectedAddress: deliveryAddress,
       }
 
       expect(
