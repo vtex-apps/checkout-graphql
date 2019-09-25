@@ -1,3 +1,5 @@
+import { Segment } from '@vtex/api'
+
 import { Checkout } from '../clients/checkout'
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { adjustItems } from './items'
@@ -6,10 +8,12 @@ import { getShippingInfo } from './shipping/utils/shipping'
 
 export const getNewOrderForm = async ({
   checkout,
+  segment,
   newOrderForm,
   searchGraphQL,
 }: {
   checkout: Checkout
+  segment: Segment
   newOrderForm: CheckoutOrderForm
   searchGraphQL: SearchGraphQL
 }) => {
@@ -22,7 +26,7 @@ export const getNewOrderForm = async ({
   }
 
   return {
-    items: await adjustItems(newOrderForm.items, searchGraphQL),
+    items: await adjustItems(newOrderForm.items, searchGraphQL, segment),
     marketingData: newOrderForm.marketingData,
     messages: newMessages,
     shipping: getShippingInfo(newOrderForm),
@@ -34,7 +38,7 @@ export const getNewOrderForm = async ({
 export const queries = {
   orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
     const {
-      clients: { checkout, searchGraphQL },
+      clients: { checkout, searchGraphQL, segment },
     } = ctx
 
     const newOrderForm = await checkout.orderForm()
@@ -43,6 +47,7 @@ export const queries = {
       checkout,
       newOrderForm,
       searchGraphQL,
+      segment,
     })
   },
 }

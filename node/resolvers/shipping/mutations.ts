@@ -7,7 +7,7 @@ export const estimateShippingMutation = async (
   ctx: Context
 ) => {
   const {
-    clients: { checkout, shipping, searchGraphQL },
+    clients: { checkout, shipping, searchGraphQL, segment },
     vtex: { orderFormId },
   } = ctx
 
@@ -25,6 +25,7 @@ export const estimateShippingMutation = async (
     checkout,
     newOrderForm,
     searchGraphQL,
+    segment,
   })
 }
 
@@ -34,7 +35,7 @@ export const selectDeliveryOptionMutation = async (
   ctx: Context
 ) => {
   const {
-    clients: { checkout, shipping, searchGraphQL },
+    clients: { checkout, shipping, searchGraphQL, segment },
     vtex: { orderFormId },
   } = ctx
 
@@ -53,5 +54,6 @@ export const selectDeliveryOptionMutation = async (
     checkout,
     newOrderForm,
     searchGraphQL,
+    segment,
   })
 }
