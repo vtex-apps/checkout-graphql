@@ -40,7 +40,13 @@ export const EMPTY_ORDER_FORM = {
   salesChannel: '1',
   selectableGifts: [],
   sellers: [],
-  shippingData: null,
+  shippingData: {
+    address: null,
+    availableAddresses: [],
+    logisticsInfo: [],
+    pickupPoints: [],
+    selectedAddresses: [],
+  },
   storeId: '1',
   storePreferencesData: {
     countryCode: 'BRA',
