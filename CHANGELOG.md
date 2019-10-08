@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `search-graphql`'s `product` query receives the product slug instead of its id when the request comes from a GoCommerce account.
+
 ## [0.14.0] - 2019-10-10
 
 ### Changed

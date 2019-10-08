@@ -7,10 +7,12 @@ import { getShippingInfo } from './shipping/utils/shipping'
 export const getNewOrderForm = async ({
   checkout,
   newOrderForm,
+  platform,
   searchGraphQL,
 }: {
   checkout: Checkout
   newOrderForm: CheckoutOrderForm
+  platform: string
   searchGraphQL: SearchGraphQL
 }) => {
   const { orderFormId, messages } = newOrderForm
@@ -22,7 +24,7 @@ export const getNewOrderForm = async ({
   }
 
   return {
-    items: await adjustItems(newOrderForm.items, searchGraphQL),
+    items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
     marketingData: newOrderForm.marketingData,
     messages: newMessages,
     shipping: getShippingInfo(newOrderForm),
@@ -35,6 +37,7 @@ export const queries = {
   orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
     const {
       clients: { checkout, searchGraphQL },
+      vtex: { platform },
     } = ctx
 
     const newOrderForm = await checkout.orderForm()
@@ -42,6 +45,7 @@ export const queries = {
     return getNewOrderForm({
       checkout,
       newOrderForm,
+      platform,
       searchGraphQL,
     })
   },

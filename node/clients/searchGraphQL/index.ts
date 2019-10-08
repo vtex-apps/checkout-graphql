@@ -12,7 +12,6 @@ export class SearchGraphQL extends AppGraphQLClient {
     query: string = productQuery
   ) => this.graphql.query<T, ProductArgs>({
     query,
-    useGet: true,
     variables,
   }, {
     metric: 'get-product',
