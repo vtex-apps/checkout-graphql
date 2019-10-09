@@ -21,8 +21,8 @@ type ItemAdditionalInfo {
 }
 
 type SKUSpecification {
-  fieldName: String
-  fieldValues: [String]
+  fieldName: String @translatableV2
+  fieldValues: [String] @translatableV2
 }
 
 input ItemInput {
