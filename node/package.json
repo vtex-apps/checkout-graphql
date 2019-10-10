@@ -12,7 +12,7 @@
     "@types/lodash": "^4.14.138",
     "@types/node": "^10.12.17",
     "@types/ramda": "types/npm-ramda#dist",
-    "@vtex/api": "^3.8.1",
+    "@vtex/api": "^3.55.2",
     "@vtex/test-tools": "^1.2.0",
     "@vtex/tsconfig": "^0.2.0",
     "tslint": "^5.12.0",

@@ -1324,13 +1324,14 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
   integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
 
-"@vtex/api@^3.8.1":
-  version "3.31.0"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-3.31.0.tgz#a06b9daa6e998e25917aa15b1e508d059e794a34"
-  integrity sha512-aBJkfX6ZdlcjmyeWuyBw+EArczLJiQteCu5X7zb2tUP5uhPV40Do3E4SdbJwRNjkUkyTPE729GI0NBfZsnjBnw==
+"@vtex/api@^3.55.2":
+  version "3.55.2"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-3.55.2.tgz#086bfdc95d5da268a64f0a4df3e4879589e03e81"
+  integrity sha512-i0LaoSHJdGOwmlFDQ3X1RvY0mqQIFATH91VesLT20avgE6m/lQLvnSwVrX+zfI2SIsCpcMCHnUaJ+R8MIB/S/Q==
   dependencies:
     "@types/koa" "^2.0.48"
     "@types/koa-compose" "^3.2.3"
+    "@wry/equality" "^0.1.9"
     apollo-datasource "^0.3.1"
     apollo-server-core "^2.4.8"
     apollo-server-errors "^2.2.1"
@@ -1338,6 +1339,7 @@
     axios "^0.18.0"
     axios-retry "^3.1.2"
     bluebird "^3.5.4"
+    chalk "^2.4.2"
     co-body "^6.0.0"
     cookie "^0.3.1"
     dataloader "^1.4.0"
@@ -1412,7 +1414,7 @@
     "@types/node" ">=6"
     tslib "^1.9.3"
 
-"@wry/equality@^0.1.2":
+"@wry/equality@^0.1.2", "@wry/equality@^0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.1.9.tgz#b13e18b7a8053c6858aa6c85b54911fb31e3a909"
   integrity sha512-mB6ceGjpMGz1ZTza8HYnrPGos2mC6So4NhS1PtZ8s4Qt0K7fBiIGhpSxUbQmhwcSWE3no+bYxmI2OL6KuXYmoQ==

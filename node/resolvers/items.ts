@@ -4,6 +4,30 @@ import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { getNewOrderForm } from './orderForm'
 
+const GOCOMMERCE = 'gocommerce'
+
+const getProductInfo = async (
+  platform: string,
+  item: OrderFormItem,
+  searchGraphQL: SearchGraphQL
+) => {
+  let response
+
+  if (platform === GOCOMMERCE) {
+    const slug = item.detailUrl.split('/')[1]
+    response = await searchGraphQL.product({ slug })
+  } else {
+    response = await searchGraphQL.product({
+      identifier: {
+        field: 'id',
+        value: item.productId,
+      },
+    })
+  }
+
+  return response.data!.product
+}
+
 const getVariations = (skuId: string, skuList: any[]) => {
   const matchedSku = skuList.find((sku: any) => sku.itemId === skuId)
   if (!matchedSku) {
@@ -16,18 +40,12 @@ const getVariations = (skuId: string, skuList: any[]) => {
 }
 
 export const adjustItems = (
+  platform: string,
   items: OrderFormItem[],
   searchGraphQL: SearchGraphQL
 ) =>
   map(items, async (item: OrderFormItem) => {
-    const response = await searchGraphQL.product({
-      identifier: {
-        field: 'id',
-        value: item.productId,
-      },
-    })
-
-    const { product } = response.data!
+    const product = await getProductInfo(platform, item, searchGraphQL)
 
     return {
       ...item,
@@ -45,7 +63,7 @@ export const mutations = {
   ): Promise<OrderForm> => {
     const {
       clients: { checkout, searchGraphQL },
-      vtex: { orderFormId },
+      vtex: { orderFormId, platform },
     } = ctx
 
     if (orderItems.some((item: OrderFormItemInput) => !item.index)) {
@@ -71,6 +89,7 @@ export const mutations = {
     return getNewOrderForm({
       checkout,
       newOrderForm,
+      platform,
       searchGraphQL,
     })
   },

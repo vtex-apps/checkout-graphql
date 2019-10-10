@@ -13,7 +13,8 @@ export interface ProductResponse {
 }
 
 export interface ProductArgs {
-  identifier: ProductUniqueIdentifier
+  identifier?: ProductUniqueIdentifier
+  slug?: string
 }
 
 interface ProductUniqueIdentifier {
@@ -22,8 +23,8 @@ interface ProductUniqueIdentifier {
 }
 
 export const query = `
-query Product($identifier: ProductUniqueIdentifier) {
-  product(identifier: $identifier) {
+query Product($identifier: ProductUniqueIdentifier, $slug: String) {
+  product(identifier: $identifier, slug: $slug) {
     productName
     items {
       itemId
