@@ -1,6 +1,7 @@
 import {
   deliveryAddress,
   ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO,
+  ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS,
   ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO,
   ORDER_FORM_WITH_EMPTY_SHIPPING_DATA,
   ORDER_FORM_WITH_PICKUPS,
@@ -112,6 +113,28 @@ describe('Shipping Resolvers', () => {
 
       expect(
         getShippingInfo(ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO)
+      ).toEqual(expectedResult)
+    })
+
+    it('should get shipping info removing duplicated SLAs which have different delivery ids', () => {
+      const expectedResult = {
+        availableAddresses: [deliveryAddress],
+        countries: ['BRA', 'GBR'],
+        deliveryOptions: [
+          {
+            estimate: '1db',
+            id: 'delivery-SLA',
+            isSelected: true,
+            price: 200,
+          },
+        ],
+        selectedAddress: deliveryAddress,
+      }
+
+      expect(
+        getShippingInfo(
+          ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS
+        )
       ).toEqual(expectedResult)
     })
   })
