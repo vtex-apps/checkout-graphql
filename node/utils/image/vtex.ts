@@ -1,10 +1,13 @@
-const DEFAULT_WIDTH = 96
-const DEFAULT_HDF = 1
+import { DEFAULT_HDF, DEFAULT_WIDTH } from './constants'
 
 const baseUrlRegex = new RegExp(/.+ids\/(\d+)(?:-(\d+)-(\d+)|)\//)
 const sizeRegex = new RegExp(/-(\d+)-(\d+)/)
 
-const cleanImageUrl = (imageUrl: string) => {
+const cleanImageUrl = (imageUrl: string | undefined) => {
+  if (!imageUrl) {
+    return undefined
+  }
+
   let resizedImageUrl = imageUrl
   const result = baseUrlRegex.exec(imageUrl)
   if (result && result.length > 0) {
@@ -35,15 +38,7 @@ const changeImageUrlSize = (
   return `${resizedImageUrl}-${widthCalc}-auto`
 }
 
-const replaceHttpToRelativeProtocol = (url: string | undefined) => {
-  if (!url) {
-    return undefined
-  }
-  return url.replace(/https:\/\/|http:\/\//, '//')
-}
-
-export const fixImageUrl = (imageUrl: string) => {
-  return changeImageUrlSize(
-    replaceHttpToRelativeProtocol(cleanImageUrl(imageUrl))
-  )
+export default {
+  changeImageUrlSize,
+  cleanImageUrl,
 }
