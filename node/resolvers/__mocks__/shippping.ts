@@ -40,6 +40,44 @@ const deliverySLA = {
   shippingEstimate: '1db',
 }
 
+const deliveryIdOne = {
+  courierId: '1',
+  warehouseId: '1',
+  dockId: '1',
+  courierName: 'PAC',
+  quantity: 1,
+}
+
+const deliveryId = {
+  courierId: '1',
+  warehouseId: '1a105fe',
+  dockId: '1fd8f86',
+  courierName: 'PAC',
+  quantity: 1,
+}
+
+const deliverySLAWithDeliveryIdOne = {
+  ...SLA,
+  availableDeliveryWindows: [],
+  deliveryChannel: DELIVERY,
+  id: 'delivery-SLA',
+  name: 'delivery-SLA',
+  price: 100,
+  shippingEstimate: '1db',
+  deliveryIds: [deliveryIdOne],
+}
+
+const deliverySLAWithDeliveryId = {
+  ...SLA,
+  availableDeliveryWindows: [],
+  deliveryChannel: DELIVERY,
+  id: 'delivery-SLA',
+  name: 'delivery-SLA',
+  price: 100,
+  shippingEstimate: '1db',
+  deliveryIds: [deliveryId],
+}
+
 const deliverySLAExpress = {
   ...SLA,
   availableDeliveryWindows: [],
@@ -167,6 +205,38 @@ export const ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO = {
         selectedSla: deliverySLA.id,
         shipsTo: ['BRA', 'GBR'],
         slas: [deliverySLA, deliverySLAExpress],
+      },
+    ],
+    pickupPoints: [],
+    selectedAddresses: [deliveryAddress],
+  },
+}
+
+export const ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS = {
+  ...EMPTY_ORDER_FORM,
+  shippingData: {
+    address: null,
+    availableAddresses: [deliveryAddress],
+    logisticsInfo: [
+      {
+        addressId: deliveryAddress.addressId,
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        itemId: 'testId',
+        itemIndex: 0,
+        selectedDeliveryChannel: DELIVERY,
+        selectedSla: deliverySLA.id,
+        shipsTo: ['BRA', 'GBR'],
+        slas: [deliverySLAWithDeliveryId],
+      },
+      {
+        addressId: deliveryAddress.addressId,
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        itemId: 'testId',
+        itemIndex: 1,
+        selectedDeliveryChannel: DELIVERY,
+        selectedSla: deliverySLA.id,
+        shipsTo: ['BRA', 'GBR'],
+        slas: [deliverySLAWithDeliveryIdOne, deliverySLAExpress],
       },
     ],
     pickupPoints: [],

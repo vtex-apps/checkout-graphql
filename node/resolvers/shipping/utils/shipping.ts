@@ -1,5 +1,6 @@
 import flatten from 'lodash/flatten'
 import uniq from 'lodash/uniq'
+import uniqBy from 'lodash/uniqBy'
 
 import {
   addressHasGeocoordinates,
@@ -75,10 +76,11 @@ export const getShippingInfo = (orderForm: CheckoutOrderForm) => {
     orderForm.shippingData &&
     getSelectedDeliveryAddress(orderForm.shippingData.selectedAddresses)!
 
-  const deliveryOptions = uniq(
+  const deliveryOptions = uniqBy(
     flatten(
       logisticsInfo ? logisticsInfo.map((item: LogisticsInfo) => item.slas) : []
-    )
+    ),
+    'id'
   )
 
   // Since at this time Shipping does not show Pickup Points or
