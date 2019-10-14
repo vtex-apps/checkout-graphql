@@ -56,6 +56,26 @@ export const adjustItems = (
   })
 
 export const mutations = {
+  addToCart: async (
+    _: any,
+    { items }: { items: OrderFormItemInput[] },
+    ctx: Context
+  ): Promise<OrderForm> => {
+    const {
+      clients: { checkout, searchGraphQL },
+      vtex: { orderFormId, platform },
+    } = ctx
+
+    const newOrderForm = await checkout.addItem(orderFormId!, items)
+
+    return getNewOrderForm({
+      checkout,
+      newOrderForm,
+      platform,
+      searchGraphQL,
+    })
+  },
+
   updateItems: async (
     _: any,
     { orderItems }: { orderItems: OrderFormItemInput[] },
