@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Image URLs in non-VTEX accounts.
+
 ## [0.15.0] - 2019-10-14
 
 ### Added
