@@ -6,7 +6,7 @@ type Item {
   availability: String
   detailUrl: String
   id: ID
-  imageUrl: String
+  imageUrls: ImageUrls
   listPrice: Float
   measurementUnit: String
   name: String
@@ -20,6 +20,12 @@ type Item {
   skuName: String
   skuSpecifications: [SKUSpecification]
   uniqueId: String
+}
+
+type ImageUrls {
+  at1x: String
+  at2x: String
+  at3x: String
 }
 
 type AssemblyOptionItem {

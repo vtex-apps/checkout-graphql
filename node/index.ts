@@ -345,8 +345,36 @@ declare global {
     options?: AssemblyOptionInput[]
   }
 
+  interface Item {
+    additionalInfo: {
+      brandName: string
+      brandId: string
+      offeringInfo: any | null
+      offeringType: any | null
+      offeringTypeId: any | null
+    }
+    availability: string
+    detailUrl: string
+    id: string
+    imageUrls?: {
+      at1x: string
+      at2x: string
+      at3x: string
+    }
+    listPrice: number
+    measurementUnit: string
+    name: string
+    price: number
+    productId: string
+    quantity: number
+    sellingPrice: number
+    skuName: string
+    skuSpecifications: SKUSpecification[]
+    uniqueId: string
+  }
+
   interface OrderForm {
-    items: OrderFormItem[]
+    items: Item[]
     shipping?: Shipping
     marketingData: OrderFormMarketingData | null
     totalizers: Array<{

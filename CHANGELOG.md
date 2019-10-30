@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- URLs to product images with 2x and 3x resolutions to OrderForm.
+
 ## [0.16.0] - 2019-10-31
 
 ### Added
