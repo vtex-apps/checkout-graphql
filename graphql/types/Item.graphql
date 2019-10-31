@@ -1,5 +1,8 @@
+scalar InputValues
+
 type Item {
   additionalInfo: ItemAdditionalInfo
+  assemblyOptions: AssemblyOptionItem
   availability: String
   detailUrl: String
   id: ID
@@ -7,13 +10,45 @@ type Item {
   listPrice: Float
   measurementUnit: String
   name: String
+  parentAssemblyBinding: String
+  options: [AssemblyOptionType]
   price: Float
   productId: String
   quantity: Float
   sellingPrice: Float
+  sellingPriceWithAssemblies: Float
   skuName: String
   skuSpecifications: [SKUSpecification]
   uniqueId: String
+}
+
+type AssemblyOptionItem {
+  added: [AddedOptionItem]!
+  removed: [RemovedOptionItem]!
+  parentPrice: Float
+}
+
+type RemovedOptionItem {
+  initialQuantity: Int
+  removedQuantity: Int
+  name: String
+}
+
+type AddedOptionItem {
+  item: Item
+  compositionItem: CompositionItem
+  normalizedQuantity: Int
+  choiceType: String
+  extraQuantity: Int
+}
+
+type CompositionItem {
+  id: ID
+  minQuantity: Int
+  maxQuantity: Int
+  initialQuantity: Int
+  priceTable: String
+  seller: String
 }
 
 type ItemAdditionalInfo {
@@ -25,10 +60,30 @@ type SKUSpecification {
   fieldValues: [String] @translatableV2
 }
 
+type AssemblyOptionType {
+  assemblyId: String!
+  id: ID
+  quantity: Int
+  seller: String
+  inputValues: InputValues
+  options: [AssemblyOptionType!]
+}
+
 input ItemInput {
   id: Int
   index: Int
   quantity: Float
   seller: ID
   uniqueId: String
+  inputValues: InputValues
+  options: [AssemblyOptionInput]
+}
+
+input AssemblyOptionInput {
+  assemblyId: String!
+  id: ID
+  quantity: Int
+  seller: String
+  inputValues: InputValues
+  options: [AssemblyOptionInput!]
 }
