@@ -2,6 +2,7 @@ import { map } from 'bluebird'
 
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
+import { addOptionsForItems } from '../utils/attachmentsHelpers'
 import { getNewOrderForm } from './orderForm'
 
 const GOCOMMERCE = 'gocommerce'
@@ -66,11 +67,25 @@ export const mutations = {
       vtex: { orderFormId, platform },
     } = ctx
 
-    const newOrderForm = await checkout.addItem(orderFormId!, items)
+    const { items: previousItems } = await checkout.orderForm()
+    const cleanItems = items.map(({ options, ...rest }) => rest)
+    const withOptions = items.filter(
+      ({ options }) => !!options && options.length > 0
+    )
+
+    const newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
+
+    await addOptionsForItems(
+      withOptions,
+      checkout,
+      { ...newOrderForm, orderFormId: orderFormId! },
+      previousItems
+    )
 
     return getNewOrderForm({
       checkout,
-      newOrderForm,
+      newOrderForm:
+        withOptions.length === 0 ? newOrderForm : await checkout.orderForm(),
       platform,
       searchGraphQL,
     })
