@@ -346,7 +346,6 @@ declare global {
   }
 
   interface OrderForm {
-    orderFormId?: string
     items: OrderFormItem[]
     shipping?: Shipping
     marketingData: OrderFormMarketingData | null
@@ -356,7 +355,7 @@ declare global {
       value: number
     }>
     value: number
-    messages: OrderFormMessages | any[]
+    messages: OrderFormMessages
   }
 
   interface Shipping {

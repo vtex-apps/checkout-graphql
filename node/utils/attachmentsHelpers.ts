@@ -9,7 +9,7 @@ interface OptionRequestUnit {
 
 interface AddOptionsLogicInput {
   checkout: Context['clients']['checkout']
-  orderForm: OrderForm
+  orderForm: CheckoutOrderForm
   itemIndex: string | number
   options?: AssemblyOptionInput[]
   oldItems: OrderFormItem[]
@@ -44,7 +44,7 @@ const findRecentlyAddedParent = (
 export const addOptionsForItems = async (
   items: OrderFormItemInput[],
   checkout: Context['clients']['checkout'],
-  orderForm: OrderForm,
+  orderForm: CheckoutOrderForm,
   oldItems: OrderFormItem[]
 ) => {
   const recentlyAdded =
@@ -188,7 +188,7 @@ const addOptionsLogic = async (input: AddOptionsLogicInput) => {
 const addOptionsRecursive = async (
   items: OptionItems,
   assemblyId: string,
-  orderForm: OrderForm,
+  orderForm: CheckoutOrderForm,
   oldItems: OrderFormItem[],
   checkout: Context['clients']['checkout']
 ) => {

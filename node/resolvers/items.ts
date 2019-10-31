@@ -78,7 +78,7 @@ export const mutations = {
     await addOptionsForItems(
       withOptions,
       checkout,
-      { ...newOrderForm, orderFormId },
+      { ...newOrderForm, orderFormId: orderFormId! },
       previousItems
     )
 
