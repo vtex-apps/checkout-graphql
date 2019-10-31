@@ -341,11 +341,14 @@ declare global {
     quantity: number
     assemblyId: string
     seller: string
+    inputValues: Record<string, string>
+    options?: AssemblyOptionInput[]
   }
 
   interface OrderForm {
+    orderFormId?: string
     items: OrderFormItem[]
-    shipping: Shipping
+    shipping?: Shipping
     marketingData: OrderFormMarketingData | null
     totalizers: Array<{
       id: string
@@ -353,7 +356,7 @@ declare global {
       value: number
     }>
     value: number
-    messages: OrderFormMessages
+    messages: OrderFormMessages | any[]
   }
 
   interface Shipping {
