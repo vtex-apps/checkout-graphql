@@ -50,7 +50,7 @@ export const adjustItems = (
 
     return {
       ...item,
-      imageUrl: fixImageUrl(item.imageUrl, platform)!,
+      imageUrls: fixImageUrl(item.imageUrl, platform),
       name: product.productName,
       skuSpecifications: getVariations(item.id, product.items),
     }

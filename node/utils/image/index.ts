@@ -2,9 +2,15 @@ import gocommerce from './gocommerce'
 import none from './none'
 import vtex from './vtex'
 
+interface ImageOptions {
+  width?: number,
+  highDensityFactor?: number,
+}
+
 interface Module {
   cleanImageUrl: (imageUrl: string | undefined) => string | undefined
-  changeImageUrlSize: (imageUrl: string | undefined) => string | undefined
+  changeImageUrlSize: (imageUrl: string | undefined, options?: ImageOptions) =>
+    string | undefined
 }
 
 const replaceHttpToRelativeProtocol = (url: string | undefined) => {
@@ -23,15 +29,20 @@ export const fixImageUrl = (imageUrl: string, platform: string) => {
 
   const adjust = modules[platform] || modules.default
 
-  const fixedUrl = adjust.changeImageUrlSize(
-    adjust.cleanImageUrl(
-      replaceHttpToRelativeProtocol(imageUrl)
+  const cleanImageUrl = adjust.cleanImageUrl(
+    replaceHttpToRelativeProtocol(imageUrl)
+  )
+
+  const [at1x, at2x, at3x] = [1, 2, 3].map(
+    hdf => adjust.changeImageUrlSize(
+      cleanImageUrl,
+      { highDensityFactor: hdf }
     )
   )
 
-  if (!fixedUrl) {
-    return imageUrl
+  if (!at1x || !at2x || !at3x) {
+    return undefined
   }
 
-  return fixedUrl
+  return { at1x, at2x, at3x }
 }
