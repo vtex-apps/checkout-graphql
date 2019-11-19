@@ -80,6 +80,7 @@ declare global {
       offeringTypeId: any | null
     }
     productCategories: Record<string, string>
+    productRefId: string
     seller: string
     sellerChain: string[]
     availability: string
