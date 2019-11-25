@@ -414,17 +414,7 @@ declare global {
     text: string
     status: string
   }
-
-  enum AddressType {
-    residential,
-    commercial,
-    inStore,
-    giftRegistry,
-    pickup,
-    search,
-  }
 }
-
 // Segments are small and immutable.
 const MAX_SEGMENT_CACHE = 10000
 const segmentCache = new LRUCache<string, any>({ max: MAX_SEGMENT_CACHE })
