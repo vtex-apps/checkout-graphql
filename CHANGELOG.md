@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `addressType` field in `Address` is now a `String`.
+
 ## [0.18.0] - 2019-11-19
 
 ### Added
