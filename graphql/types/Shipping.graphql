@@ -14,7 +14,7 @@ type DeliveryOption {
 
 type Address {
   addressId: ID
-  addressType: AddressType
+  addressType: String
   city: String
   complement: String
   country: String
