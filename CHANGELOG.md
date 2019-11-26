@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.1] - 2019-11-26
+
 ### Fixed
 
 - A GraphQL error would occur if the API returned an address type that was not in the AddressType enum.
