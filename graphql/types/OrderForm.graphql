@@ -1,11 +1,11 @@
 type OrderForm {
-  items: [Item]
-  canEditData: Boolean
-  shipping: Shipping
-  marketingData: MarketingData
-  totalizers: [Totalizer]
-  value: Int
-  messages: OrderFormMessages
+  items: [Item!]!
+  canEditData: Boolean!
+  shipping: Shipping!
+  marketingData: MarketingData!
+  totalizers: [Totalizer]!
+  value: Int!
+  messages: OrderFormMessages!
 }
 
 type MarketingData {
@@ -13,14 +13,14 @@ type MarketingData {
 }
 
 type Totalizer {
-  id: String
+  id: String!
   name: String
-  value: Int
+  value: Int!
 }
 
 type OrderFormMessages {
-  couponMessages: [Message]
-  generalMessages: [Message]
+  couponMessages: [Message]!
+  generalMessages: [Message]!
 }
 
 type Message {

@@ -8,30 +8,30 @@ type Item {
   assemblyOptions: AssemblyOptionItem
   availability: String
   detailUrl: String
-  id: ID
+  id: ID!
   imageUrls: ImageUrls
-  listPrice: Float
+  listPrice: Float!
   measurementUnit: String
   name: String
   parentAssemblyBinding: String
   options: [AssemblyOptionType]
-  price: Float
+  price: Float!
   productCategories: productCategoriesObject
   productCategoryIds: String
-  productId: String
+  productId: String!
   productRefId: String
-  quantity: Float
-  sellingPrice: Float
+  quantity: Float!
+  sellingPrice: Float!
   sellingPriceWithAssemblies: Float
   skuName: String
-  skuSpecifications: [SKUSpecification]
-  uniqueId: String
+  skuSpecifications: [SKUSpecification!]!
+  uniqueId: String!
 }
 
 type ImageUrls {
-  at1x: String
-  at2x: String
-  at3x: String
+  at1x: String!
+  at2x: String!
+  at3x: String!
 }
 
 type AssemblyOptionItem {
@@ -69,7 +69,7 @@ type ItemAdditionalInfo {
 
 type SKUSpecification {
   fieldName: String @translatableV2
-  fieldValues: [String] @translatableV2
+  fieldValues: [String]! @translatableV2
 }
 
 type AssemblyOptionType {

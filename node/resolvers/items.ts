@@ -36,7 +36,7 @@ const getVariations = (skuId: string, skuList: any[]) => {
   }
   return matchedSku.variations.map((variation: any) => ({
     fieldName: variation.name,
-    fieldValues: variation.values,
+    fieldValues: variation.values || [],
   }))
 }
 
