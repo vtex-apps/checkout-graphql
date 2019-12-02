@@ -1,5 +1,6 @@
 type OrderForm {
   items: [Item]
+  canEditData: Boolean
   shipping: Shipping
   marketingData: MarketingData
   totalizers: [Totalizer]

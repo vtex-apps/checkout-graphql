@@ -379,6 +379,7 @@ declare global {
 
   interface OrderForm {
     items: Item[]
+    canEditData: boolean
     shipping?: Shipping
     marketingData: OrderFormMarketingData | null
     totalizers: Array<{
