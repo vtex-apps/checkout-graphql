@@ -25,6 +25,7 @@ export const getNewOrderForm = async ({
 
   return {
     items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
+    canEditData: newOrderForm.canEditData,
     marketingData: newOrderForm.marketingData,
     messages: newMessages,
     shipping: getShippingInfo(newOrderForm),

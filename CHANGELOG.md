@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `canEditData` field to the `OrderForm` type.
+
 ## [0.18.1] - 2019-11-26
 
 ### Fixed
