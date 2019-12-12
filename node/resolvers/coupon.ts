@@ -6,8 +6,10 @@ export const mutations = {
       clients,
       vtex: { orderFormId, platform },
     } = ctx
-    const newOrderForm =
-      await clients.checkout.insertCoupon(orderFormId!, args.text)
+    const newOrderForm = await clients.checkout.insertCoupon(
+      orderFormId!,
+      args.text
+    )
 
     return getNewOrderForm({
       clients,

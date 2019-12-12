@@ -120,7 +120,10 @@ export const mutations = {
       })
     }
 
-    const newOrderForm = await clients.checkout.updateItems(orderFormId!, orderItems)
+    const newOrderForm = await clients.checkout.updateItems(
+      orderFormId!,
+      orderItems
+    )
 
     return getNewOrderForm({
       clients,

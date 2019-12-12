@@ -13,7 +13,7 @@ export const getNewOrderForm = async ({
   platform: string
 }) => {
   const { orderFormId, messages } = newOrderForm
-  const { checkout, searchGraphQL } = clients
+  const { checkout, searchGraphQL, shipping } = clients
 
   const newMessages = fillMessages(messages)
 
@@ -26,7 +26,10 @@ export const getNewOrderForm = async ({
     items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
     marketingData: newOrderForm.marketingData,
     messages: newMessages,
-    shipping: getShippingInfo(newOrderForm),
+    shipping: getShippingInfo({
+      orderForm: newOrderForm,
+      shipping,
+    }),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
   }

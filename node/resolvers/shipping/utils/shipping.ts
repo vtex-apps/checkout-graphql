@@ -2,6 +2,7 @@ import flatten from 'lodash/flatten'
 import uniq from 'lodash/uniq'
 import uniqBy from 'lodash/uniqBy'
 
+import { Shipping } from '../../../clients/shipping'
 import {
   addressHasGeocoordinates,
   filterDeliveryOptions,
@@ -61,7 +62,13 @@ export const selectDeliveryOption = ({
   )
 }
 
-export const getShippingInfo = (orderForm: CheckoutOrderForm) => {
+export const getShippingInfo = ({
+  shipping,
+  orderForm,
+}: {
+  shipping: Shipping
+  orderForm: CheckoutOrderForm
+}) => {
   const logisticsInfo =
     orderForm.shippingData && orderForm.shippingData.logisticsInfo
 
@@ -95,6 +102,31 @@ export const getShippingInfo = (orderForm: CheckoutOrderForm) => {
     filteredDeliveryOptions,
     logisticsInfo
   )
+
+  const selectedDeliveryOption = updatedDeliveryOptions.find(
+    option => option.isSelected
+  )
+
+  const shippingTotalizer = orderForm.totalizers.find(
+    totalizer => totalizer.id === 'Shipping'
+  )
+
+  if (
+    selectedDeliveryOption &&
+    shippingTotalizer &&
+    selectedDeliveryOption.price !== shippingTotalizer.value
+  ) {
+    const newShippingData = selectDeliveryOption({
+      deliveryOptionId: selectedDeliveryOption.id,
+      shippingData: orderForm.shippingData,
+    })
+
+    shipping.shippingAttachmentRequest(orderForm.orderFormId, newShippingData)
+
+    const difference = selectedDeliveryOption.price - shippingTotalizer.value
+    shippingTotalizer.value = selectedDeliveryOption.price
+    orderForm.value += difference
+  }
 
   return {
     availableAddresses,
