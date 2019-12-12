@@ -35,11 +35,11 @@ export function statusToError(e: any) {
 /** Checkout cookie methods */
 const CHECKOUT_COOKIE = 'checkout.vtex.com'
 
-export function checkoutCookieFormat (orderFormId: string) {
+export function checkoutCookieFormat(orderFormId: string) {
   return `${CHECKOUT_COOKIE}=__ofid=${orderFormId};`
 }
 
-export function getOrderFormIdFromCookie (cookies: Context['cookies']) {
+export function getOrderFormIdFromCookie(cookies: Context['cookies']) {
   const cookie = cookies.get(CHECKOUT_COOKIE)
   return cookie && cookie.split('=')[1]
 }

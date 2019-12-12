@@ -10,10 +10,7 @@ const cleanImageUrl = (imageUrl: string | undefined) => {
 
 const changeImageUrlSize = (
   imageUrl: string | undefined,
-  {
-    width = DEFAULT_WIDTH,
-    highDensityFactor = DEFAULT_HDF,
-  } = {}
+  { width = DEFAULT_WIDTH, highDensityFactor = DEFAULT_HDF } = {}
 ) => {
   if (!imageUrl) {
     return undefined

@@ -13,8 +13,8 @@ const cleanImageUrl = (imageUrl: string | undefined) => {
   if (result && result.length > 0) {
     if (
       result.length === 4 &&
-        result[2] !== undefined &&
-        result[3] !== undefined
+      result[2] !== undefined &&
+      result[3] !== undefined
     ) {
       resizedImageUrl = result[0].replace(sizeRegex, '')
     } else {
@@ -27,10 +27,7 @@ const cleanImageUrl = (imageUrl: string | undefined) => {
 
 const changeImageUrlSize = (
   imageUrl: string | undefined,
-  {
-    highDensityFactor = DEFAULT_HDF,
-    width = DEFAULT_WIDTH,
-  } = {}
+  { highDensityFactor = DEFAULT_HDF, width = DEFAULT_WIDTH } = {}
 ) => {
   if (!imageUrl) {
     return undefined

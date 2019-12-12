@@ -4,8 +4,8 @@ import { SchemaDirectiveVisitor } from 'graphql-tools'
 import { getOrderFormIdFromCookie } from '../utils'
 
 export class WithOrderFormId extends SchemaDirectiveVisitor {
-  public visitFieldDefinition (field: GraphQLField<any, any>) {
-    const {resolve = defaultFieldResolver} = field
+  public visitFieldDefinition(field: GraphQLField<any, any>) {
+    const { resolve = defaultFieldResolver } = field
     field.resolve = async (root: any, args: any, ctx: Context, info: any) => {
       const checkoutOrderFormId = getOrderFormIdFromCookie(ctx.cookies)
       ctx.vtex.orderFormId = checkoutOrderFormId
