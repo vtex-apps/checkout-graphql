@@ -7,9 +7,10 @@ export const estimateShippingMutation = async (
   ctx: Context
 ) => {
   const {
-    clients: { checkout, shipping, searchGraphQL },
+    clients,
     vtex: { orderFormId, platform },
   } = ctx
+  const { checkout, shipping } = clients
 
   const orderForm = await checkout.orderForm()
   const logisticsInfo =
@@ -22,10 +23,9 @@ export const estimateShippingMutation = async (
   )
 
   return getNewOrderForm({
-    checkout,
+    clients,
     newOrderForm,
     platform,
-    searchGraphQL,
   })
 }
 
@@ -35,9 +35,10 @@ export const selectDeliveryOptionMutation = async (
   ctx: Context
 ) => {
   const {
-    clients: { checkout, shipping, searchGraphQL },
+    clients,
     vtex: { orderFormId, platform },
   } = ctx
+  const { checkout, shipping } = clients
 
   const orderForm = await checkout.orderForm()
   const newShippingData = selectDeliveryOption({
@@ -51,9 +52,8 @@ export const selectDeliveryOptionMutation = async (
   )
 
   return getNewOrderForm({
-    checkout,
+    clients,
     newOrderForm,
     platform,
-    searchGraphQL,
   })
 }
