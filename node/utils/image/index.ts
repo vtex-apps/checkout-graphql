@@ -3,14 +3,16 @@ import none from './none'
 import vtex from './vtex'
 
 interface ImageOptions {
-  width?: number,
-  highDensityFactor?: number,
+  width?: number
+  highDensityFactor?: number
 }
 
 interface Module {
   cleanImageUrl: (imageUrl: string | undefined) => string | undefined
-  changeImageUrlSize: (imageUrl: string | undefined, options?: ImageOptions) =>
-    string | undefined
+  changeImageUrlSize: (
+    imageUrl: string | undefined,
+    options?: ImageOptions
+  ) => string | undefined
 }
 
 const replaceHttpToRelativeProtocol = (url: string | undefined) => {
@@ -33,11 +35,8 @@ export const fixImageUrl = (imageUrl: string, platform: string) => {
     replaceHttpToRelativeProtocol(imageUrl)
   )
 
-  const [at1x, at2x, at3x] = [1, 2, 3].map(
-    hdf => adjust.changeImageUrlSize(
-      cleanImageUrl,
-      { highDensityFactor: hdf }
-    )
+  const [at1x, at2x, at3x] = [1, 2, 3].map(hdf =>
+    adjust.changeImageUrlSize(cleanImageUrl, { highDensityFactor: hdf })
   )
 
   if (!at1x || !at2x || !at3x) {

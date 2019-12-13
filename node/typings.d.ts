@@ -14,7 +14,7 @@ declare global {
       params: {
         [param: string]: string
       }
-    },
+    }
   }
 
   interface ServiceContext extends KoaContext {
@@ -27,8 +27,11 @@ declare global {
     checkout: CheckoutDataSource
   }
 
-  type Resolver<TArgs=any, TRoot=any> =
-    (root: TRoot, args: TArgs, context: ServiceContext) => Promise<any>
+  type Resolver<TArgs = any, TRoot = any> = (
+    root: TRoot,
+    args: TArgs,
+    context: ServiceContext
+  ) => Promise<any>
 }
 
 export {}
