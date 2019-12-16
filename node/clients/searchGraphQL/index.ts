@@ -13,7 +13,7 @@ import {
 
 export class SearchGraphQL extends AppGraphQLClient {
   constructor(ctx: IOContext, opts?: InstanceOptions) {
-    super('vtex.search-graphql', ctx, opts)
+    super('vtex.search-graphql@0', ctx, opts)
   }
 
   public product = <T extends Serializable = ProductResponse>(

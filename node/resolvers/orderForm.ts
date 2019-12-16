@@ -1,21 +1,19 @@
-import { Checkout } from '../clients/checkout'
-import { SearchGraphQL } from '../clients/searchGraphQL'
+import { Clients } from '../clients'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping/utils/shipping'
 
 export const getNewOrderForm = async ({
-  checkout,
+  clients,
   newOrderForm,
   platform,
-  searchGraphQL,
 }: {
-  checkout: Checkout
+  clients: Clients
   newOrderForm: CheckoutOrderForm
   platform: string
-  searchGraphQL: SearchGraphQL
 }) => {
   const { orderFormId, messages } = newOrderForm
+  const { checkout, searchGraphQL, shipping } = clients
 
   const newMessages = fillMessages(messages)
 
@@ -24,11 +22,14 @@ export const getNewOrderForm = async ({
   }
 
   return {
-    items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
     canEditData: newOrderForm.canEditData,
+    items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
     marketingData: newOrderForm.marketingData,
     messages: newMessages,
-    shipping: getShippingInfo(newOrderForm),
+    shipping: getShippingInfo({
+      orderForm: newOrderForm,
+      shipping,
+    }),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
   }
@@ -37,17 +38,16 @@ export const getNewOrderForm = async ({
 export const queries = {
   orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
     const {
-      clients: { checkout, searchGraphQL },
+      clients,
       vtex: { platform },
     } = ctx
 
-    const newOrderForm = await checkout.orderForm()
+    const newOrderForm = await clients.checkout.orderForm()
 
     return getNewOrderForm({
-      checkout,
+      clients,
       newOrderForm,
       platform,
-      searchGraphQL,
     })
   },
 }

@@ -1,3 +1,4 @@
+import { Shipping } from '../../clients/shipping'
 import { ADDRESS_TYPES, DELIVERY, PICKUP_IN_STORE } from '../../constants'
 import { EMPTY_ORDER_FORM } from './orderForm'
 
@@ -279,3 +280,7 @@ export const ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO = {
 export const ORDER_FORM_WITH_EMPTY_SHIPPING_DATA = {
   ...EMPTY_ORDER_FORM,
 }
+
+export const shipping = ({
+  shippingAttachmentRequest: jest.fn(),
+} as unknown) as Shipping

@@ -63,9 +63,10 @@ export const mutations = {
     ctx: Context
   ): Promise<OrderForm> => {
     const {
-      clients: { checkout, searchGraphQL },
+      clients,
       vtex: { orderFormId, platform },
     } = ctx
+    const { checkout } = clients
 
     const { items: previousItems } = await checkout.orderForm()
     const cleanItems = items.map(({ options, ...rest }) => rest)
@@ -83,11 +84,10 @@ export const mutations = {
     )
 
     return getNewOrderForm({
-      checkout,
+      clients,
       newOrderForm:
         withOptions.length === 0 ? newOrderForm : await checkout.orderForm(),
       platform,
-      searchGraphQL,
     })
   },
 
@@ -97,9 +97,10 @@ export const mutations = {
     ctx: Context
   ): Promise<OrderForm> => {
     const {
-      clients: { checkout, searchGraphQL },
+      clients,
       vtex: { orderFormId, platform },
     } = ctx
+    const { checkout } = clients
 
     if (orderItems.some((item: OrderFormItemInput) => !item.index)) {
       const orderForm = await checkout.orderForm()
@@ -119,13 +120,15 @@ export const mutations = {
       })
     }
 
-    const newOrderForm = await checkout.updateItems(orderFormId!, orderItems)
+    const newOrderForm = await clients.checkout.updateItems(
+      orderFormId!,
+      orderItems
+    )
 
     return getNewOrderForm({
-      checkout,
+      clients,
       newOrderForm,
       platform,
-      searchGraphQL,
     })
   },
 }
