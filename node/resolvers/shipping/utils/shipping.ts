@@ -12,6 +12,8 @@ import {
   hasDeliveryOption,
 } from './delivery-options'
 
+import { getNumberOfUnavailableItems } from '../../items'
+
 export const getShippingData = (
   address: CheckoutAddress,
   logisticsInfo: LogisticsInfo[] | null
@@ -91,6 +93,8 @@ export const getShippingInfo = (orderForm: CheckoutOrderForm) => {
     logisticsInfo
   )
 
+  const numberOfUnavailableItems = getNumberOfUnavailableItems(orderForm.items)
+
   const updatedDeliveryOptions = getFormattedDeliveryOptions(
     filteredDeliveryOptions,
     logisticsInfo
@@ -101,5 +105,6 @@ export const getShippingInfo = (orderForm: CheckoutOrderForm) => {
     countries,
     deliveryOptions: updatedDeliveryOptions,
     selectedAddress,
+    numberOfUnavailableItems,
   }
 }

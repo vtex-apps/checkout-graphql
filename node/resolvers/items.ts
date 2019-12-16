@@ -5,6 +5,7 @@ import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
 import { getNewOrderForm } from './orderForm'
 
+const AVAILABLE = 'available'
 const GOCOMMERCE = 'gocommerce'
 
 const getProductInfo = async (
@@ -27,6 +28,16 @@ const getProductInfo = async (
   }
 
   return response.data!.product
+}
+
+export const getNumberOfUnavailableItems = (items: Item[]) => {
+  return items.reduce(
+    (numberOfUnavailableItems, item) =>
+      item.availability !== AVAILABLE
+        ? numberOfUnavailableItems + 1
+        : numberOfUnavailableItems,
+    0
+  )
 }
 
 const getVariations = (skuId: string, skuList: any[]) => {

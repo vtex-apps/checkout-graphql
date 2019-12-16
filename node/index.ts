@@ -395,6 +395,7 @@ declare global {
     availableAddresses: CheckoutAddress[]
     countries: string[]
     deliveryOptions: DeliveryOption[]
+    numberOfUnavailableItems: number
     selectedAddress: CheckoutAddress | null
   }
 
