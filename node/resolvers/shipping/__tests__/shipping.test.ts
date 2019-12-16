@@ -7,7 +7,8 @@ import {
   ORDER_FORM_WITH_PICKUPS,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
-} from '../../__mocks__/shippping'
+  shipping,
+} from '../../__mocks__/shipping'
 import { getShippingInfo } from '../utils/shipping'
 
 describe('Shipping Resolvers', () => {
@@ -20,9 +21,12 @@ describe('Shipping Resolvers', () => {
         selectedAddress: undefined,
       }
 
-      expect(getShippingInfo(ORDER_FORM_WITH_EMPTY_SHIPPING_DATA)).toEqual(
-        expectedResult
-      )
+      expect(
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_EMPTY_SHIPPING_DATA,
+        })
+      ).toEqual(expectedResult)
     })
 
     it('should get shipping info handling empty logisticsInfo', () => {
@@ -33,9 +37,12 @@ describe('Shipping Resolvers', () => {
         selectedAddress: deliveryAddress,
       }
 
-      expect(getShippingInfo(ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO)).toEqual(
-        expectedResult
-      )
+      expect(
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO,
+        })
+      ).toEqual(expectedResult)
     })
 
     it('should get shipping info removing pickup point SLAs', () => {
@@ -53,7 +60,9 @@ describe('Shipping Resolvers', () => {
         selectedAddress: deliveryAddress,
       }
 
-      expect(getShippingInfo(ORDER_FORM_WITH_PICKUPS)).toEqual(expectedResult)
+      expect(
+        getShippingInfo({ shipping, orderForm: ORDER_FORM_WITH_PICKUPS })
+      ).toEqual(expectedResult)
     })
 
     it('should get shipping info removing scheduled delivery SLAs', () => {
@@ -71,9 +80,12 @@ describe('Shipping Resolvers', () => {
         selectedAddress: deliveryAddress,
       }
 
-      expect(getShippingInfo(ORDER_FORM_WITH_SCHEDULED_DELIVERY)).toEqual(
-        expectedResult
-      )
+      expect(
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_SCHEDULED_DELIVERY,
+        })
+      ).toEqual(expectedResult)
     })
 
     it('should get shipping info removing scheduled delivery and pickup SLAs', () => {
@@ -92,7 +104,10 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo(ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS)
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
+        })
       ).toEqual(expectedResult)
     })
 
@@ -112,7 +127,10 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo(ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO)
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO,
+        })
       ).toEqual(expectedResult)
     })
 
@@ -132,9 +150,10 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo(
-          ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS
-        )
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS,
+        })
       ).toEqual(expectedResult)
     })
   })
