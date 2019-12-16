@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.19.1] - 2019-12-16
+
 ### Fixed
 
 - Inconsistency in shipping cost between Shipping Calculator and order form totalizer.
