@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Unavailable items causing empty `deliveryOptions`, since their logistics info do not have any slas.
+
 ## [0.19.1] - 2019-12-16
 
 ### Fixed
