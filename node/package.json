@@ -28,5 +28,5 @@
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "test": "vtex-test-tools test"
   },
-  "version": "0.20.0"
+  "version": "0.20.1"
 }
