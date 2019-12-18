@@ -7,6 +7,7 @@ import {
   ORDER_FORM_WITH_PICKUPS,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
+  ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
   shipping,
 } from '../../__mocks__/shipping'
 import { getShippingInfo } from '../utils/shipping'
@@ -153,6 +154,29 @@ describe('Shipping Resolvers', () => {
         getShippingInfo({
           shipping,
           orderForm: ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS,
+        })
+      ).toEqual(expectedResult)
+    })
+
+    it('should get shipping info without empty deliveryOptions', () => {
+      const expectedResult = {
+        availableAddresses: [deliveryAddress],
+        countries: ['BRA', 'GBR'],
+        deliveryOptions: [
+          {
+            estimate: '1db',
+            id: 'delivery-SLA',
+            isSelected: true,
+            price: 100,
+          },
+        ],
+        selectedAddress: deliveryAddress,
+      }
+
+      expect(
+        getShippingInfo({
+          shipping,
+          orderForm: ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)
     })

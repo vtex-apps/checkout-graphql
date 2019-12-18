@@ -277,6 +277,38 @@ export const ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO = {
   },
 }
 
+export const ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO = {
+  ...EMPTY_ORDER_FORM,
+  shippingData: {
+    address: null,
+    availableAddresses: [deliveryAddress],
+    logisticsInfo: [
+      {
+        addressId: deliveryAddress.addressId,
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        itemId: 'testId',
+        itemIndex: 0,
+        selectedDeliveryChannel: DELIVERY,
+        selectedSla: deliverySLA.id,
+        shipsTo: ['BRA', 'GBR'],
+        slas: [],
+      },
+      {
+        addressId: deliveryAddress.addressId,
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        itemId: 'testId2',
+        itemIndex: 0,
+        selectedDeliveryChannel: DELIVERY,
+        selectedSla: deliverySLA.id,
+        shipsTo: ['BRA', 'GBR'],
+        slas: [deliverySLA, pickupSLA],
+      },
+    ],
+    pickupPoints: [],
+    selectedAddresses: [deliveryAddress],
+  },
+}
+
 export const ORDER_FORM_WITH_EMPTY_SHIPPING_DATA = {
   ...EMPTY_ORDER_FORM,
 }

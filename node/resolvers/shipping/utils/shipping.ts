@@ -83,9 +83,13 @@ export const getShippingInfo = ({
     orderForm.shippingData &&
     getSelectedDeliveryAddress(orderForm.shippingData.selectedAddresses)!
 
+  const availableItemsLogisticsInfo = logisticsInfo
+    ? logisticsInfo.filter((item: LogisticsInfo) => item.slas.length)
+    : []
+
   const deliveryOptions = uniqBy(
     flatten(
-      logisticsInfo ? logisticsInfo.map((item: LogisticsInfo) => item.slas) : []
+      availableItemsLogisticsInfo.map((item: LogisticsInfo) => item.slas)
     ),
     'id'
   )
@@ -95,12 +99,12 @@ export const getShippingInfo = ({
   // Also we will filter deliveryOptions which does not apply to all LogisticsInfo.
   const filteredDeliveryOptions = filterDeliveryOptions(
     deliveryOptions,
-    logisticsInfo
+    availableItemsLogisticsInfo
   )
 
   const updatedDeliveryOptions = getFormattedDeliveryOptions(
     filteredDeliveryOptions,
-    logisticsInfo
+    availableItemsLogisticsInfo
   )
 
   const selectedDeliveryOption = updatedDeliveryOptions.find(
