@@ -9,3 +9,18 @@ export const queries = {
         return cardSessionId
       },
 }
+
+export const mutations = {
+  savePaymentToken: async (
+    _: any,
+    { paymentTokens } : any,
+    ctx: Context
+  ): Promise<string> => {
+    const {
+      clients
+    } = ctx
+    const { checkout } = clients
+    await checkout.savePaymentToken(paymentTokens)
+    return 'Ok!'
+  },
+}

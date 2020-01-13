@@ -2,7 +2,7 @@ import { mutations as couponMutations } from './coupon'
 import { mutations as itemMutations } from './items'
 import { queries as orderFormQueries } from './orderForm'
 import { Address, mutations as shippingMutations } from './shipping/index'
-import { queries as paymentQueries }  from './payment'
+import { queries as paymentQueries, mutations as paymentMutations }  from './payment'
 
 export const resolvers = {
   Address,
@@ -15,6 +15,7 @@ export const resolvers = {
     ...couponMutations,
     ...itemMutations,
     ...shippingMutations,
+    ...paymentMutations
   },
   OrderForm: {
     marketingData: (orderForm: OrderForm) => {

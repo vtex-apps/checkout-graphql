@@ -30,6 +30,14 @@ export class Checkout extends JanusClient {
     })
   }
 
+  public savePaymentToken = (paymentTokens: any) => {
+    return this.post(
+      this.routes.savePaymentToken(),
+      paymentTokens,
+      { metric: 'checkout-save-payment' }
+    )
+  }
+
   public getPaymentSession = () => {
     return this.get<PaymentSession>(this.routes.getPaymentSession())
   }
@@ -287,6 +295,8 @@ export class Checkout extends JanusClient {
         `${base}/orderForms/simulation${queryString}`,
       updateItems: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/items/update`,
+      savePaymentToken: () =>
+        `${base}/current-user/payment-tokens/?sc=1`,
       getPaymentSession: () =>
         `${base}/payment-session`,
     }
