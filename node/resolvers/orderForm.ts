@@ -32,6 +32,7 @@ export const getNewOrderForm = async ({
     }),
     totalizers: newOrderForm.totalizers,
     value: newOrderForm.value,
+    paymentData: newOrderForm.paymentData,
   }
 }
 
