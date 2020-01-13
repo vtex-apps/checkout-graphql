@@ -30,6 +30,10 @@ export class Checkout extends JanusClient {
     })
   }
 
+  public getPaymentSession = () => {
+    return this.get<PaymentSession>(this.routes.getPaymentSession())
+  }
+
   public addItem = (orderFormId: string, items: any) =>
     this.post<CheckoutOrderForm>(
       this.routes.addItem(orderFormId, this.getChannelQueryString()),
@@ -283,6 +287,8 @@ export class Checkout extends JanusClient {
         `${base}/orderForms/simulation${queryString}`,
       updateItems: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/items/update`,
+      getPaymentSession: () =>
+        `${base}/payment-session`,
     }
   }
 }

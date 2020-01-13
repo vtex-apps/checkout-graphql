@@ -1,4 +1,5 @@
 type Query {
+  getCardSessionId: String
   orderForm: OrderForm
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
