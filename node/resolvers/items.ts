@@ -107,7 +107,9 @@ export const mutations = {
 
       const idToIndex = orderForm.items.reduce(
         (acc: Record<string, number>, item: OrderFormItem, index: number) => {
-          acc[item.uniqueId] = index
+          if (acc[item.uniqueId] === undefined) {
+            acc[item.uniqueId] = index
+          }
           return acc
         },
         {} as Record<string, number>
