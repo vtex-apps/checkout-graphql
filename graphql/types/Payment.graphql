@@ -40,3 +40,7 @@ type PaymentData {
     installmentOptions: [InstallmentOption]!
     paymentSystems: [PaymentSystem]!
 }
+
+type SavePaymentTokenPayload {
+  status: String
+}

@@ -421,6 +421,10 @@ declare global {
     name: string
     expiresAt: string
   }
+
+  interface SavePaymentTokenPayload {
+    status: string
+  }
 }
 // Segments are small and immutable.
 const MAX_SEGMENT_CACHE = 10000
