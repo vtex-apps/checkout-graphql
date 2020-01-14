@@ -1,44 +1,44 @@
 type InstallmentOption  {
-    paymentSystem: String!
-    bin: String
-    paymentName: String
-    paymentGroupName: String
-    value: Int!
+  paymentSystem: String!
+  bin: String
+  paymentName: String
+  paymentGroupName: String
+  value: Int!
 }
 
 type Validator {
-    regex: String
-    mask: String
-    cardCodeRegex: String
-    cardCodeMask: String
-    weights: [Int]
-    useCvv: Boolean
-    useExpirationDate: Boolean
-    useCardHolderName: Boolean
-    useBillingAddress: Boolean
+  regex: String
+  mask: String
+  cardCodeRegex: String
+  cardCodeMask: String
+  weights: [Int]
+  useCvv: Boolean
+  useExpirationDate: Boolean
+  useCardHolderName: Boolean
+  useBillingAddress: Boolean
 }
 
 type PaymentSystem {
-    id: String!
-    name: String!
-    groupName: String!
-    validator: Validator
-    stringId: String!
-    requiresDocument: Boolean!
-    isCustom: Boolean!
-    description: String
-    requiresAuthentication: Boolean
-    dueDate: String
+  id: String!
+  name: String!
+  groupName: String!
+  validator: Validator
+  stringId: String!
+  requiresDocument: Boolean!
+  isCustom: Boolean!
+  description: String
+  requiresAuthentication: Boolean
+  dueDate: String
 }
 
 input PaymentToken {
-    creditCardToken: String!
-    paymentSystem: String!
+  creditCardToken: String!
+  paymentSystem: String!
 }
 
 type PaymentData {
-    installmentOptions: [InstallmentOption]!
-    paymentSystems: [PaymentSystem]!
+  installmentOptions: [InstallmentOption]!
+  paymentSystems: [PaymentSystem]!
 }
 
 type SavePaymentTokenPayload {
