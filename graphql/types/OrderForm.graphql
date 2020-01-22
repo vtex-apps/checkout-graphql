@@ -6,6 +6,7 @@ type OrderForm {
   totalizers: [Totalizer]!
   value: Int!
   messages: OrderFormMessages!
+  paymentData: PaymentData!
 }
 
 type MarketingData {

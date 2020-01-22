@@ -1,4 +1,5 @@
 type Query {
+  getCardSessionId: String
   orderForm: OrderForm
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
@@ -11,4 +12,5 @@ type Mutation {
   insertCoupon(text: String): OrderForm @withOrderFormId
   estimateShipping(address: AddressInput): OrderForm @withOrderFormId
   selectDeliveryOption(deliveryOptionId: String): OrderForm @withOrderFormId
+  savePaymentToken(paymentTokens: [PaymentToken]): SavePaymentTokenPayload @withOrderFormId
 }
