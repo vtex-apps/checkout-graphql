@@ -22,6 +22,7 @@ export const getNewOrderForm = async ({
   }
 
   return {
+    id: newOrderForm.orderFormId,
     canEditData: newOrderForm.canEditData,
     items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
     marketingData: newOrderForm.marketingData,
