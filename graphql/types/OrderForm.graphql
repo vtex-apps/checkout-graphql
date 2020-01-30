@@ -1,4 +1,5 @@
 type OrderForm {
+  id: ID!
   items: [Item!]!
   canEditData: Boolean!
   shipping: Shipping!
