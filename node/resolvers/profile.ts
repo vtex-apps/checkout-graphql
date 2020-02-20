@@ -1,11 +1,13 @@
 export const queries = {
-  profile: (
+  checkoutProfile: async (
     _: unknown,
     { email }: { email: string },
     ctx: Context
   ): Promise<CheckoutProfile> => {
     const { clients } = ctx
 
-    return clients.checkout.getProfile(email)
+    const profile = await clients.checkout.getProfile(email)
+
+    return profile
   },
 }

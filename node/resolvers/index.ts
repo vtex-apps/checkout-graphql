@@ -15,16 +15,16 @@ export const resolvers = {
       return marketingData.coupon ?? ''
     },
   },
+  OrderForm: {
+    marketingData: (orderForm: OrderForm) => {
+      return orderForm.marketingData ?? {}
+    },
+  },
   Mutation: {
     ...couponMutations,
     ...itemMutations,
     ...shippingMutations,
     ...paymentMutations,
-  },
-  OrderForm: {
-    marketingData: (orderForm: OrderForm) => {
-      return orderForm.marketingData ?? {}
-    },
   },
   Query: {
     ...orderFormQueries,

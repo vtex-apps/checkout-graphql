@@ -4,7 +4,7 @@ type Query {
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
     @withSegment
-  profile(email: String!): CheckoutProfile @cacheControl(scope: PRIVATE)
+  checkoutProfile(email: String!): CheckoutProfile @cacheControl(scope: PRIVATE)
 }
 
 type Mutation {
@@ -13,5 +13,6 @@ type Mutation {
   insertCoupon(text: String): OrderForm @withOrderFormId
   estimateShipping(address: AddressInput): OrderForm @withOrderFormId
   selectDeliveryOption(deliveryOptionId: String): OrderForm @withOrderFormId
-  savePaymentToken(paymentTokens: [PaymentToken]): SavePaymentTokenPayload @withOrderFormId
+  savePaymentToken(paymentTokens: [PaymentToken]): SavePaymentTokenPayload
+    @withOrderFormId
 }
