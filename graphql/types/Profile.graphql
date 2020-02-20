@@ -1,0 +1,7 @@
+interface CheckoutProfile {
+  userProfileId: String
+  profileProvider: String
+  availableAccounts: [String!]!
+  availableAddresses: [Address!]!
+  userProfile: Profile
+}

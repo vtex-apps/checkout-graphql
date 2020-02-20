@@ -256,6 +256,15 @@ declare global {
     subscriptionData: any | null
     itemsOrdination: any | null
   }
+
+  interface CheckoutProfile {
+    userProfileId: string
+    profileProvider: string
+    availableAccounts: string[]
+    availableAddresses: CheckoutAddress[]
+    userProfile: any
+  }
+
   interface ShippingData {
     address: CheckoutAddress | null
     logisticsInfo: LogisticsInfo[]
@@ -426,6 +435,7 @@ declare global {
     status: string
   }
 }
+
 // Segments are small and immutable.
 const MAX_SEGMENT_CACHE = 10000
 const segmentCache = new LRUCache<string, any>({ max: MAX_SEGMENT_CACHE })

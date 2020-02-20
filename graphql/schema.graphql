@@ -4,6 +4,7 @@ type Query {
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
     @withSegment
+  profile(email: String!): CheckoutProfile @cacheControl(scope: PRIVATE)
 }
 
 type Mutation {
