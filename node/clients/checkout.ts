@@ -18,11 +18,11 @@ export interface SimulationData {
 }
 
 export class Checkout extends JanusClient {
-  public constructor(ctx: IOContext, options?: InstanceOptions) {
+  constructor(ctx: IOContext, options?: InstanceOptions) {
     super(ctx, {
       ...options,
       headers: {
-        ...(options && options.headers),
+        ...options?.headers,
         ...(ctx.storeUserAuthToken
           ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
           : null),
@@ -80,7 +80,7 @@ export class Checkout extends JanusClient {
     ignoreProfileData: boolean
   ) =>
     this.patch(
-      this.routes.profile(orderFormId),
+      this.routes.orderFormProfile(orderFormId),
       { ignoreProfileData },
       { metric: 'checkout-updateOrderFormIgnoreProfile' }
     )
@@ -180,6 +180,9 @@ export class Checkout extends JanusClient {
   public clearMessages = (orderFormId: string) =>
     this.post<CheckoutOrderForm>(this.routes.clearMessages(orderFormId), {})
 
+  public getProfile = (email: string) =>
+    this.get<CheckoutProfile>(this.routes.profile(email))
+
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
@@ -256,7 +259,7 @@ export class Checkout extends JanusClient {
 
   private getChannelQueryString = () => {
     const { segment } = this.context as CustomIOContext
-    const channel = segment && segment.channel
+    const channel = segment?.channel
     const queryString = channel ? `?sc=${channel}` : ''
     return queryString
   }
@@ -289,16 +292,16 @@ export class Checkout extends JanusClient {
         field: string
       ) => `${base}/orderForm/${orderFormId}/customData/${appId}/${field}`,
       orders: `${base}/orders`,
-      profile: (orderFormId: string) =>
+      orderFormProfile: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/profile`,
+      profile: (email: string) => `${base}/profiles/?email=${email}`,
       simulation: (queryString: string) =>
         `${base}/orderForms/simulation${queryString}`,
       updateItems: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/items/update`,
-      savePaymentToken: (queryString: string) => 
+      savePaymentToken: (queryString: string) =>
         `${base}/current-user/payment-tokens/${queryString}`,
-      getPaymentSession: () =>
-        `${base}/payment-session`,
+      getPaymentSession: () => `${base}/payment-session`,
     }
   }
 }

@@ -1,0 +1,25 @@
+type UserProfile {
+  email: String!
+  firstName: String!
+  lastName: String!
+  document: String
+  documentType: String
+  phone: String
+  corporateName: String
+  tradeName: String
+  corporateDocument: String
+  stateInscription: String
+  corporatePhone: String
+  isCorporate: Boolean!
+  profileCompleteOnLoading: String
+  profileErrorOnLoading: String
+  customerClass: String
+}
+
+type CheckoutProfile {
+  userProfileId: String
+  profileProvider: String
+  availableAccounts: [String!]!
+  availableAddresses: [Address]!
+  userProfile: UserProfile
+}

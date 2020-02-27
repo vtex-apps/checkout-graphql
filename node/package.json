@@ -1,4 +1,11 @@
 {
+  "name": "vtex.checkout-graphql",
+  "version": "0.22.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "vtex-test-tools test"
+  },
   "dependencies": {
     "bluebird": "^3.5.5",
     "graphql": "^0.13.2",
@@ -16,17 +23,8 @@
     "@vtex/api": "^3.55.2",
     "@vtex/test-tools": "^1.2.0",
     "@vtex/tsconfig": "^0.2.0",
-    "eslint": "^6.7.2",
-    "eslint-config-vtex": "^11.2.1",
-    "eslint-config-vtex-react": "^5.1.0",
-    "prettier": "^1.19.1",
     "typescript": "3.7.3",
-    "vtex.checkout-graphql": "http://vtex.vteximg.com.br/_v/public/typings/v1/vtex.checkout-graphql@0.19.0/public/@types/vtex.checkout-graphql",
-    "vtex.search-graphql": "http://vtex.vteximg.com.br/_v/public/typings/v1/vtex.search-graphql@0.12.4/public/@types/vtex.search-graphql"
-  },
-  "scripts": {
-    "lint": "eslint --ext js,jsx,ts,tsx .",
-    "test": "vtex-test-tools test"
-  },
-  "version": "0.22.0"
+    "vtex.checkout-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.22.0/public/@types/vtex.checkout-graphql",
+    "vtex.search-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.16.3/public/@types/vtex.search-graphql"
+  }
 }
