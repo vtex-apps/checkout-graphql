@@ -80,7 +80,7 @@ export class Checkout extends JanusClient {
     ignoreProfileData: boolean
   ) =>
     this.patch(
-      this.routes.profile(orderFormId),
+      this.routes.orderFormProfile(orderFormId),
       { ignoreProfileData },
       { metric: 'checkout-updateOrderFormIgnoreProfile' }
     )
