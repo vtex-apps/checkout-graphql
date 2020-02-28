@@ -38,7 +38,11 @@ export const getNewOrderForm = async ({
 }
 
 export const queries = {
-  orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
+  orderForm: async (
+    _: unknown,
+    __: unknown,
+    ctx: Context
+  ): Promise<OrderForm> => {
     const {
       clients,
       vtex: { platform },
@@ -51,5 +55,25 @@ export const queries = {
       newOrderForm,
       platform,
     })
+  },
+}
+
+export const mutations = {
+  updateOrderFormProfile: async (
+    _: unknown,
+    { email }: { email: string },
+    ctx: Context
+  ): Promise<OrderForm> => {
+    const {
+      clients: { checkout },
+      vtex: { orderFormId },
+    } = ctx
+
+    const orderFormWithProfile = await checkout.updateOrderFormProfile(
+      orderFormId!,
+      { email }
+    )
+
+    return orderFormWithProfile
   },
 }
