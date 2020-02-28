@@ -2,6 +2,7 @@ import { Clients } from '../clients'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping/utils/shipping'
+import { DEFAULT_ORDER_FORM_SECTIONS } from '../constants'
 
 export const getNewOrderForm = async ({
   clients,
@@ -71,7 +72,7 @@ export const mutations = {
 
     const orderFormWithProfile = await checkout.updateOrderFormProfile(
       orderFormId!,
-      { email }
+      { email, expectedOrderFormSections: DEFAULT_ORDER_FORM_SECTIONS }
     )
 
     return orderFormWithProfile
