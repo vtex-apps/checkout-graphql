@@ -1,0 +1,17 @@
+type ClientData {
+  email: String!
+  firstName: String!
+  lastName: String!
+  document: String
+  documentType: String
+  phone: String
+  corporateName: String
+  tradeName: String
+  corporateDocument: String
+  stateInscription: String
+  corporatePhone: String
+  isCorporate: Boolean
+  profileCompleteOnLoading: Boolean
+  profileErrorOnLoading: Boolean
+  customerClass: String
+}
