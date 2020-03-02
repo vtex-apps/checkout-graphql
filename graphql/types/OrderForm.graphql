@@ -8,6 +8,7 @@ type OrderForm {
   value: Int!
   messages: OrderFormMessages!
   paymentData: PaymentData!
+  clientProfileData: ClientData
 }
 
 type MarketingData {

@@ -15,4 +15,7 @@ type Mutation {
   selectDeliveryOption(deliveryOptionId: String): OrderForm @withOrderFormId
   savePaymentToken(paymentTokens: [PaymentToken]): SavePaymentTokenPayload
     @withOrderFormId
+  updateOrderFormProfile(email: String!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
 }

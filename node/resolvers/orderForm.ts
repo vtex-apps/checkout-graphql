@@ -2,6 +2,7 @@ import { Clients } from '../clients'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping/utils/shipping'
+import { DEFAULT_ORDER_FORM_SECTIONS } from '../constants'
 
 export const getNewOrderForm = async ({
   clients,
@@ -38,7 +39,11 @@ export const getNewOrderForm = async ({
 }
 
 export const queries = {
-  orderForm: async (_: any, __: any, ctx: Context): Promise<OrderForm> => {
+  orderForm: async (
+    _: unknown,
+    __: unknown,
+    ctx: Context
+  ): Promise<OrderForm> => {
     const {
       clients,
       vtex: { platform },
@@ -51,5 +56,25 @@ export const queries = {
       newOrderForm,
       platform,
     })
+  },
+}
+
+export const mutations = {
+  updateOrderFormProfile: async (
+    _: unknown,
+    { email }: { email: string },
+    ctx: Context
+  ): Promise<OrderForm> => {
+    const {
+      clients: { checkout },
+      vtex: { orderFormId },
+    } = ctx
+
+    const orderFormWithProfile = await checkout.updateOrderFormProfile(
+      orderFormId!,
+      { email, expectedOrderFormSections: DEFAULT_ORDER_FORM_SECTIONS }
+    )
+
+    return orderFormWithProfile
   },
 }

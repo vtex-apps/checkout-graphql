@@ -86,21 +86,21 @@ export class Checkout extends JanusClient {
     )
 
   public updateOrderFormPayment = (orderFormId: string, payments: any) =>
-    this.post(
+    this.post<OrderForm>(
       this.routes.attachmentsData(orderFormId, 'paymentData'),
       { payments },
       { metric: 'checkout-updateOrderFormPayment' }
     )
 
   public updateOrderFormProfile = (orderFormId: string, fields: any) =>
-    this.post(
+    this.post<OrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientProfileData'),
       fields,
       { metric: 'checkout-updateOrderFormProfile' }
     )
 
   public updateOrderFormShipping = (orderFormId: string, shipping: any) =>
-    this.post(
+    this.post<OrderForm>(
       this.routes.attachmentsData(orderFormId, 'shippingData'),
       shipping,
       { metric: 'checkout-updateOrderFormShipping' }
@@ -110,7 +110,7 @@ export class Checkout extends JanusClient {
     orderFormId: string,
     marketingData: any
   ) =>
-    this.post(
+    this.post<OrderForm>(
       this.routes.attachmentsData(orderFormId, 'marketingData'),
       marketingData,
       { metric: 'checkout-updateOrderFormMarketingData' }
