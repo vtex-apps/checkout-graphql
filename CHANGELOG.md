@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update `updateOrderFormProfile` mutation input to receive all user profile fields, not just email.
+- Use field resolvers to adapt order form from checkout to our schema.
+
 ## [0.24.0] - 2020-03-02
 
 ### Added

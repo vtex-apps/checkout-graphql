@@ -1,3 +1,17 @@
+input UserProfileInput {
+  email: String
+  firstName: String
+  lastName: String
+  document: String
+  phone: String
+  documentType: String
+  isCorporate: Boolean
+  corporateName: String
+  tradeName: String
+  corporateDocument: String
+  stateInscription: String
+}
+
 type UserProfile {
   email: String!
   firstName: String!
