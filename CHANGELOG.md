@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.24.1] - 2020-03-04
+
 ### Changed
 
 - Update `updateOrderFormProfile` mutation input to receive all user profile fields, not just email.
