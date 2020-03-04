@@ -5690,13 +5690,13 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.checkout-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.22.0/public/@types/vtex.checkout-graphql":
-  version "0.22.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.22.0/public/@types/vtex.checkout-graphql#8431798aa058506b3a67a50b14e0a836400abf4b"
+"vtex.checkout-graphql@https://lucas--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.24.0+build1583325327/public/@types/vtex.checkout-graphql":
+  version "0.24.0"
+  resolved "https://lucas--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.24.0+build1583325327/public/@types/vtex.checkout-graphql#9e821e77ee30bb0a42e36e67298fc5a4bb68dd45"
 
-"vtex.search-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.16.3/public/@types/vtex.search-graphql":
-  version "0.16.3"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.16.3/public/@types/vtex.search-graphql#3df6b7a041bbc204cfe9a2e2f3112e4ea1be593f"
+"vtex.search-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.19.1/public/@types/vtex.search-graphql":
+  version "0.19.1"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.19.1/public/@types/vtex.search-graphql#0ac5aa482ffd782dcee3438fefad0715cc017a7f"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"

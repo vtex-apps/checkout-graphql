@@ -5,6 +5,7 @@ import {
   JanusClient,
   RequestConfig,
 } from '@vtex/api'
+import { UserProfileInput } from 'vtex.checkout-graphql'
 
 import { checkoutCookieFormat, statusToError } from '../utils'
 
@@ -92,7 +93,10 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormPayment' }
     )
 
-  public updateOrderFormProfile = (orderFormId: string, fields: any) =>
+  public updateOrderFormProfile = (
+    orderFormId: string,
+    fields: UserProfileInput
+  ) =>
     this.post<OrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientProfileData'),
       fields,
