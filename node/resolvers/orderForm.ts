@@ -1,42 +1,39 @@
 import { MutationUpdateOrderFormProfileArgs } from 'vtex.checkout-graphql'
+import { prop, propOr } from 'ramda'
 
-import { Clients } from '../clients'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping/utils/shipping'
 
-export const getNewOrderForm = async ({
-  clients,
-  newOrderForm,
-  platform,
-}: {
-  clients: Clients
-  newOrderForm: CheckoutOrderForm
-  platform: string
-}) => {
-  const { orderFormId, messages } = newOrderForm
-  const { checkout, searchGraphQL, shipping } = clients
+export const root = {
+  OrderForm: {
+    id: prop('orderFormId'),
+    marketingData: propOr({}, 'marketingData'),
+    messages: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
+      const {
+        clients: { checkout },
+      } = ctx
 
-  const newMessages = fillMessages(messages)
+      const newMessages = fillMessages(orderForm.messages)
 
-  if (messages.length) {
-    checkout.clearMessages(orderFormId)
-  }
+      if (orderForm.messages) {
+        checkout.clearMessages(orderForm.orderFormId)
+      }
 
-  return {
-    id: newOrderForm.orderFormId,
-    canEditData: newOrderForm.canEditData,
-    items: await adjustItems(platform, newOrderForm.items, searchGraphQL),
-    marketingData: newOrderForm.marketingData,
-    messages: newMessages,
-    shipping: getShippingInfo({
-      orderForm: newOrderForm,
-      shipping,
-    }),
-    totalizers: newOrderForm.totalizers,
-    value: newOrderForm.value,
-    paymentData: newOrderForm.paymentData,
-  }
+      return newMessages
+    },
+    items: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
+      const {
+        clients: { searchGraphQL },
+        vtex: { platform },
+      } = ctx
+
+      return adjustItems(platform, orderForm.items, searchGraphQL)
+    },
+    shipping: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
+      return getShippingInfo({ orderForm, shipping: ctx.clients.shipping })
+    },
+  },
 }
 
 export const queries = {
@@ -44,19 +41,12 @@ export const queries = {
     _: unknown,
     __: unknown,
     ctx: Context
-  ): Promise<OrderForm> => {
-    const {
-      clients,
-      vtex: { platform },
-    } = ctx
+  ): Promise<CheckoutOrderForm> => {
+    const { clients } = ctx
 
     const newOrderForm = await clients.checkout.orderForm()
 
-    return getNewOrderForm({
-      clients,
-      newOrderForm,
-      platform,
-    })
+    return newOrderForm
   },
 }
 
@@ -65,7 +55,7 @@ export const mutations = {
     _: unknown,
     { input }: MutationUpdateOrderFormProfileArgs,
     ctx: Context
-  ): Promise<OrderForm> => {
+  ): Promise<CheckoutOrderForm> => {
     const {
       clients: { checkout },
       vtex: { orderFormId },

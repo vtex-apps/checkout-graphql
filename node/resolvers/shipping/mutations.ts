@@ -1,14 +1,13 @@
-import { getNewOrderForm } from '../orderForm'
 import { getShippingData, selectDeliveryOption } from './utils/shipping'
 
 export const estimateShippingMutation = async (
-  _: any,
+  _: unknown,
   { address }: { address: CheckoutAddress },
   ctx: Context
 ) => {
   const {
     clients,
-    vtex: { orderFormId, platform },
+    vtex: { orderFormId },
   } = ctx
   const { checkout, shipping } = clients
 
@@ -22,21 +21,17 @@ export const estimateShippingMutation = async (
     shippingData
   )
 
-  return getNewOrderForm({
-    clients,
-    newOrderForm,
-    platform,
-  })
+  return newOrderForm
 }
 
 export const selectDeliveryOptionMutation = async (
-  _: any,
+  _: unknown,
   { deliveryOptionId }: { deliveryOptionId: string },
   ctx: Context
 ) => {
   const {
     clients,
-    vtex: { orderFormId, platform },
+    vtex: { orderFormId },
   } = ctx
   const { checkout, shipping } = clients
 
@@ -51,9 +46,5 @@ export const selectDeliveryOptionMutation = async (
     newShippingData
   )
 
-  return getNewOrderForm({
-    clients,
-    newOrderForm,
-    platform,
-  })
+  return newOrderForm
 }

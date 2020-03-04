@@ -1,6 +1,7 @@
 import { mutations as couponMutations } from './coupon'
 import { mutations as itemMutations } from './items'
 import {
+  root as orderFormRoot,
   queries as orderFormQueries,
   mutations as orderFormMutations,
 } from './orderForm'
@@ -18,11 +19,7 @@ export const resolvers = {
       return marketingData.coupon ?? ''
     },
   },
-  OrderForm: {
-    marketingData: (orderForm: OrderForm) => {
-      return orderForm.marketingData ?? {}
-    },
-  },
+  ...orderFormRoot,
   Mutation: {
     ...couponMutations,
     ...itemMutations,

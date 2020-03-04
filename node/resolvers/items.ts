@@ -3,7 +3,6 @@ import { map } from 'bluebird'
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
-import { getNewOrderForm } from './orderForm'
 
 const GOCOMMERCE = 'gocommerce'
 
@@ -58,13 +57,13 @@ export const adjustItems = (
 
 export const mutations = {
   addToCart: async (
-    _: any,
+    _: unknown,
     { items }: { items: OrderFormItemInput[] },
     ctx: Context
-  ): Promise<OrderForm> => {
+  ): Promise<CheckoutOrderForm> => {
     const {
       clients,
-      vtex: { orderFormId, platform },
+      vtex: { orderFormId },
     } = ctx
     const { checkout } = clients
 
@@ -83,22 +82,17 @@ export const mutations = {
       previousItems
     )
 
-    return getNewOrderForm({
-      clients,
-      newOrderForm:
-        withOptions.length === 0 ? newOrderForm : await checkout.orderForm(),
-      platform,
-    })
+    return withOptions.length === 0 ? newOrderForm : checkout.orderForm()
   },
 
   updateItems: async (
-    _: any,
+    _: unknown,
     { orderItems }: { orderItems: OrderFormItemInput[] },
     ctx: Context
-  ): Promise<OrderForm> => {
+  ): Promise<CheckoutOrderForm> => {
     const {
       clients,
-      vtex: { orderFormId, platform },
+      vtex: { orderFormId },
     } = ctx
     const { checkout } = clients
 
@@ -127,10 +121,6 @@ export const mutations = {
       orderItems
     )
 
-    return getNewOrderForm({
-      clients,
-      newOrderForm,
-      platform,
-    })
+    return newOrderForm
   },
 }
