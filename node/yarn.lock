@@ -5690,9 +5690,9 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.checkout-graphql@https://lucas--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.24.0+build1583325327/public/@types/vtex.checkout-graphql":
+"vtex.checkout-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.24.0/public/@types/vtex.checkout-graphql":
   version "0.24.0"
-  resolved "https://lucas--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.24.0+build1583325327/public/@types/vtex.checkout-graphql#9e821e77ee30bb0a42e36e67298fc5a4bb68dd45"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.24.0/public/@types/vtex.checkout-graphql#37b5ba2720c336c1b3ec55832e3b0ebb45e8433b"
 
 "vtex.search-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.19.1/public/@types/vtex.search-graphql":
   version "0.19.1"

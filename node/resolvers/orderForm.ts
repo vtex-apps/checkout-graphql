@@ -1,4 +1,3 @@
-import { MutationUpdateOrderFormProfileArgs } from 'vtex.checkout-graphql'
 import { prop, propOr } from 'ramda'
 
 import { adjustItems } from './items'
@@ -48,6 +47,10 @@ export const queries = {
 
     return newOrderForm
   },
+}
+
+interface MutationUpdateOrderFormProfileArgs {
+  input: UserProfileInput
 }
 
 export const mutations = {
