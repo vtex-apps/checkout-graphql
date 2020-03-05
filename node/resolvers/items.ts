@@ -80,10 +80,15 @@ export const mutations = {
       ({ options }) => !!options && options.length > 0
     )
 
-    const newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
+    /**
+     * The `updateOrderFormMarketingData` method should be performed
+     * before the `addItem` so that the final orderForm actually consider
+     * the marketingInfo while calculating the values for each of its properties.
+     */
     const { marketingData: newMarketingData } = shouldUpdateMarketingData
       ? await checkout.updateOrderFormMarketingData(orderFormId!, marketingData)
       : { marketingData: {} }
+    const newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
 
     await addOptionsForItems(
       withOptions,
