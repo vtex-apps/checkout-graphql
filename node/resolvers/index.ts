@@ -18,6 +18,24 @@ export const resolvers = {
     coupon: (marketingData: OrderFormMarketingData) => {
       return marketingData.coupon ?? ''
     },
+    utmCampaign: (marketingData: OrderFormMarketingData) => {
+      return marketingData.utmCampaign ?? ''
+    },
+    utmSource: (marketingData: OrderFormMarketingData) => {
+      return marketingData.utmSource ?? ''
+    },
+    utmMedium: (marketingData: OrderFormMarketingData) => {
+      return marketingData.utmMedium ?? ''
+    },
+    utmiCampaign: (marketingData: OrderFormMarketingData) => {
+      return marketingData.utmiCampaign ?? ''
+    },
+    utmiPart: (marketingData: OrderFormMarketingData) => {
+      return marketingData.utmiPart ?? ''
+    },
+    utmiPage: (marketingData: OrderFormMarketingData) => {
+      return marketingData.utmipage ?? ''
+    },
   },
   ...orderFormRoot,
   Mutation: {

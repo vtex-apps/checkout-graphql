@@ -12,7 +12,22 @@ type OrderForm {
 }
 
 type MarketingData {
+  utmCampaign: String
+  utmMedium: String
+  utmSource: String
+  utmiCampaign: String
+  utmiPart: String
+  utmiPage: String
   coupon: String
+}
+
+input MarketingDataInput {
+  utmCampaign: String
+  utmMedium: String
+  utmSource: String
+  utmiCampaign: String
+  utmiPart: String
+  utmiPage: String
 }
 
 type Totalizer {
