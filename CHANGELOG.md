@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `marketingData` argument to `addToCart` mutation.
+- `utmCampaign`, `utmMedium`, `utmSource`, `utmiCampaign`, `utmiPart`, `utmiPage` fields to `MarketingData` type.
+
 ## [0.24.2] - 2020-03-06
 
 ### Fixed

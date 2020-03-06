@@ -58,7 +58,13 @@ export const adjustItems = (
 export const mutations = {
   addToCart: async (
     _: unknown,
-    { items }: { items: OrderFormItemInput[] },
+    {
+      items,
+      marketingData = {},
+    }: {
+      items: OrderFormItemInput[]
+      marketingData: Partial<OrderFormMarketingData>
+    },
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const {
@@ -66,6 +72,7 @@ export const mutations = {
       vtex: { orderFormId },
     } = ctx
     const { checkout } = clients
+    const shouldUpdateMarketingData = Object.keys(marketingData).length > 0
 
     const { items: previousItems } = await checkout.orderForm()
     const cleanItems = items.map(({ options, ...rest }) => rest)
@@ -73,16 +80,30 @@ export const mutations = {
       ({ options }) => !!options && options.length > 0
     )
 
+    /**
+     * Always be sure to make these requests in the same order you use
+     * while spreading their properties, since the second one will always
+     * contain the most recent orderForm.
+     */
     const newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
+    const newOrderFormWithMarketingData = shouldUpdateMarketingData
+      ? await checkout.updateOrderFormMarketingData(orderFormId!, marketingData)
+      : newOrderForm
 
     await addOptionsForItems(
       withOptions,
       checkout,
-      { ...newOrderForm, orderFormId: orderFormId! },
+      {
+        ...newOrderForm,
+        ...newOrderFormWithMarketingData,
+        orderFormId: orderFormId!,
+      },
       previousItems
     )
 
-    return withOptions.length === 0 ? newOrderForm : checkout.orderForm()
+    return withOptions.length === 0
+      ? { ...newOrderForm, ...newOrderFormWithMarketingData }
+      : checkout.orderForm()
   },
 
   updateItems: async (
