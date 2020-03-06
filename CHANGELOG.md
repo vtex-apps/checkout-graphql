@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.24.1] - 2020-03-04
+### Fixed
+
+- Remove required fields inside `ClientData`
+
+## [0.24.1] - 2020-03-04 [YANKED]
 
 ### Changed
 

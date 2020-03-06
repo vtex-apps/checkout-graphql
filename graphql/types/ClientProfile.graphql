@@ -1,7 +1,7 @@
 type ClientData {
-  email: String!
-  firstName: String!
-  lastName: String!
+  email: String
+  firstName: String
+  lastName: String
   document: String
   documentType: String
   phone: String
