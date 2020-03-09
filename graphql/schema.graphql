@@ -10,6 +10,7 @@ type Query {
 type Mutation {
   addToCart(items: [ItemInput], marketingData: MarketingDataInput): OrderForm
     @withOrderFormId
+    @withSegment
   updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
   insertCoupon(text: String): OrderForm @withOrderFormId
   estimateShipping(address: AddressInput): OrderForm @withOrderFormId
