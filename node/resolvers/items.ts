@@ -90,20 +90,21 @@ export const mutations = {
       ? await checkout.updateOrderFormMarketingData(orderFormId!, marketingData)
       : newOrderForm
 
-    await addOptionsForItems(
-      withOptions,
-      checkout,
-      {
-        ...newOrderForm,
-        ...newOrderFormWithMarketingData,
-        orderFormId: orderFormId!,
-      },
-      previousItems
-    )
+    if (withOptions && withOptions.length > 0) {
+      await addOptionsForItems(
+        withOptions,
+        checkout,
+        {
+          ...newOrderFormWithMarketingData,
+          orderFormId: orderFormId!,
+        },
+        previousItems
+      )
 
-    return withOptions.length === 0
-      ? { ...newOrderForm, ...newOrderFormWithMarketingData }
-      : checkout.orderForm()
+      return checkout.orderForm()
+    }
+
+    return newOrderFormWithMarketingData
   },
 
   updateItems: async (
