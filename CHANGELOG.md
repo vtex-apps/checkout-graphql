@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Simplify code path of `addToCart`.
+- Enconding of parameter of assemblies API.
 
 ## [0.25.1] - 2020-03-09
 
