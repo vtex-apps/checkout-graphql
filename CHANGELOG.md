@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.26.0] - 2020-03-18
+
 ### Added
 
 - `userProfileId` field to `OrderForm` type.
