@@ -450,8 +450,13 @@ declare global {
   }
 
   interface ClientPreferencesDataInput {
+    optInNewsletter?: boolean
+    locale?: string
+  }
+
+  interface CheckoutClientPreferencesData {
     optinNewsLetter?: boolean
-    locale?: boolean
+    locale?: string
   }
 }
 

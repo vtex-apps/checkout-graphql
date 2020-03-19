@@ -88,7 +88,10 @@ export const mutations = {
 
     const updatedOrderForm = await checkout.updateOrderFormClientPreferencesData(
       orderFormId!,
-      input
+      {
+        optinNewsLetter: input.optInNewsletter,
+        locale: input.locale,
+      }
     )
 
     return updatedOrderForm
