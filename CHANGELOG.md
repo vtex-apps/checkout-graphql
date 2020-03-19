@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Rename order form field `optinNewsLetter` to `optInNewsletter`.
+
 ## [0.27.0] - 2020-03-19
 
 ### Added

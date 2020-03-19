@@ -51,7 +51,7 @@ type Message {
 
 type ClientPreferencesData {
   locale: String
-  optinNewsLetter: Boolean
+  optInNewsletter: Boolean
 }
 
 input ClientPreferencesDataInput {

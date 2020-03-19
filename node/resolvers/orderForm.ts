@@ -32,6 +32,7 @@ export const root = {
     shipping: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
       return getShippingInfo({ orderForm, shipping: ctx.clients.shipping })
     },
+    optInNewsletter: prop('optinNewsLetter'),
   },
 }
 
