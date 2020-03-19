@@ -10,6 +10,7 @@ type OrderForm {
   messages: OrderFormMessages!
   paymentData: PaymentData!
   clientProfileData: ClientData
+  clientPreferencesData: ClientPreferencesData
 }
 
 type MarketingData {
@@ -46,6 +47,11 @@ type Message {
   code: String
   status: String
   text: String
+}
+
+type ClientPreferencesData {
+  locale: String
+  optinNewsLetter: Boolean
 }
 
 input ClientPreferencesDataInput {
