@@ -448,6 +448,11 @@ declare global {
     corporateDocument?: string
     stateInscription?: string
   }
+
+  interface ClientPreferencesDataInput {
+    optinNewsLetter?: boolean
+    locale?: boolean
+  }
 }
 
 // Segments are small and immutable.

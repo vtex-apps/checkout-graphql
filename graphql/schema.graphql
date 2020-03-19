@@ -20,4 +20,7 @@ type Mutation {
   updateOrderFormProfile(input: UserProfileInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+  updateClientPreferencesData(input: ClientPreferencesDataInput!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
 }

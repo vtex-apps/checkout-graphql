@@ -53,6 +53,10 @@ interface MutationUpdateOrderFormProfileArgs {
   input: UserProfileInput
 }
 
+interface MutationUpdateClientPreferencesDataArgs {
+  input: ClientPreferencesDataInput
+}
+
 export const mutations = {
   updateOrderFormProfile: async (
     _: unknown,
@@ -70,5 +74,22 @@ export const mutations = {
     )
 
     return orderFormWithProfile
+  },
+  updateClientPreferencesData: async (
+    _: unknown,
+    { input }: MutationUpdateClientPreferencesDataArgs,
+    ctx: Context
+  ) => {
+    const {
+      clients: { checkout },
+      vtex: { orderFormId },
+    } = ctx
+
+    const updatedOrderForm = await checkout.updateOrderFormClientPreferencesData(
+      orderFormId!,
+      input
+    )
+
+    return updatedOrderForm
   },
 }
