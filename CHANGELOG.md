@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Mutation `updateClientPreferencesData` to update the client preferences in the order form.
+
 ## [0.26.0] - 2020-03-18
 
 ### Added

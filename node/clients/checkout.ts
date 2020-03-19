@@ -120,6 +120,16 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormMarketingData' }
     )
 
+  public updateOrderFormClientPreferencesData = (
+    orderFormId: string,
+    preferencesData: ClientPreferencesDataInput
+  ) =>
+    this.post<CheckoutOrderForm>(
+      this.routes.attachmentsData(orderFormId, 'clientPreferencesData'),
+      preferencesData,
+      { metric: 'checkout-updateOrderFormClientPreferencesData' }
+    )
+
   public addAssemblyOptions = async (
     orderFormId: string,
     itemId: string | number,

@@ -47,3 +47,8 @@ type Message {
   status: String
   text: String
 }
+
+input ClientPreferencesDataInput {
+  optinNewsLetter: Boolean
+  locale: String
+}
