@@ -122,7 +122,7 @@ export class Checkout extends JanusClient {
 
   public updateOrderFormClientPreferencesData = (
     orderFormId: string,
-    preferencesData: ClientPreferencesDataInput
+    preferencesData: CheckoutClientPreferencesData
   ) =>
     this.post<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientPreferencesData'),
@@ -288,7 +288,9 @@ export class Checkout extends JanusClient {
         itemId: string | number,
         assemblyOptionsId: string
       ) =>
-        `${base}/orderForm/${orderFormId}/items/${itemId}/assemblyOptions/${encodeURI(assemblyOptionsId)}`,
+        `${base}/orderForm/${orderFormId}/items/${itemId}/assemblyOptions/${encodeURI(
+          assemblyOptionsId
+        )}`,
       attachmentsData: (orderFormId: string, field: string) =>
         `${base}/orderForm/${orderFormId}/attachments/${field}`,
       cancelOrder: (orderFormId: string) =>

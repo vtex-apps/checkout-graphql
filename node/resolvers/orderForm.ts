@@ -33,6 +33,9 @@ export const root = {
       return getShippingInfo({ orderForm, shipping: ctx.clients.shipping })
     },
   },
+  ClientPreferencesData: {
+    optInNewsletter: prop('optinNewsLetter'),
+  },
 }
 
 export const queries = {
@@ -87,7 +90,10 @@ export const mutations = {
 
     const updatedOrderForm = await checkout.updateOrderFormClientPreferencesData(
       orderFormId!,
-      input
+      {
+        optinNewsLetter: input.optInNewsletter,
+        locale: input.locale,
+      }
     )
 
     return updatedOrderForm
