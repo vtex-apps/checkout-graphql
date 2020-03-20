@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Rename order form field `optinNewsLetter` to `optInNewsletter`.
+- Rename field `optinNewsLetter` to `optInNewsletter` in `ClientPreferencesData`.
 
 ## [0.27.0] - 2020-03-19
 
