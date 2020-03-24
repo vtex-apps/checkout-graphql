@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `userType` field to `OrderForm` type.
+
 ## [0.27.1] - 2020-03-20
 
 ### Changed
