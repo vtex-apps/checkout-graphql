@@ -8,6 +8,12 @@ export const root = {
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),
+    userType: (orderForm: CheckoutOrderForm) => {
+      if (orderForm.userType === 'callCenterOperator') {
+        return 'CALL_CENTER_OPERATOR'
+      }
+      return 'UNKNOWN'
+    },
     messages: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
       const {
         clients: { checkout },
