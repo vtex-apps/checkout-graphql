@@ -12,7 +12,7 @@ export const root = {
       if (orderForm.userType === 'callCenterOperator') {
         return 'CALL_CENTER_OPERATOR'
       }
-      return 'UNKNOWN'
+      return 'STORE_USER'
     },
     messages: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
       const {

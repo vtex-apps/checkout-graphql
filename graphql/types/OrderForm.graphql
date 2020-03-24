@@ -16,7 +16,7 @@ type OrderForm {
 
 enum UserType {
   CALL_CENTER_OPERATOR
-  UNKNOWN
+  STORE_USER
 }
 
 type MarketingData {
