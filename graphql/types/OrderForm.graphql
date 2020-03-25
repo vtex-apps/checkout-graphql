@@ -3,6 +3,7 @@ type OrderForm {
   items: [Item!]!
   canEditData: Boolean!
   userProfileId: String
+  userType: UserType
   shipping: Shipping!
   marketingData: MarketingData!
   totalizers: [Totalizer]!
@@ -11,6 +12,11 @@ type OrderForm {
   paymentData: PaymentData!
   clientProfileData: ClientData
   clientPreferencesData: ClientPreferencesData
+}
+
+enum UserType {
+  CALL_CENTER_OPERATOR
+  STORE_USER
 }
 
 type MarketingData {
