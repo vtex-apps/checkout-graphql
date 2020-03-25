@@ -1,8 +1,19 @@
-import { prop, propOr } from 'ramda'
+import { prop, propOr, compose, forEach } from 'ramda'
 
+import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping/utils/shipping'
+
+const SetCookieWhitelist = [CHECKOUT_COOKIE, '.ASPXAUTH']
+
+const isWhitelistedSetCookie = (cookie: string) => {
+  const [key] = cookie.split('=')
+  return SetCookieWhitelist.includes(key)
+}
+
+const replaceDomain = (host: string) => (cookie: string) =>
+  cookie.replace(/domain=.+?(;|$)/, `domain=${host};`)
 
 export const root = {
   OrderForm: {
@@ -44,6 +55,22 @@ export const root = {
   },
 }
 
+export async function setCheckoutCookies(
+  rawHeaders: Record<string, any>,
+  ctx: Context
+) {
+  const responseSetCookies: string[] = rawHeaders?.['set-cookie'] || []
+
+  const host = ctx.get('x-forwarded-host')
+  const forwardedSetCookies = responseSetCookies.filter(isWhitelistedSetCookie)
+  const parseAndClean = compose(parseCookie, replaceDomain(host))
+  const cleanCookies = forwardedSetCookies.map(parseAndClean)
+  forEach(
+    ({ name, value, options }) => ctx.cookies.set(name, value, options),
+    cleanCookies
+  )
+}
+
 export const queries = {
   orderForm: async (
     _: unknown,
@@ -52,7 +79,12 @@ export const queries = {
   ): Promise<CheckoutOrderForm> => {
     const { clients } = ctx
 
-    const newOrderForm = await clients.checkout.orderForm()
+    const {
+      data: newOrderForm,
+      headers,
+    } = await clients.checkout.orderFormRaw()
+
+    setCheckoutCookies(headers, ctx)
 
     return newOrderForm
   },
