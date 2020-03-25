@@ -9,6 +9,7 @@
   "dependencies": {
     "atob": "^2.1.2",
     "bluebird": "^3.5.5",
+    "cookie": "^0.4.0",
     "graphql": "^0.13.2",
     "graphql-tools": "^3.1.1",
     "lodash": "^4.17.15",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@types/atob": "^2.1.2",
     "@types/bluebird": "^3.5.25",
+    "@types/cookie": "^0.3.3",
     "@types/graphql": "0.13.x",
     "@types/jest": "^24.0.18",
     "@types/lodash": "^4.14.138",
