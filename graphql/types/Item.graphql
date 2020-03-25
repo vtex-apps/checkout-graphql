@@ -26,6 +26,7 @@ type Item {
   skuName: String
   skuSpecifications: [SKUSpecification!]!
   uniqueId: String!
+  refId: String
 }
 
 type ImageUrls {
