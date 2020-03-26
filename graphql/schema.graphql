@@ -1,6 +1,6 @@
 type Query {
   getCardSessionId: String
-  orderForm: OrderForm
+  orderForm(setCheckoutCookie: Boolean): OrderForm
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
     @withSegment
