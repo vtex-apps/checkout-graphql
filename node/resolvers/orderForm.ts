@@ -74,7 +74,7 @@ export async function setCheckoutCookies(
 export const queries = {
   orderForm: async (
     _: unknown,
-    __: unknown,
+    args: QueryOrderFormArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const { clients } = ctx
@@ -84,10 +84,16 @@ export const queries = {
       headers,
     } = await clients.checkout.orderFormRaw()
 
-    setCheckoutCookies(headers, ctx)
+    if (args.setCheckoutCookie) {
+      setCheckoutCookies(headers, ctx)
+    }
 
     return newOrderForm
   },
+}
+
+interface QueryOrderFormArgs {
+  setCheckoutCookie: boolean
 }
 
 interface MutationUpdateOrderFormProfileArgs {
