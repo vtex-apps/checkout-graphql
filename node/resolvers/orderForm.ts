@@ -5,6 +5,15 @@ import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from './shipping/utils/shipping'
 
+interface StoreSettings {
+  enableOrderFormOptimization: boolean
+  storeName: string
+  titleTag: 'Store Theme - VTEX Base Store'
+  metaTagDescription: string
+  metaTagKeywords: string
+  enableCriticalCSS: boolean
+}
+
 const SetCookieWhitelist = [CHECKOUT_COOKIE, '.ASPXAUTH']
 
 const isWhitelistedSetCookie = (cookie: string) => {
@@ -74,7 +83,7 @@ export async function setCheckoutCookies(
 export const queries = {
   orderForm: async (
     _: unknown,
-    args: QueryOrderFormArgs,
+    __: unknown,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const { clients } = ctx
@@ -84,16 +93,21 @@ export const queries = {
       headers,
     } = await clients.checkout.orderFormRaw()
 
-    if (args.setCheckoutCookie) {
+    /**
+     * In case the enableOrderFormOptimization setting is enabled in the store,
+     * this will be the only `orderForm` query performed in the client. So no
+     * 'checkout.vtex.com' cookie would have been set. Otherwise vtex.store-graphql
+     * would've already set this cookie and this resolver should not overwrite it.
+     */
+    const storeSettings: StoreSettings = await clients.apps.getAppSettings(
+      'vtex.store@2.x'
+    )
+    if (storeSettings.enableOrderFormOptimization) {
       setCheckoutCookies(headers, ctx)
     }
 
     return newOrderForm
   },
-}
-
-interface QueryOrderFormArgs {
-  setCheckoutCookie: boolean
 }
 
 interface MutationUpdateOrderFormProfileArgs {
