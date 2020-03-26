@@ -8,7 +8,7 @@ import { getShippingInfo } from './shipping/utils/shipping'
 interface StoreSettings {
   enableOrderFormOptimization: boolean
   storeName: string
-  titleTag: 'Store Theme - VTEX Base Store'
+  titleTag: string
   metaTagDescription: string
   metaTagKeywords: string
   enableCriticalCSS: boolean
@@ -64,7 +64,7 @@ export const root = {
   },
 }
 
-export async function setCheckoutCookies(
+export async function forwardCheckoutCookies(
   rawHeaders: Record<string, any>,
   ctx: Context
 ) {
@@ -103,7 +103,7 @@ export const queries = {
       'vtex.store@2.x'
     )
     if (storeSettings.enableOrderFormOptimization) {
-      setCheckoutCookies(headers, ctx)
+      forwardCheckoutCookies(headers, ctx)
     }
 
     return newOrderForm
