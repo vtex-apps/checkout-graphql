@@ -1,4 +1,4 @@
-import { ADDRESS_TYPES, DELIVERY } from '../../../constants'
+import { ADDRESS_TYPES, DELIVERY } from '../constants'
 
 export function getSelectedDeliveryAddress(
   selectedAddresses: CheckoutAddress[]
@@ -13,7 +13,7 @@ export function getSelectedDeliveryAddress(
 }
 
 export function addressHasGeocoordinates(address: CheckoutAddress) {
-  return address && address.geoCoordinates && address.geoCoordinates.length > 0
+  return address?.geoCoordinates && address.geoCoordinates.length > 0
 }
 
 export function filterDeliveryOptions(
