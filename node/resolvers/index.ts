@@ -5,7 +5,10 @@ import {
   queries as orderFormQueries,
   mutations as orderFormMutations,
 } from './orderForm'
-import { Address, mutations as shippingMutations } from './shipping/index'
+import {
+  root as shippingRoot,
+  mutations as shippingMutations,
+} from './shipping'
 import {
   queries as paymentQueries,
   mutations as paymentMutations,
@@ -13,7 +16,6 @@ import {
 import { queries as profileQueries } from './profile'
 
 export const resolvers = {
-  Address,
   MarketingData: {
     coupon: (marketingData: OrderFormMarketingData) => {
       return marketingData.coupon ?? ''
@@ -38,6 +40,7 @@ export const resolvers = {
     },
   },
   ...orderFormRoot,
+  ...shippingRoot,
   Mutation: {
     ...couponMutations,
     ...itemMutations,
