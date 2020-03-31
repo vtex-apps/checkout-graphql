@@ -28,10 +28,21 @@ export const root = {
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),
-    userType: (orderForm: CheckoutOrderForm) => {
-      if (orderForm.userType === 'callCenterOperator') {
+    userType: async (_: CheckoutOrderForm, __: unknown, ctx: Context) => {
+      const {
+        clients: { customSession },
+        cookies,
+      } = ctx
+
+      const { sessionData } = await customSession.getSession(
+        cookies.get('vtex_session'),
+        ['*']
+      )
+
+      if (sessionData.namespaces.impersonate?.canImpersonate.value) {
         return 'CALL_CENTER_OPERATOR'
       }
+
       return 'STORE_USER'
     },
     messages: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
