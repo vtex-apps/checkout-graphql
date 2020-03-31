@@ -38,8 +38,10 @@ export const root = {
         cookies.get('vtex_session'),
         ['*']
       )
+      const isCallCenterOperator =
+        sessionData.namespaces.impersonate?.canImpersonate.value === 'true'
 
-      if (sessionData.namespaces.impersonate?.canImpersonate.value) {
+      if (isCallCenterOperator) {
         return 'CALL_CENTER_OPERATOR'
       }
 
