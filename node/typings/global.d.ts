@@ -453,4 +453,18 @@ declare global {
     optinNewsLetter?: boolean
     locale?: string
   }
+
+  interface PaymentInput {
+    paymentSystem?: string
+    bin?: string
+    accountId?: string
+    tokenId?: string
+    installments?: number
+    referenceValue?: number
+    value?: number
+  }
+
+  interface PaymentDataInput {
+    payments: PaymentInput[]
+  }
 }
