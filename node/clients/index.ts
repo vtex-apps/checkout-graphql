@@ -3,6 +3,7 @@ import { IOClients } from '@vtex/api'
 import { Checkout } from './checkout'
 import { SearchGraphQL } from './searchGraphQL'
 import { Shipping } from './shipping'
+import { Session } from './session'
 
 export class Clients extends IOClients {
   public get checkout() {
@@ -15,5 +16,9 @@ export class Clients extends IOClients {
 
   public get shipping() {
     return this.getOrSet('shipping', Shipping)
+  }
+
+  public get customSession() {
+    return this.getOrSet('customSession', Session)
   }
 }
