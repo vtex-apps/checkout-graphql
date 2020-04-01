@@ -12,7 +12,7 @@ type InstallmentOption  {
   paymentName: String
   paymentGroupName: String
   value: Int!
-  installments: [Installment]!
+  installments: [Installment!]!
 }
 
 type Validator {
@@ -51,9 +51,9 @@ type Payment {
 }
 
 type PaymentData {
-  installmentOptions: [InstallmentOption]!
-  paymentSystems: [PaymentSystem]!
-  payments: [Payment]!
+  installmentOptions: [InstallmentOption!]!
+  paymentSystems: [PaymentSystem!]!
+  payments: [Payment!]!
 }
 
 type SavePaymentTokenPayload {
@@ -61,8 +61,8 @@ type SavePaymentTokenPayload {
 }
 
 input PaymentInput {
-  hasDefaultBillingAddress: Boolean,
-  installmentsInterestRate: Int,
+  hasDefaultBillingAddress: Boolean
+  installmentsInterestRate: Int
   paymentSystem: Int
   bin: String
   accountId: String
@@ -73,7 +73,7 @@ input PaymentInput {
 }
 
 input PaymentDataInput {
-  payments: [PaymentInput]!
+  payments: [PaymentInput!]!
 }
 
 input PaymentToken {
