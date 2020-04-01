@@ -1,21 +1,13 @@
 import { getShippingData, selectDeliveryOption } from '../utils/shipping'
-
-enum AddressType {
-  residential = 'residential',
-  commercial = 'commercial',
-  inStore = 'inStore',
-  giftRegistry = 'giftRegistry',
-  pickup = 'pickup',
-  search = 'search',
-}
+import { AddressType } from '../constants'
 
 const addressTypes = new Set<string>([
-  AddressType.commercial,
-  AddressType.giftRegistry,
-  AddressType.inStore,
-  AddressType.pickup,
-  AddressType.residential,
-  AddressType.search,
+  AddressType.COMMERCIAL,
+  AddressType.GIFT_REGISTRY,
+  AddressType.INSTORE,
+  AddressType.PICKUP,
+  AddressType.RESIDENTIAL,
+  AddressType.SEARCH,
 ])
 
 export const root = {

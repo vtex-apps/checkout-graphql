@@ -1,4 +1,4 @@
-import { ADDRESS_TYPES, DELIVERY, PICKUP_IN_STORE } from '../constants'
+import { AddressType, DELIVERY, PICKUP_IN_STORE } from '../constants'
 import { EMPTY_ORDER_FORM } from './orderForm'
 import { Clients } from '../clients'
 
@@ -101,7 +101,7 @@ const scheduledDeliverySLA = {
 
 export const deliveryAddress = {
   addressId: 'test',
-  addressType: ADDRESS_TYPES.RESIDENTIAL,
+  addressType: AddressType.RESIDENTIAL,
   city: '',
   complement: '',
   country: 'BRA',
