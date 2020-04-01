@@ -3,7 +3,7 @@ import { prop, propOr, compose, forEach } from 'ramda'
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
-import { getShippingInfo } from './shipping/utils/shipping'
+import { getShippingInfo } from '../utils/shipping'
 
 interface StoreSettings {
   enableOrderFormOptimization: boolean
@@ -69,7 +69,7 @@ export const root = {
       return adjustItems(platform, orderForm.items, searchGraphQL)
     },
     shipping: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
-      return getShippingInfo({ orderForm, shipping: ctx.clients.shipping })
+      return getShippingInfo({ orderForm, clients: ctx.clients })
     },
   },
   ClientPreferencesData: {

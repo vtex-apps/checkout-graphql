@@ -1,19 +1,19 @@
-import { ADDRESS_TYPES, DELIVERY } from '../../../constants'
+import { AddressType, DELIVERY } from '../constants'
 
 export function getSelectedDeliveryAddress(
   selectedAddresses: CheckoutAddress[]
 ) {
   return selectedAddresses.find((address: CheckoutAddress) => {
-    const isCommercial = address.addressType === ADDRESS_TYPES.COMMERCIAL
-    const isResidential = address.addressType === ADDRESS_TYPES.RESIDENTIAL
-    const iGiftRegistry = address.addressType === ADDRESS_TYPES.GIFT_REGISTRY
+    const isCommercial = address.addressType === AddressType.COMMERCIAL
+    const isResidential = address.addressType === AddressType.RESIDENTIAL
+    const iGiftRegistry = address.addressType === AddressType.GIFT_REGISTRY
 
     return isCommercial || isResidential || iGiftRegistry
   })
 }
 
 export function addressHasGeocoordinates(address: CheckoutAddress) {
-  return address && address.geoCoordinates && address.geoCoordinates.length > 0
+  return address?.geoCoordinates && address.geoCoordinates.length > 0
 }
 
 export function filterDeliveryOptions(

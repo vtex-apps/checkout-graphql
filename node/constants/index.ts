@@ -1,10 +1,10 @@
-export const ADDRESS_TYPES = {
-  COMMERCIAL: 'commercial',
-  GIFT_REGISTRY: 'giftRegistry',
-  INSTORE: 'inStore',
-  PICKUP: 'pickup',
-  RESIDENTIAL: 'residential',
-  SEARCH: 'search',
+export enum AddressType {
+  RESIDENTIAL = 'residential',
+  COMMERCIAL = 'commercial',
+  INSTORE = 'inStore',
+  GIFT_REGISTRY = 'giftRegistry',
+  PICKUP = 'pickup',
+  SEARCH = 'search',
 }
 
 // Delivery channels

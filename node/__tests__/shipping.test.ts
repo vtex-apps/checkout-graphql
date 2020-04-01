@@ -8,13 +8,13 @@ import {
   ORDER_FORM_WITH_SCHEDULED_DELIVERY,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
   ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
-  shipping,
-} from '../../__mocks__/shipping'
+  clients,
+} from '../__fixtures__/shipping'
 import { getShippingInfo } from '../utils/shipping'
 
 describe('Shipping Resolvers', () => {
   describe('getShippingInfo', () => {
-    it('should get shipping info handling empty shippingData', () => {
+    it('should get shipping info handling empty shippingData', async () => {
       const expectedResult = {
         availableAddresses: [],
         countries: [],
@@ -23,14 +23,14 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_EMPTY_SHIPPING_DATA,
         })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info handling empty logisticsInfo', () => {
+    it('should get shipping info handling empty logisticsInfo', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -39,14 +39,14 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing pickup point SLAs', () => {
+    it('should get shipping info removing pickup point SLAs', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -62,11 +62,11 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({ shipping, orderForm: ORDER_FORM_WITH_PICKUPS })
+        await getShippingInfo({ clients, orderForm: ORDER_FORM_WITH_PICKUPS })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing scheduled delivery SLAs', () => {
+    it('should get shipping info removing scheduled delivery SLAs', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -82,14 +82,14 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_SCHEDULED_DELIVERY,
         })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing scheduled delivery and pickup SLAs', () => {
+    it('should get shipping info removing scheduled delivery and pickup SLAs', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -105,14 +105,14 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
         })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing SLAs which does not exist in all logisticsInfo', () => {
+    it('should get shipping info removing SLAs which does not exist in all logisticsInfo', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -128,14 +128,14 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing duplicated SLAs which have different delivery ids', () => {
+    it('should get shipping info removing duplicated SLAs which have different delivery ids', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -151,14 +151,14 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS,
         })
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info without empty deliveryOptions', () => {
+    it('should get shipping info without empty deliveryOptions', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
@@ -174,8 +174,8 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        getShippingInfo({
-          shipping,
+        await getShippingInfo({
+          clients,
           orderForm: ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)
