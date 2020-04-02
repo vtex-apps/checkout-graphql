@@ -86,10 +86,10 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormIgnoreProfile' }
     )
 
-  public updateOrderFormPayment = (orderFormId: string, payments: any) =>
+  public updateOrderFormPayment = (orderFormId: string, paymentData: PaymentDataInput) =>
     this.post<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'paymentData'),
-      { payments },
+      paymentData,
       { metric: 'checkout-updateOrderFormPayment' }
     )
 

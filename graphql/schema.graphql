@@ -23,4 +23,7 @@ type Mutation {
   updateClientPreferencesData(input: ClientPreferencesDataInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+  updateOrderFormPayment(input: PaymentDataInput!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
 }

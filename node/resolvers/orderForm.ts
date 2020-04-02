@@ -131,6 +131,10 @@ interface MutationUpdateClientPreferencesDataArgs {
   input: ClientPreferencesDataInput
 }
 
+interface MutationUpdateOrderFormPaymentArgs {
+  input: PaymentDataInput
+}
+
 export const mutations = {
   updateOrderFormProfile: async (
     _: unknown,
@@ -168,5 +172,17 @@ export const mutations = {
     )
 
     return updatedOrderForm
+  },
+  updateOrderFormPayment: async (
+    _: unknown,
+    { input }: MutationUpdateOrderFormPaymentArgs,
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients: { checkout },
+      vtex: { orderFormId },
+    } = ctx
+    const orderFormWithPayments = await checkout.updateOrderFormPayment(orderFormId!, input)
+    return orderFormWithPayments
   },
 }

@@ -1,9 +1,18 @@
+type Installment {
+  count: Int
+  hasInterestRate: Boolean
+  interestRate: Int
+  value: Int
+  total: Int
+}
+
 type InstallmentOption  {
   paymentSystem: String!
   bin: String
   paymentName: String
   paymentGroupName: String
   value: Int!
+  installments: [Installment!]!
 }
 
 type Validator {
@@ -31,16 +40,43 @@ type PaymentSystem {
   dueDate: String
 }
 
-input PaymentToken {
-  creditCardToken: String!
-  paymentSystem: String!
+type Payment {
+  paymentSystem: String
+  bin: String
+  accountId: String
+  tokenId: String
+  installments: Int
+  referenceValue: Int
+  value: Int
 }
 
 type PaymentData {
-  installmentOptions: [InstallmentOption]!
-  paymentSystems: [PaymentSystem]!
+  installmentOptions: [InstallmentOption!]!
+  paymentSystems: [PaymentSystem!]!
+  payments: [Payment!]!
 }
 
 type SavePaymentTokenPayload {
   status: String
+}
+
+input PaymentInput {
+  hasDefaultBillingAddress: Boolean
+  installmentsInterestRate: Int
+  paymentSystem: Int
+  bin: String
+  accountId: String
+  tokenId: String
+  installments: Int
+  referenceValue: Int
+  value: Int
+}
+
+input PaymentDataInput {
+  payments: [PaymentInput!]!
+}
+
+input PaymentToken {
+  creditCardToken: String!
+  paymentSystem: String!
 }
