@@ -11,18 +11,32 @@ type Mutation {
   addToCart(items: [ItemInput], marketingData: MarketingDataInput): OrderForm
     @withOrderFormId
     @withSegment
+
   updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
+
   insertCoupon(text: String): OrderForm @withOrderFormId
+
   estimateShipping(address: AddressInput): OrderForm @withOrderFormId
+
   selectDeliveryOption(deliveryOptionId: String): OrderForm @withOrderFormId
+
+  """
+  Changes the currently selected address in the shipping data
+  of the OrderForm
+  """
+  updateSelectedAddress(input: AddressInput!): OrderForm @withOrderFormId
+
   savePaymentToken(paymentTokens: [PaymentToken]): SavePaymentTokenPayload
     @withOrderFormId
+
   updateOrderFormProfile(input: UserProfileInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+
   updateClientPreferencesData(input: ClientPreferencesDataInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+
   updateOrderFormPayment(input: PaymentDataInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)

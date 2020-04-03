@@ -60,6 +60,19 @@ export const selectDeliveryOption = ({
   )
 }
 
+export const selectAddress = ({
+  shippingData,
+  address,
+}: {
+  shippingData: ShippingData
+  address: CheckoutAddress
+}): ShippingData => {
+  return {
+    ...shippingData,
+    selectedAddresses: [address],
+  }
+}
+
 export const getShippingInfo = async ({
   clients,
   orderForm,
