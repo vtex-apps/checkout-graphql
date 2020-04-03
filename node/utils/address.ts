@@ -4,11 +4,11 @@ export function getSelectedDeliveryAddress(
   selectedAddresses: CheckoutAddress[]
 ) {
   return selectedAddresses.find((address: CheckoutAddress) => {
-    const isCommercial = address.addressType === AddressType.COMMERCIAL
-    const isResidential = address.addressType === AddressType.RESIDENTIAL
-    const iGiftRegistry = address.addressType === AddressType.GIFT_REGISTRY
+    const isSearch = address.addressType === AddressType.SEARCH
+    const isPickup = address.addressType === AddressType.PICKUP
+    const isInStore = address.addressType === AddressType.INSTORE
 
-    return isCommercial || isResidential || iGiftRegistry
+    return !isSearch && !isPickup && !isInStore
   })
 }
 
