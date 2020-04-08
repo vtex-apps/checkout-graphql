@@ -40,8 +40,7 @@ export const root = {
       )
 
       const isCallCenterOperator =
-        sessionData?.namespaces?.impersonate?.canImpersonate?.value ===
-          'true' ?? false
+        sessionData?.namespaces?.impersonate?.canImpersonate?.value === 'true'
 
       if (isCallCenterOperator) {
         return 'CALL_CENTER_OPERATOR'
