@@ -38,8 +38,9 @@ export const root = {
         cookies.get('vtex_session'),
         ['*']
       )
+
       const isCallCenterOperator =
-        sessionData.namespaces.impersonate?.canImpersonate.value === 'true'
+        sessionData?.namespaces?.impersonate?.canImpersonate?.value === 'true'
 
       if (isCallCenterOperator) {
         return 'CALL_CENTER_OPERATOR'
@@ -182,7 +183,10 @@ export const mutations = {
       clients: { checkout },
       vtex: { orderFormId },
     } = ctx
-    const orderFormWithPayments = await checkout.updateOrderFormPayment(orderFormId!, input)
+    const orderFormWithPayments = await checkout.updateOrderFormPayment(
+      orderFormId!,
+      input
+    )
     return orderFormWithPayments
   },
 }
