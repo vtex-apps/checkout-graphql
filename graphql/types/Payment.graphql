@@ -2,16 +2,16 @@ type Installment {
   count: Int
   hasInterestRate: Boolean
   interestRate: Int
-  value: Int
-  total: Int
+  value: Float
+  total: Float
 }
 
-type InstallmentOption  {
+type InstallmentOption {
   paymentSystem: String!
   bin: String
   paymentName: String
   paymentGroupName: String
-  value: Int!
+  value: Float!
   installments: [Installment!]!
 }
 
@@ -46,8 +46,8 @@ type Payment {
   accountId: String
   tokenId: String
   installments: Int
-  referenceValue: Int
-  value: Int
+  referenceValue: Float
+  value: Float
 }
 
 type PaymentData {

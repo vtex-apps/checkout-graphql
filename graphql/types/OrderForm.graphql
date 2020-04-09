@@ -7,7 +7,7 @@ type OrderForm {
   shipping: Shipping!
   marketingData: MarketingData!
   totalizers: [Totalizer]!
-  value: Int!
+  value: Float!
   messages: OrderFormMessages!
   paymentData: PaymentData!
   clientProfileData: ClientData
@@ -41,7 +41,7 @@ input MarketingDataInput {
 type Totalizer {
   id: String!
   name: String
-  value: Int!
+  value: Float!
 }
 
 type OrderFormMessages {
