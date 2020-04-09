@@ -1,4 +1,4 @@
-import { map } from 'bluebird'
+import { AxiosError } from 'axios'
 
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
@@ -14,7 +14,7 @@ const getProductInfo = async (
   let response
 
   if (platform === GOCOMMERCE) {
-    const slug = item.detailUrl.split('/')[1]
+    const [, slug] = item.detailUrl.split('/')
     response = await searchGraphQL.product({ slug })
   } else {
     response = await searchGraphQL.product({
@@ -44,16 +44,35 @@ export const adjustItems = (
   items: OrderFormItem[],
   searchGraphQL: SearchGraphQL
 ) =>
-  map(items, async (item: OrderFormItem) => {
-    const product = await getProductInfo(platform, item, searchGraphQL)
+  Promise.all(
+    items.map(async (item: OrderFormItem) => {
+      try {
+        const product = await getProductInfo(platform, item, searchGraphQL)
 
-    return {
-      ...item,
-      imageUrls: fixImageUrl(item.imageUrl, platform),
-      name: product.productName,
-      skuSpecifications: getVariations(item.id, product.items),
-    }
-  })
+        return {
+          ...item,
+          imageUrls: fixImageUrl(item.imageUrl, platform),
+          name: product.productName,
+          skuSpecifications: getVariations(item.id, product.items),
+        }
+      } catch (err) {
+        if ('config' in err) {
+          const axiosError = err as AxiosError
+
+          // if we didn't find the product, it's likely that
+          // it is unavailable, so we will return null and filter
+          // it out later
+          if (axiosError.code === '404') {
+            return null
+          }
+        }
+
+        // if we did found the product, but there still an error,
+        // we should throw because it is not expected
+        throw err
+      }
+    })
+  ).then(resolvedItems => resolvedItems.filter(item => item != null))
 
 export const mutations = {
   addToCart: async (
