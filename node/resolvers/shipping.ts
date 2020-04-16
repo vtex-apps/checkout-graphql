@@ -1,4 +1,8 @@
-import { getShippingData, selectDeliveryOption } from '../utils/shipping'
+import {
+  getShippingData,
+  selectDeliveryOption,
+  selectAddress,
+} from '../utils/shipping'
 import { AddressType } from '../constants'
 
 const addressTypes = new Set<string>([
@@ -61,6 +65,31 @@ export const mutations = {
     const orderForm = await checkout.orderForm()
     const newShippingData = selectDeliveryOption({
       deliveryOptionId,
+      shippingData: orderForm.shippingData,
+    })
+
+    const newOrderForm = await checkout.updateOrderFormShipping(
+      orderFormId!,
+      newShippingData
+    )
+
+    return newOrderForm
+  },
+
+  updateSelectedAddress: async (
+    _: unknown,
+    { input }: { input: CheckoutAddress },
+    ctx: Context
+  ) => {
+    const {
+      clients: { checkout },
+      vtex: { orderFormId },
+    } = ctx
+
+    const orderForm = await checkout.orderForm()
+
+    const newShippingData = selectAddress({
+      address: input,
       shippingData: orderForm.shippingData,
     })
 
