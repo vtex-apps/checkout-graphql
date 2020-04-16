@@ -10,18 +10,18 @@ type Item {
   detailUrl: String
   id: ID!
   imageUrls: ImageUrls
-  listPrice: Float!
+  listPrice: Float
   measurementUnit: String
   name: String
   parentAssemblyBinding: String
   options: [AssemblyOptionType]
-  price: Float!
+  price: Float
   productCategories: productCategoriesObject
   productCategoryIds: String
   productId: String!
   productRefId: String
   quantity: Float!
-  sellingPrice: Float!
+  sellingPrice: Float
   sellingPriceWithAssemblies: Float
   skuName: String
   skuSpecifications: [SKUSpecification!]!
