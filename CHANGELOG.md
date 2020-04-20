@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Error `Cannot return null for non-nullable field Item.listPrice` when the item
+  didn't have a price registered.
 
 ## [0.32.0] - 2020-04-16
 ### Added
