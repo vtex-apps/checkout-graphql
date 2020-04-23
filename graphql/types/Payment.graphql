@@ -50,10 +50,19 @@ type Payment {
   value: Float
 }
 
+type AvailableAccount {
+  accountId: String!
+  paymentSystem: String!
+  paymentSystemName: String!
+  cardNumber: String!
+  bin: String!
+}
+
 type PaymentData {
   installmentOptions: [InstallmentOption!]!
   paymentSystems: [PaymentSystem!]!
   payments: [Payment!]!
+  availableAccounts: [AvailableAccount!]!
 }
 
 type SavePaymentTokenPayload {
