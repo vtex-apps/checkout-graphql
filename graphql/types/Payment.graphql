@@ -1,8 +1,8 @@
 type Installment {
   count: Int!
-  hasInterestRate: Boolean!
-  interestRate: Int!
-  value: Float!
+  hasInterestRate: Boolean
+  interestRate: Int
+  value: Float
   total: Float!
 }
 
