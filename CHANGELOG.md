@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update to node builder 6.x.
 - Call graphql gateway instead of search-graphql directly.
 
 ## [0.33.1] - 2020-04-27
