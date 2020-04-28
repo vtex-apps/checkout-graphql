@@ -1,11 +1,11 @@
-import { ServiceContext, SegmentData } from '@vtex/api'
+import { ServiceContext, SegmentData, ParamsContext } from '@vtex/api'
 
 import { Clients } from '../clients'
 
 declare global {
-  type Context = ServiceContext<Clients, void, CustomContext>
+  type Context = ServiceContext<Clients, RecorderState, CustomContext>
 
-  interface CustomContext {
+  interface CustomContext extends ParamsContext {
     cookie: string
     dataSources: SearchGraphQLDataSources
     originalPath: string

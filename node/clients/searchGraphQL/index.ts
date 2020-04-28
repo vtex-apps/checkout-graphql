@@ -1,32 +1,22 @@
-import {
-  AppGraphQLClient,
-  InstanceOptions,
-  IOContext,
-  Serializable,
-} from '@vtex/api'
+import { Serializable } from '@vtex/api'
 
+import { GraphQLServer } from '../graphqlServer'
 import {
   ProductArgs,
-  ProductResponse,
   query as productQuery,
+  ProductResponse,
 } from './productQuery'
 
-export class SearchGraphQL extends AppGraphQLClient {
-  constructor(ctx: IOContext, opts?: InstanceOptions) {
-    super('vtex.search-graphql@0', ctx, opts)
-  }
+const extensions = {
+  persistedQuery: {
+    provider: 'vtex.search-graphql@0.x',
+    sender: 'vtex.checkout-graphql@0.x',
+  },
+}
 
+export class SearchGraphQL extends GraphQLServer {
   public product = <T extends Serializable = ProductResponse>(
     variables: ProductArgs,
     query: string = productQuery
-  ) =>
-    this.graphql.query<T, ProductArgs>(
-      {
-        query,
-        variables,
-      },
-      {
-        metric: 'get-product',
-      }
-    )
+  ) => this.query<T>(query, variables, extensions, { metric: 'get-product' })
 }
