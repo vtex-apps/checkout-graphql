@@ -1,6 +1,6 @@
 import { partition, propEq, omit, eqProps } from 'ramda'
 
-type OptionItems = Omit<AssemblyOptionInput, 'assemblyId'>[]
+type OptionItems = Array<Omit<AssemblyOptionInput, 'assemblyId'>>
 
 interface OptionRequestUnit {
   items: OptionItems
@@ -18,11 +18,11 @@ interface AddOptionsLogicInput {
 interface AssemblyOptionBody {
   noSplitItem?: boolean
   composition?: {
-    items: {
+    items: Array<{
       id: string
       quantity: number
       seller: string
-    }[]
+    }>
   }
   inputValues?: Record<string, string>
 }

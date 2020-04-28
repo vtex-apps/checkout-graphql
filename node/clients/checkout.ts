@@ -86,7 +86,10 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormIgnoreProfile' }
     )
 
-  public updateOrderFormPayment = (orderFormId: string, paymentData: PaymentDataInput) =>
+  public updateOrderFormPayment = (
+    orderFormId: string,
+    paymentData: PaymentDataInput
+  ) =>
     this.post<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'paymentData'),
       paymentData,
@@ -264,7 +267,7 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId } = this.context as unknown as CustomIOContext
+    const { orderFormId } = (this.context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     return {
       Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
@@ -272,7 +275,7 @@ export class Checkout extends JanusClient {
   }
 
   private getChannelQueryString = () => {
-    const { segment } = this.context as unknown as CustomIOContext
+    const { segment } = (this.context as unknown) as CustomIOContext
     const channel = segment?.channel
     const queryString = channel ? `?sc=${channel}` : ''
     return queryString

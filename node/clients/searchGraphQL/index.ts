@@ -1,10 +1,6 @@
-import { GraphQLServer } from './../graphqlServer';
-import {
-  InstanceOptions,
-  IOContext,
-  Serializable,
-} from '@vtex/api'
+import { Serializable } from '@vtex/api'
 
+import { GraphQLServer } from '../graphqlServer'
 import {
   ProductArgs,
   query as productQuery,
@@ -19,13 +15,8 @@ const extensions = {
 }
 
 export class SearchGraphQL extends GraphQLServer {
-  constructor(ctx: IOContext, opts?: InstanceOptions) {
-    super(ctx, opts)
-  }
-
   public product = <T extends Serializable = ProductResponse>(
     variables: ProductArgs,
     query: string = productQuery
-  ) =>
-    this.query<T>(query, variables, extensions, { metric: 'get-product' })
+  ) => this.query<T>(query, variables, extensions, { metric: 'get-product' })
 }
