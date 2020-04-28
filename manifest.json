@@ -6,7 +6,7 @@
   "description": "Checkout GraphQL API",
   "builders": {
     "graphql": "1.x",
-    "node": "4.x"
+    "node": "6.x"
   },
   "dependencies": {
     "vtex.search-graphql": "0.x"

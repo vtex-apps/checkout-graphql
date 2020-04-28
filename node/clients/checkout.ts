@@ -264,7 +264,7 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId } = this.context as CustomIOContext
+    const { orderFormId } = this.context as unknown as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     return {
       Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
@@ -272,7 +272,7 @@ export class Checkout extends JanusClient {
   }
 
   private getChannelQueryString = () => {
-    const { segment } = this.context as CustomIOContext
+    const { segment } = this.context as unknown as CustomIOContext
     const channel = segment?.channel
     const queryString = channel ? `?sc=${channel}` : ''
     return queryString

@@ -1,4 +1,4 @@
-import { LRUCache, Service } from '@vtex/api'
+import { LRUCache, Service, RecorderState } from '@vtex/api'
 
 import { Clients } from './clients'
 import { schemaDirectives } from './directives'
@@ -15,7 +15,7 @@ metrics.trackCache('segment', segmentCache)
 const searchGraphQLCache = new LRUCache<string, any>({ max: 5000 })
 metrics.trackCache('searchGraphQL', searchGraphQLCache)
 
-export default new Service<Clients, void, CustomContext>({
+export default new Service<Clients, RecorderState, CustomContext>({
   clients: {
     implementation: Clients,
     options: {
