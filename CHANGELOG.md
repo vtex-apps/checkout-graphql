@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Type of paymentSystem to string
+- Type of `paymentSystem` from `Int` to `String`.
 
 ## [0.33.2] - 2020-04-28
 ### Changed
