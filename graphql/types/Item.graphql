@@ -26,6 +26,7 @@ type Item {
   skuName: String
   skuSpecifications: [SKUSpecification!]!
   uniqueId: String!
+  unitMultiplier: Float
   refId: String
 }
 
