@@ -1602,13 +1602,14 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
   integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
 
-"@vtex/api@6.28.1":
-  version "6.28.1"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.28.1.tgz#36ae0535bde187f0bf84c69d41bf30f3c38f5ea6"
-  integrity sha512-9lpRwHPPXsyrbwkgbFgMp5/ENvaqS5TVJ7VtOXtRo5HjjEKrRCRO2vhPnocCDYj0O1Msk41Awj30HMZ5MpblFw==
+"@vtex/api@6.28.3":
+  version "6.28.3"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.28.3.tgz#866fdd9c42d9437672792c0135940143b73a7d58"
+  integrity sha512-KAjfjexcXKIpvOX+/z5iVDzWu6icTYH46FpEUSzDmJGmrfylUGEjSwtbzWbOeKwE8luUaoTgZOlaNVk+jEn4jg==
   dependencies:
     "@types/koa" "^2.11.0"
     "@types/koa-compose" "^3.2.3"
+    "@vtex/node-error-report" "^0.0.2"
     "@wry/equality" "^0.1.9"
     agentkeepalive "^4.0.2"
     apollo-server-errors "^2.2.1"
@@ -1646,6 +1647,13 @@
     tar-fs "^2.0.0"
     uuid "^3.3.3"
     xss "^1.0.6"
+
+"@vtex/node-error-report@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@vtex/node-error-report/-/node-error-report-0.0.2.tgz#edf15095d6bb543d28b46f86bc109e6214149dfe"
+  integrity sha512-Q6V8E1IR/U0H6uTB1G+gH4ugL4Kw1l/WsK7W46LQBsxv4ISlZcO7dXPlWrL4RzRcVam5yzGAwNkv2wJdW61tAA==
+  dependencies:
+    is-stream "^2.0.0"
 
 "@vtex/test-tools@^3.1.0":
   version "3.1.0"
@@ -3562,6 +3570,11 @@ is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
+
+is-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.0.tgz#bde9c32680d6fae04129d6ac9d921ce7815f78e3"
+  integrity sha512-XCoy+WlUr7d1+Z8GgSuXmpuUFC9fOhRXglJMx+dwLKTkL44Cjd4W1Z5P+BQZpr+cR93aGP4S/s7Ftw6Nd/kiEw==
 
 is-symbol@^1.0.2:
   version "1.0.2"
