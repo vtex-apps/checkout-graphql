@@ -99,6 +99,7 @@ export const mutations = {
         message: 'Error when updating orderForm marketing data.',
         id: orderFormId,
         graphqlArgs: marketingData,
+        originalError: err,
       })
     }
 
