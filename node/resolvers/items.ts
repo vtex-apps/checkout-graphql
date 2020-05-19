@@ -69,7 +69,7 @@ export const mutations = {
   ): Promise<CheckoutOrderForm> => {
     const {
       clients,
-      vtex: { orderFormId },
+      vtex: { orderFormId, logger },
     } = ctx
     const { checkout } = clients
     const shouldUpdateMarketingData = Object.keys(marketingData).length > 0
@@ -85,17 +85,29 @@ export const mutations = {
      * while spreading their properties, since the second one will always
      * contain the most recent orderForm.
      */
-    const newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
-    const newOrderFormWithMarketingData = shouldUpdateMarketingData
-      ? await checkout.updateOrderFormMarketingData(orderFormId!, marketingData)
-      : newOrderForm
+    let newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
+
+    try {
+      if (shouldUpdateMarketingData) {
+        newOrderForm = await checkout.updateOrderFormMarketingData(
+          orderFormId!,
+          marketingData
+        )
+      }
+    } catch (err) {
+      logger.error({
+        message: 'Error when updating orderForm marketing data.',
+        id: orderFormId,
+        graphqlArgs: marketingData,
+      })
+    }
 
     if (withOptions && withOptions.length > 0) {
       await addOptionsForItems(
         withOptions,
         checkout,
         {
-          ...newOrderFormWithMarketingData,
+          ...newOrderForm,
           orderFormId: orderFormId!,
         },
         previousItems
@@ -104,7 +116,7 @@ export const mutations = {
       return checkout.orderForm()
     }
 
-    return newOrderFormWithMarketingData
+    return newOrderForm
   },
 
   updateItems: async (
