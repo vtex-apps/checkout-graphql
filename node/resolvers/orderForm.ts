@@ -25,6 +25,26 @@ const replaceDomain = (host: string) => (cookie: string) =>
   cookie.replace(/domain=.+?(;|$)/, `domain=${host};`)
 
 export const root = {
+  PaymentData: {
+    isValid: (payment: PaymentData) => {
+      return !!(payment.payments.length > 0)
+    },
+  },
+  Shipping: {
+    isValid: (shipping: Shipping) => {
+      return !!(
+        shipping.selectedAddress &&
+        shipping.deliveryOptions?.some(
+          deliveryOption => deliveryOption?.isSelected
+        )
+      )
+    },
+  },
+  ClientData: {
+    isValid: (profile: ClientProfileData) => {
+      return !!(profile?.firstName && profile?.lastName && profile?.phone)
+    },
+  },
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),

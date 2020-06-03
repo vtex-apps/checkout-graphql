@@ -3,6 +3,7 @@ type Shipping {
   deliveryOptions: [DeliveryOption]
   selectedAddress: Address
   availableAddresses: [Address]
+  isValid: Boolean!
 }
 
 type DeliveryOption {
