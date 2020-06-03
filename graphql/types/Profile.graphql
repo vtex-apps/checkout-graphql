@@ -33,7 +33,7 @@ type UserProfile {
 type CheckoutProfile {
   userProfileId: String
   profileProvider: String
-  availableAccounts: [String!]!
-  availableAddresses: [Address]!
+  availableAccounts: [AvailableAccount!]!
+  availableAddresses: [Address!]!
   userProfile: UserProfile
 }
