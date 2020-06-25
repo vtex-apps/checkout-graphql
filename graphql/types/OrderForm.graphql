@@ -2,6 +2,7 @@ type OrderForm {
   id: ID!
   items: [Item!]!
   canEditData: Boolean!
+  loggedIn: Boolean!
   userProfileId: String
   userType: UserType
   shipping: Shipping!
