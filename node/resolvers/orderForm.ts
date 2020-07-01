@@ -4,6 +4,11 @@ import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from '../utils/shipping'
+import {
+  isShippingValid,
+  isProfileValid,
+  isPaymentValid,
+} from '../utils/validation'
 
 interface StoreSettings {
   enableOrderFormOptimization: boolean
@@ -25,84 +30,6 @@ const replaceDomain = (host: string) => (cookie: string) =>
   cookie.replace(/domain=.+?(;|$)/, `domain=${host};`)
 
 export const root = {
-  PaymentData: {
-    isValid: (payment: PaymentData) => {
-      return !!(payment.payments.length > 0)
-    },
-  },
-  Shipping: {
-    isValid: async (shipping: Shipping, _: void, ctx: Context) => {
-      if (
-        !(
-          shipping.selectedAddress &&
-          shipping.deliveryOptions?.some(
-            deliveryOption => deliveryOption?.isSelected
-          )
-        )
-      ) {
-        return false
-      }
-
-      const address = shipping.selectedAddress
-
-      if (!address.country) {
-        return false
-      }
-
-      const countrySettings = await ctx.clients.countryDataSettings.getCountrySettings(
-        address.country
-      )
-
-      const fields = countrySettings.addressFields
-
-      for (const [field, fieldSchema] of Object.entries(fields) as Array<
-        [AddressFields, AddressFieldSchema]
-      >) {
-        const fieldValue = address[field]
-
-        if (fieldSchema.required && !fieldValue) {
-          return false
-        }
-
-        if (
-          fieldSchema.maxLength &&
-          fieldValue != null &&
-          typeof fieldValue !== 'boolean' &&
-          fieldValue.length > fieldSchema.maxLength
-        ) {
-          return false
-        }
-      }
-
-      return true
-    },
-  },
-  ClientData: {
-    isValid: async (profile: ClientProfileData, _: void, ctx: Context) => {
-      if (
-        !profile ||
-        !profile.firstName ||
-        !profile.lastName ||
-        !profile.phone ||
-        !profile.document ||
-        !profile.documentType
-      ) {
-        return false
-      }
-
-      const countriesSettings = await ctx.clients.countryDataSettings.getAllCountriesSettings()
-
-      const phoneCountry = countriesSettings.find(countrySetting => {
-        return profile.phone.startsWith(`+${countrySetting.phone.countryCode}`)
-      })
-
-      if (!phoneCountry) {
-        return false
-      }
-
-      return profile.phone.match(phoneCountry.phone.pattern) !== null
-    },
-  },
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),
@@ -147,8 +74,50 @@ export const root = {
 
       return adjustItems(platform, orderForm.items, searchGraphQL)
     },
-    shipping: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
-      return getShippingInfo({ orderForm, clients: ctx.clients })
+    clientProfileData: async (
+      orderForm: CheckoutOrderForm,
+      _: unknown,
+      ctx: Context
+    ) => {
+      if (!orderForm.clientProfileData) {
+        return null
+      }
+
+      const isValid = await isProfileValid(
+        orderForm,
+        orderForm.clientProfileData,
+        ctx
+      )
+
+      return {
+        ...orderForm.clientProfileData,
+        isValid,
+      }
+    },
+    shipping: async (
+      orderForm: CheckoutOrderForm,
+      _: unknown,
+      ctx: Context
+    ) => {
+      const shippingInfo = await getShippingInfo({
+        orderForm,
+        clients: ctx.clients,
+      })
+
+      const isValid = await isShippingValid(orderForm, shippingInfo, ctx)
+
+      return {
+        ...shippingInfo,
+        isValid,
+      }
+    },
+    paymentData: (orderForm: CheckoutOrderForm) => {
+      const isValid = isPaymentValid(orderForm.paymentData)
+
+      return {
+        ...orderForm.paymentData,
+        isValid,
+      }
     },
   },
   ClientPreferencesData: {
