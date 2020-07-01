@@ -84,6 +84,7 @@ declare global {
   interface PhoneSchema {
     countryCode: string
     mask?: string
+    pattern: string
   }
 
   interface OrderFormItem {

@@ -78,8 +78,29 @@ export const root = {
     },
   },
   ClientData: {
-    isValid: (profile: ClientProfileData) => {
-      return !!(profile?.firstName && profile?.lastName && profile?.phone)
+    isValid: async (profile: ClientProfileData, _: void, ctx: Context) => {
+      if (
+        !profile ||
+        !profile.firstName ||
+        !profile.lastName ||
+        !profile.phone ||
+        !profile.document ||
+        !profile.documentType
+      ) {
+        return false
+      }
+
+      const countriesSettings = await ctx.clients.countryDataSettings.getAllCountriesSettings()
+
+      const phoneCountry = countriesSettings.find(countrySetting => {
+        return profile.phone.startsWith(`+${countrySetting.phone.countryCode}`)
+      })
+
+      if (!phoneCountry) {
+        return false
+      }
+
+      return profile.phone.match(phoneCountry.phone.pattern) !== null
     },
   },
   OrderForm: {
