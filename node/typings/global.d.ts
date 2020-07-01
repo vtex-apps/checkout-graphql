@@ -42,6 +42,48 @@ declare global {
     reference: string | null
     state: string | null
     street: string | null
+    isDisposable: boolean
+  }
+
+  type AddressFields = keyof CheckoutAddress
+
+  interface CountryDataSchema {
+    countryISO: string
+    addressFields: AddressFieldsSchema
+    phone: PhoneSchema
+  }
+
+  interface AddressFieldsSchema {
+    [field in AddressField]: AddressFieldSchema
+    postalCode?: AddressFieldSchema & PostalCodeSchema
+  }
+
+  interface PostalCodeSchema {
+    forgottenURL?: string
+  }
+
+  interface AddressFieldSchema {
+    label: string
+    name?: AddressField | 'addressType'
+    hidden?: boolean
+    maxLength?: number
+    size?: string
+    required?: boolean
+    autoComplete?: string
+    optionsCaption?: string
+    options?: AddressOption[]
+    elementName?: string
+    mask?: string
+  }
+
+  interface AddressOption {
+    label: string
+    value: string
+  }
+
+  interface PhoneSchema {
+    countryCode: string
+    mask?: string
   }
 
   interface OrderFormItem {

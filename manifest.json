@@ -9,6 +9,7 @@
     "node": "6.x"
   },
   "dependencies": {
+    "vtex.country-data-settings": "0.x",
     "vtex.graphql-server": "1.x"
   },
   "credentialType": "absolute",

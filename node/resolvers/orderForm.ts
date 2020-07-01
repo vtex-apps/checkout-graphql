@@ -31,13 +31,50 @@ export const root = {
     },
   },
   Shipping: {
-    isValid: (shipping: Shipping) => {
-      return !!(
-        shipping.selectedAddress &&
-        shipping.deliveryOptions?.some(
-          deliveryOption => deliveryOption?.isSelected
+    isValid: async (shipping: Shipping, _: void, ctx: Context) => {
+      if (
+        !(
+          shipping.selectedAddress &&
+          shipping.deliveryOptions?.some(
+            deliveryOption => deliveryOption?.isSelected
+          )
         )
+      ) {
+        return false
+      }
+
+      const address = shipping.selectedAddress
+
+      if (!address.country) {
+        return false
+      }
+
+      const countrySettings = await ctx.clients.countryDataSettings.getCountrySettings(
+        address.country
       )
+
+      const fields = countrySettings.addressFields
+
+      for (const [field, fieldSchema] of Object.entries(fields) as Array<
+        [AddressFields, AddressFieldSchema]
+      >) {
+        const fieldValue = address[field]
+
+        if (fieldSchema.required && !fieldValue) {
+          return false
+        }
+
+        if (
+          fieldSchema.maxLength &&
+          fieldValue != null &&
+          typeof fieldValue !== 'boolean' &&
+          fieldValue.length > fieldSchema.maxLength
+        ) {
+          return false
+        }
+      }
+
+      return true
     },
   },
   ClientData: {

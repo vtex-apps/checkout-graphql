@@ -3,6 +3,7 @@ import { IOClients } from '@vtex/api'
 import { Checkout } from './checkout'
 import { SearchGraphQL } from './searchGraphQL'
 import { Session } from './session'
+import { CountryDataSettings } from './countryDataSettings'
 
 export class Clients extends IOClients {
   public get checkout() {
@@ -15,5 +16,9 @@ export class Clients extends IOClients {
 
   public get customSession() {
     return this.getOrSet('customSession', Session)
+  }
+
+  public get countryDataSettings() {
+    return this.getOrSet('countryDataSettings', CountryDataSettings)
   }
 }

@@ -34,6 +34,9 @@ export default new Service<Clients, RecorderState, CustomContext>({
         memoryCache: segmentCache,
         timeout: THREE_SECONDS_MS,
       },
+      countryDataSettings: {
+        timeout: THREE_SECONDS_MS,
+      },
     },
   },
   graphql: {
