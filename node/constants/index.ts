@@ -10,3 +10,5 @@ export enum AddressType {
 // Delivery channels
 export const DELIVERY = 'delivery'
 export const PICKUP_IN_STORE = 'pickup-in-store'
+
+export const VTEX_SESSION = 'vtex_session'

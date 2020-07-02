@@ -1,4 +1,5 @@
 import { prop, propOr, compose, forEach } from 'ramda'
+import { ResolverError } from '@vtex/api'
 
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { adjustItems } from './items'
@@ -9,6 +10,7 @@ import {
   isProfileValid,
   isPaymentValid,
 } from '../utils/validation'
+import { VTEX_SESSION } from '../constants'
 
 interface StoreSettings {
   enableOrderFormOptimization: boolean
@@ -39,8 +41,16 @@ export const root = {
         cookies,
       } = ctx
 
+      const sessionCookie = cookies.get(VTEX_SESSION)
+
+      if (sessionCookie === undefined){
+        throw new ResolverError(
+          `Invalid request for session, the ${VTEX_SESSION} wasn't provided!`
+        )
+      }
+
       const { sessionData } = await customSession.getSession(
-        cookies.get('vtex_session'),
+        sessionCookie,
         ['*']
       )
 
