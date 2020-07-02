@@ -1,5 +1,4 @@
 import { prop, propOr, compose, forEach } from 'ramda'
-import { ResolverError } from '@vtex/api'
 
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { adjustItems } from './items'
@@ -35,24 +34,32 @@ export const root = {
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),
-    userType: async (_: CheckoutOrderForm, __: unknown, ctx: Context) => {
+    userType: async (
+      orderForm: CheckoutOrderForm,
+      __: unknown,
+      ctx: Context
+    ) => {
       const {
         clients: { customSession },
         cookies,
+        vtex: { logger },
       } = ctx
 
       const sessionCookie = cookies.get(VTEX_SESSION)
 
-      if (sessionCookie === undefined){
-        throw new ResolverError(
-          `Invalid request for session, the ${VTEX_SESSION} wasn't provided!`
+      if (sessionCookie === undefined) {
+        logger.warn(
+          `Can't request session details: ${JSON.stringify(
+            VTEX_SESSION
+          )} is undefined. ofid=${orderForm.orderFormId}`
         )
+
+        return 'STORE_USER'
       }
 
-      const { sessionData } = await customSession.getSession(
-        sessionCookie,
-        ['*']
-      )
+      const { sessionData } = await customSession.getSession(sessionCookie, [
+        '*',
+      ])
 
       const isCallCenterOperator =
         sessionData?.namespaces?.impersonate?.canImpersonate?.value === 'true'
