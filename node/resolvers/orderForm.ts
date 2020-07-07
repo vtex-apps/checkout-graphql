@@ -49,9 +49,7 @@ export const root = {
 
       if (sessionCookie === undefined) {
         logger.warn(
-          `Can't request session details: ${JSON.stringify(
-            VTEX_SESSION
-          )} is undefined. ofid=${orderForm.orderFormId}`
+          `Can't request session details: "${VTEX_SESSION}" is undefined. ofid=${orderForm.orderFormId}`
         )
 
         return 'STORE_USER'
