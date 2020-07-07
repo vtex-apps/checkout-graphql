@@ -63,6 +63,7 @@ type PaymentData {
   paymentSystems: [PaymentSystem!]!
   payments: [Payment!]!
   availableAccounts: [AvailableAccount!]!
+  isValid: Boolean!
 }
 
 type SavePaymentTokenPayload {

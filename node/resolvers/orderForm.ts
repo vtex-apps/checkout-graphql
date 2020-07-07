@@ -4,6 +4,11 @@ import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from '../utils/shipping'
+import {
+  isShippingValid,
+  isProfileValid,
+  isPaymentValid,
+} from '../utils/validation'
 
 interface StoreSettings {
   enableOrderFormOptimization: boolean
@@ -69,8 +74,50 @@ export const root = {
 
       return adjustItems(platform, orderForm.items, searchGraphQL)
     },
-    shipping: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
-      return getShippingInfo({ orderForm, clients: ctx.clients })
+    clientProfileData: async (
+      orderForm: CheckoutOrderForm,
+      _: unknown,
+      ctx: Context
+    ) => {
+      if (!orderForm.clientProfileData) {
+        return null
+      }
+
+      const isValid = await isProfileValid(
+        orderForm,
+        orderForm.clientProfileData,
+        ctx
+      )
+
+      return {
+        ...orderForm.clientProfileData,
+        isValid,
+      }
+    },
+    shipping: async (
+      orderForm: CheckoutOrderForm,
+      _: unknown,
+      ctx: Context
+    ) => {
+      const shippingInfo = await getShippingInfo({
+        orderForm,
+        clients: ctx.clients,
+      })
+
+      const isValid = await isShippingValid(orderForm, shippingInfo, ctx)
+
+      return {
+        ...shippingInfo,
+        isValid,
+      }
+    },
+    paymentData: (orderForm: CheckoutOrderForm) => {
+      const isValid = isPaymentValid(orderForm.paymentData)
+
+      return {
+        ...orderForm.paymentData,
+        isValid,
+      }
     },
   },
   ClientPreferencesData: {

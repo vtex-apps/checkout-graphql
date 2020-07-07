@@ -42,6 +42,49 @@ declare global {
     reference: string | null
     state: string | null
     street: string | null
+    isDisposable: boolean
+  }
+
+  type AddressFields = keyof CheckoutAddress
+
+  interface CountryDataSchema {
+    countryISO: string
+    addressFields: AddressFieldsSchema
+    phone: PhoneSchema
+  }
+
+  interface AddressFieldsSchema {
+    [field in AddressField]: AddressFieldSchema
+    postalCode?: AddressFieldSchema & PostalCodeSchema
+  }
+
+  interface PostalCodeSchema {
+    forgottenURL?: string
+  }
+
+  interface AddressFieldSchema {
+    label: string
+    name?: AddressField | 'addressType'
+    hidden?: boolean
+    maxLength?: number
+    size?: string
+    required?: boolean
+    autoComplete?: string
+    optionsCaption?: string
+    options?: AddressOption[]
+    elementName?: string
+    mask?: string
+  }
+
+  interface AddressOption {
+    label: string
+    value: string
+  }
+
+  interface PhoneSchema {
+    countryCode: string
+    mask?: string
+    pattern: string
   }
 
   interface OrderFormItem {
@@ -157,59 +200,8 @@ declare global {
       value: number
     }>
     shippingData: ShippingData
-    clientProfileData: any | null
-    paymentData: {
-      installmentOptions: Array<{
-        paymentSystem: string
-        bin: string | null
-        paymentName: string | null
-        paymentGroupName: string | null
-        value: number
-        installments: Array<{
-          count: number
-          hasInterestRate: false
-          interestRate: number
-          value: number
-          total: number
-          sellerMerchantInstallments: Array<{
-            count: number
-            hasInterestRate: false
-            interestRate: number
-            value: number
-            total: number
-          }>
-        }>
-      }>
-      paymentSystems: Array<{
-        id: string
-        name: string
-        groupName: string
-        validator: {
-          regex: string
-          mask: string
-          cardCodeRegex: string
-          cardCodeMask: string
-          weights: number[]
-          useCvv: boolean
-          useExpirationDate: boolean
-          useCardHolderName: boolean
-          useBillingAddress: boolean
-        }
-        stringId: string
-        template: string
-        requiresDocument: boolean
-        isCustom: boolean
-        description: string | null
-        requiresAuthentication: boolean
-        dueDate: string
-        availablePayments: any | null
-      }>
-      payments: any[]
-      giftCards: any[]
-      giftCardMessages: any[]
-      availableAccounts: any[]
-      availableTokens: any[]
-    }
+    clientProfileData: ClientProfileData | null
+    paymentData: PaymentData
     marketingData: OrderFormMarketingData | null
     sellers: Array<{
       id: string
@@ -258,6 +250,77 @@ declare global {
     availableAccounts: string[]
     availableAddresses: CheckoutAddress[]
     userProfile: any
+  }
+
+  interface ClientProfileData {
+    email: string
+    firstName: string
+    lastName: string
+    document: string
+    documentType: string
+    phone: string
+    corporateName: string
+    tradeName: string
+    corporateDocument: string
+    stateInscription: string
+    corporatePhone: string
+    isCorporate: boolean
+    profileCompleteOnLoading: boolean
+    profileErrorOnLoading: boolean
+    customerClass: string
+  }
+
+  interface PaymentData {
+    installmentOptions: Array<{
+      paymentSystem: string
+      bin: string | null
+      paymentName: string | null
+      paymentGroupName: string | null
+      value: number
+      installments: Array<{
+        count: number
+        hasInterestRate: false
+        interestRate: number
+        value: number
+        total: number
+        sellerMerchantInstallments: Array<{
+          count: number
+          hasInterestRate: false
+          interestRate: number
+          value: number
+          total: number
+        }>
+      }>
+    }>
+    paymentSystems: Array<{
+      id: string
+      name: string
+      groupName: string
+      validator: {
+        regex: string
+        mask: string
+        cardCodeRegex: string
+        cardCodeMask: string
+        weights: number[]
+        useCvv: boolean
+        useExpirationDate: boolean
+        useCardHolderName: boolean
+        useBillingAddress: boolean
+      }
+      stringId: string
+      template: string
+      requiresDocument: boolean
+      isCustom: boolean
+      description: string | null
+      requiresAuthentication: boolean
+      dueDate: string
+      availablePayments: any | null
+    }>
+    payments: any[]
+    giftCards: any[]
+    giftCardMessages: any[]
+    availableAccounts: any[]
+    availableTokens: any[]
   }
 
   interface ShippingData {
