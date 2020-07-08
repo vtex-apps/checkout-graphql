@@ -31,6 +31,10 @@ export const isShippingValid = async (
     address.country
   )
 
+  if (!countrySettings) {
+    return false
+  }
+
   const fields = countrySettings.addressFields
 
   for (const [field, fieldSchema] of Object.entries(fields) as Array<

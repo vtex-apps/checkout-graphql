@@ -13,7 +13,9 @@ export class CountryDataSettings extends AppClient {
     })
   }
 
-  public getCountrySettings(country: string): Promise<CountryDataSchema> {
+  public getCountrySettings(
+    country: string
+  ): Promise<CountryDataSchema | null> {
     return this.http.get(`/country-settings/${country}`)
   }
 
