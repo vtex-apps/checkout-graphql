@@ -69,10 +69,15 @@ export const root = {
     items: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
       const {
         clients: { searchGraphQL },
-        vtex: { platform },
+        vtex: { platform, logger },
       } = ctx
 
-      return adjustItems(platform, orderForm.items, searchGraphQL)
+      return adjustItems({
+        platform,
+        items: orderForm.items,
+        searchGraphQL,
+        logger,
+      })
     },
     clientProfileData: async (
       orderForm: CheckoutOrderForm,

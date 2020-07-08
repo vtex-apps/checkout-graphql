@@ -1,4 +1,5 @@
 import { map } from 'bluebird'
+import { Logger } from '@vtex/api'
 
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
@@ -39,19 +40,34 @@ const getVariations = (skuId: string, skuList: any[]) => {
   }))
 }
 
-export const adjustItems = (
-  platform: string,
-  items: OrderFormItem[],
+export const adjustItems = ({
+  platform,
+  items,
+  searchGraphQL,
+  logger,
+}: {
+  platform: string
+  items: OrderFormItem[]
   searchGraphQL: SearchGraphQL
-) =>
+  logger: Logger
+}) =>
   map(items, async (item: OrderFormItem) => {
-    const product = await getProductInfo(platform, item, searchGraphQL)
+    let product = null
+
+    try {
+      product = await getProductInfo(platform, item, searchGraphQL)
+    } catch (err) {
+      logger.warn({
+        message: 'Error when communicating with vtex.search-graphql',
+        error: err,
+      })
+    }
 
     return {
       ...item,
       imageUrls: fixImageUrl(item.imageUrl, platform),
-      name: product.productName,
-      skuSpecifications: getVariations(item.id, product.items),
+      name: product?.productName ?? item.name,
+      skuSpecifications: getVariations(item.id, product?.items ?? []),
     }
   })
 
