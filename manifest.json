@@ -1,7 +1,7 @@
 {
   "name": "checkout-graphql",
   "vendor": "vtex",
-  "version": "0.36.3",
+  "version": "0.36.4",
   "title": "Checkout GraphQL",
   "description": "Checkout GraphQL API",
   "builders": {
@@ -14,9 +14,7 @@
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
-  "registries": [
-    "smartcheckout"
-  ],
+  "registries": ["smartcheckout"],
   "policies": [
     {
       "name": "outbound-access",
