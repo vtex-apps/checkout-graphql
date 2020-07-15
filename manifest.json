@@ -14,7 +14,9 @@
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
-  "registries": ["smartcheckout"],
+  "registries": [
+    "smartcheckout"
+  ],
   "policies": [
     {
       "name": "outbound-access",

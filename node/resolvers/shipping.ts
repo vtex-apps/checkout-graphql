@@ -45,7 +45,10 @@ export const mutations = {
 
     const newOrderForm = await checkout.updateOrderFormShipping(
       orderFormId!,
-      shippingData
+      {
+        ...shippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
     )
 
     return newOrderForm
@@ -70,7 +73,10 @@ export const mutations = {
 
     const newOrderForm = await checkout.updateOrderFormShipping(
       orderFormId!,
-      newShippingData
+      {
+        ...newShippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
     )
 
     return newOrderForm
@@ -95,7 +101,10 @@ export const mutations = {
 
     const newOrderForm = await checkout.updateOrderFormShipping(
       orderFormId!,
-      newShippingData
+      {
+        ...newShippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
     )
 
     return newOrderForm
