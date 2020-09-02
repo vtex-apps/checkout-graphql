@@ -87,8 +87,10 @@ export const mutations = {
       clients,
       vtex: { orderFormId, logger },
     } = ctx
+
     const { checkout } = clients
-    const shouldUpdateMarketingData = Object.keys(marketingData).length > 0
+    const shouldUpdateMarketingData =
+      Object.keys(marketingData ?? {}).length > 0
 
     const { items: previousItems } = await checkout.orderForm()
     const cleanItems = items.map(({ options, ...rest }) => rest)
