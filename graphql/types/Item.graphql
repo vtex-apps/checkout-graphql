@@ -21,6 +21,7 @@ type Item {
   productId: String!
   productRefId: String
   quantity: Float!
+  seller: String
   sellingPrice: Float
   sellingPriceWithAssemblies: Float
   skuName: String
