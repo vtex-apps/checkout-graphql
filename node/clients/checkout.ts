@@ -226,17 +226,17 @@ export class Checkout extends JanusClient {
       metric: 'checkout-updateOrderFormCheckin',
     })
 
-  public orderForm = () => {
+  public orderForm = (orderFormId: string) => {
     return this.post<CheckoutOrderForm>(
-      this.routes.orderForm,
+      this.routes.orderForm(orderFormId),
       {},
       { metric: 'checkout-orderForm' }
     )
   }
 
-  public orderFormRaw = () => {
+  public orderFormRaw = (orderFormId?: string) => {
     return this.postRaw<CheckoutOrderForm>(
-      this.routes.orderForm,
+      this.routes.orderForm(orderFormId),
       {},
       { metric: 'checkout-orderForm' }
     )
@@ -369,7 +369,8 @@ export class Checkout extends JanusClient {
         `${base}/orderForm/${orderFormId}/messages/clear`,
       insertCoupon: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/coupons`,
-      orderForm: `${base}/orderForm`,
+      orderForm: (orderFormId?: string) =>
+        `${base}/orderForm/${orderFormId ?? ''}`,
       orderFormCustomData: (
         orderFormId: string,
         appId: string,

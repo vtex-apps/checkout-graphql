@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Optional argument `orderFormId` to all queries and mutation that alters
+  information in the cart.
 
 ## [0.41.1] - 2020-09-29
 ### Fixed
