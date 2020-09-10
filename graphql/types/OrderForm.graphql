@@ -13,6 +13,7 @@ type OrderForm {
   paymentData: PaymentData!
   clientProfileData: ClientData
   clientPreferencesData: ClientPreferencesData
+  allowManualPrice: Boolean
 }
 
 enum UserType {

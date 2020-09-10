@@ -248,6 +248,11 @@ export class Checkout extends JanusClient {
   public getProfile = (email: string) =>
     this.get<CheckoutProfile>(this.routes.profile(email))
 
+  public setManualPrice = (orderFormId: string, itemIndex: number, price: number) => this.put<CheckoutOrderForm>(
+    this.routes.setManualPrice(orderFormId, itemIndex), {
+      price
+    })
+
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
@@ -375,6 +380,7 @@ export class Checkout extends JanusClient {
       savePaymentToken: (queryString: string) =>
         `${base}/current-user/payment-tokens/${queryString}`,
       getPaymentSession: () => `${base}/payment-session`,
+      setManualPrice: (orderFormId: string, itemIndex: number) => `${base}/orderForm/${orderFormId}/items/${itemIndex}/price`
     }
   }
 }

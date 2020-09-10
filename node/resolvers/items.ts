@@ -253,7 +253,24 @@ export const mutations = {
     )
 
     return data
-  }
+  },
+  setManualPrice: async (
+    _: unknown,
+    { input: {itemIndex, price} }: { input: {itemIndex: number, price: number} },
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients,
+      vtex: { orderFormId },
+    } = ctx
+
+    const newOrderForm = await clients.checkout.setManualPrice(
+      orderFormId!,
+      itemIndex,
+      price
+    )
+    
+    return newOrderForm
 }
 
 interface OfferingInput {
