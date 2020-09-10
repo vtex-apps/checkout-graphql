@@ -7,16 +7,16 @@ type Item {
   additionalInfo: ItemAdditionalInfo
   assemblyOptions: AssemblyOptionItem
   availability: String
-  attachmentOfferings: [AttachmentOffering]
-  attachments: [Attachment]
-  bundleItems: [Item]
+  attachmentOfferings: [AttachmentOffering!]!
+  attachments: [Attachment!]!
+  bundleItems: [Item!]!
   detailUrl: String
   id: ID!
   imageUrls: ImageUrls
   listPrice: Float
   measurementUnit: String
   name: String
-  offerings: [Offering]
+  offerings: [Offering!]!
   options: [AssemblyOptionType]
   parentAssemblyBinding: String
   price: Float
@@ -93,7 +93,7 @@ type Offering {
   name: String!
   price: Int!
   type: String!
-  attachmentOfferings: [AttachmentOffering]
+  attachmentOfferings: [AttachmentOffering!]!
 }
 
 scalar AttachmentSchema
@@ -142,5 +142,5 @@ input BundleItemAttachmentInput {
   itemIndex: Int!
   bundleItemId: String!
   attachmentName: String!
-  attachmentContent: AttachmentContent
+  attachmentContent: AttachmentContent!
 }

@@ -197,10 +197,11 @@ export class Checkout extends JanusClient {
     itemIndex: number,
     bundleItemId: string,
     attachmentName: string,
+    attachmentContent: any,
   ) =>
     this.delete<CheckoutOrderForm>(
       this.routes.bundleItemAttachment(orderFormId, itemIndex, bundleItemId, attachmentName),
-      { metric: 'checkout-removeBundleItemAttachment' }
+      { metric: 'checkout-removeBundleItemAttachment', data: { content: attachmentContent } }
     )
 
   public updateOrderFormCheckin = (orderFormId: string, checkinPayload: any) =>

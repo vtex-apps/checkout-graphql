@@ -180,13 +180,12 @@ export const mutations = {
     _: unknown,
     { offeringInput }: { offeringInput: OfferingInput },
     ctx: Context
-  ) => {
+  ): Promise<CheckoutOrderForm> => {
     const {
       clients,
       vtex: { orderFormId },
     } = ctx
 
-    try {
     const newOrderForm = await clients.checkout.addItemOffering(
       orderFormId!,
       offeringInput.itemIndex,
@@ -195,10 +194,6 @@ export const mutations = {
     )
 
     return newOrderForm
-    } catch (e) {
-      console.log(e)
-      return null
-    }
   },
   removeItemOffering: async (
     _: unknown,
@@ -222,7 +217,7 @@ export const mutations = {
     _: unknown,
     { bundleItemAttachmentInput }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
     ctx: Context
-  ) => {
+  ): Promise<CheckoutOrderForm> => {
     const {
       clients,
       vtex: { orderFormId },
@@ -248,26 +243,27 @@ export const mutations = {
       vtex: { orderFormId },
     } = ctx
 
-    const newOrderForm = await clients.checkout.removeBundleItemAttachment(
+    const { data } = await clients.checkout.removeBundleItemAttachment(
       orderFormId!,
       bundleItemAttachmentInput.itemIndex,
       bundleItemAttachmentInput.bundleItemId,
       bundleItemAttachmentInput.attachmentName,
+      bundleItemAttachmentInput.attachmentContent,
     )
 
-    return newOrderForm
+    return data
   }
 }
 
 interface OfferingInput {
   itemIndex: number
   offeringId: string
-  offeringInfo: any
+  offeringInfo: unknown
 }
 
 interface BundleItemAttachmentInput {
   itemIndex: number
   bundleItemId: string
   attachmentName: string
-  attachmentContent: any
+  attachmentContent: unknown
 }
