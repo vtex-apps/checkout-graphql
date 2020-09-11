@@ -176,4 +176,94 @@ export const mutations = {
 
     return newOrderForm
   },
+  addItemOffering: async (
+    _: unknown,
+    { offeringInput }: { offeringInput: OfferingInput },
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients,
+      vtex: { orderFormId },
+    } = ctx
+
+    const newOrderForm = await clients.checkout.addItemOffering(
+      orderFormId!,
+      offeringInput.itemIndex,
+      offeringInput.offeringId,
+      offeringInput.offeringInfo,
+    )
+
+    return newOrderForm
+  },
+  removeItemOffering: async (
+    _: unknown,
+    { offeringInput }: { offeringInput: OfferingInput },
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients,
+      vtex: { orderFormId },
+    } = ctx
+
+    const newOrderForm = await clients.checkout.removeItemOffering(
+      orderFormId!,
+      offeringInput.itemIndex,
+      offeringInput.offeringId,
+    )
+
+    return newOrderForm
+  },
+  addBundleItemAttachment: async (
+    _: unknown,
+    { bundleItemAttachmentInput }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients,
+      vtex: { orderFormId },
+    } = ctx
+
+    const newOrderForm = await clients.checkout.addBundleItemAttachment(
+      orderFormId!,
+      bundleItemAttachmentInput.itemIndex,
+      bundleItemAttachmentInput.bundleItemId,
+      bundleItemAttachmentInput.attachmentName,
+      bundleItemAttachmentInput.attachmentContent,
+    )
+
+    return newOrderForm
+  },
+  removeBundleItemAttachment: async (
+    _: unknown,
+    { bundleItemAttachmentInput }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
+    ctx: Context
+  ) => {
+    const {
+      clients,
+      vtex: { orderFormId },
+    } = ctx
+
+    const { data } = await clients.checkout.removeBundleItemAttachment(
+      orderFormId!,
+      bundleItemAttachmentInput.itemIndex,
+      bundleItemAttachmentInput.bundleItemId,
+      bundleItemAttachmentInput.attachmentName,
+      bundleItemAttachmentInput.attachmentContent,
+    )
+
+    return data
+  }
+}
+
+interface OfferingInput {
+  itemIndex: number
+  offeringId: string
+  offeringInfo: unknown
+}
+
+interface BundleItemAttachmentInput {
+  itemIndex: number
+  bundleItemId: string
+  attachmentName: string
+  attachmentContent: unknown
 }

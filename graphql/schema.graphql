@@ -14,6 +14,12 @@ type Mutation {
 
   updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
 
+  addItemOffering(offeringInput: OfferingInput): OrderForm @withOrderFormId
+  removeItemOffering(offeringInput: OfferingInput): OrderForm @withOrderFormId
+
+  addBundleItemAttachment(bundleItemAttachmentInput: BundleItemAttachmentInput): OrderForm @withOrderFormId
+  removeBundleItemAttachment(bundleItemAttachmentInput: BundleItemAttachmentInput): OrderForm @withOrderFormId
+
   insertCoupon(text: String): OrderForm @withOrderFormId
 
   estimateShipping(address: AddressInput): OrderForm @withOrderFormId

@@ -7,20 +7,25 @@ type Item {
   additionalInfo: ItemAdditionalInfo
   assemblyOptions: AssemblyOptionItem
   availability: String
+  attachmentOfferings: [AttachmentOffering!]!
+  attachments: [Attachment!]!
+  bundleItems: [Item!]!
   detailUrl: String
   id: ID!
   imageUrls: ImageUrls
   listPrice: Float
   measurementUnit: String
   name: String
-  parentAssemblyBinding: String
+  offerings: [Offering!]!
   options: [AssemblyOptionType]
+  parentAssemblyBinding: String
   price: Float
   productCategories: productCategoriesObject
   productCategoryIds: String
   productId: String!
   productRefId: String
   quantity: Float!
+  refId: String
   seller: String!
   sellingPrice: Float
   sellingPriceWithAssemblies: Float
@@ -28,7 +33,6 @@ type Item {
   skuSpecifications: [SKUSpecification!]!
   uniqueId: String!
   unitMultiplier: Float
-  refId: String
 }
 
 type ImageUrls {
@@ -84,6 +88,29 @@ type AssemblyOptionType {
   options: [AssemblyOptionType!]
 }
 
+type Offering {
+  id: String!
+  name: String!
+  price: Int!
+  type: String!
+  attachmentOfferings: [AttachmentOffering!]!
+}
+
+scalar AttachmentSchema
+
+type AttachmentOffering {
+  name: String
+  required: Boolean
+  schema: AttachmentSchema
+}
+
+scalar AttachmentContent
+
+type Attachment {
+  name: String
+  content: AttachmentContent
+}
+
 input ItemInput {
   id: Int
   index: Int
@@ -101,4 +128,19 @@ input AssemblyOptionInput {
   seller: String
   inputValues: InputValues
   options: [AssemblyOptionInput!]
+}
+
+scalar OfferingInfo
+
+input OfferingInput {
+  itemIndex: Int!
+  offeringId: String!
+  offeringInfo: OfferingInfo
+}
+
+input BundleItemAttachmentInput {
+  itemIndex: Int!
+  bundleItemId: String!
+  attachmentName: String!
+  attachmentContent: AttachmentContent!
 }

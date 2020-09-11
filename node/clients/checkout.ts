@@ -156,6 +156,54 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-removeAssemblyOptions', data: body }
     )
 
+  public addItemOffering = async (
+    orderFormId: string,
+    itemIndex: number,
+    offeringId: string,
+    offeringInfo?: any,
+  ) =>
+    this.post<CheckoutOrderForm>(
+      this.routes.offering(orderFormId, itemIndex),
+      { id: offeringId, offeringInfo },
+      { metric: 'checkout-addItemOffering' }
+    )
+
+  public removeItemOffering = async (
+    orderFormId: string,
+    itemIndex: number,
+    offeringId: string,
+  ) =>
+    this.post<CheckoutOrderForm>(
+      this.routes.removeOffering(orderFormId, itemIndex, offeringId),
+      { Id: offeringId },
+      { metric: 'checkout-removeItemOffering' }
+    )
+
+  public addBundleItemAttachment = async (
+    orderFormId: string,
+    itemIndex: number,
+    bundleItemId: string,
+    attachmentName: string,
+    attachmentContent: any,
+  ) =>
+    this.post<CheckoutOrderForm>(
+      this.routes.bundleItemAttachment(orderFormId, itemIndex, bundleItemId, attachmentName),
+      { content: attachmentContent },
+      { metric: 'checkout-addBundleItemAttachment' }
+    )
+
+  public removeBundleItemAttachment = async (
+    orderFormId: string,
+    itemIndex: number,
+    bundleItemId: string,
+    attachmentName: string,
+    attachmentContent: any,
+  ) =>
+    this.delete<CheckoutOrderForm>(
+      this.routes.bundleItemAttachment(orderFormId, itemIndex, bundleItemId, attachmentName),
+      { metric: 'checkout-removeBundleItemAttachment', data: { content: attachmentContent } }
+    )
+
   public updateOrderFormCheckin = (orderFormId: string, checkinPayload: any) =>
     this.post(this.routes.checkin(orderFormId), checkinPayload, {
       metric: 'checkout-updateOrderFormCheckin',
@@ -318,6 +366,12 @@ export class Checkout extends JanusClient {
         `${base}/orderForms/simulation${queryString}`,
       updateItems: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/items/update`,
+      offering: (orderFormId: string, itemIndex: number) =>
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings`,
+      removeOffering: (orderFormId: string, itemIndex: number, offeringId: string) =>
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings/${offeringId}/remove`,
+      bundleItemAttachment: (orderFormId: string, itemIndex: number, bundleItemId: string, attachmentName: string) =>
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/bundles/${bundleItemId}/attachments/${attachmentName}`,
       savePaymentToken: (queryString: string) =>
         `${base}/current-user/payment-tokens/${queryString}`,
       getPaymentSession: () => `${base}/payment-session`,
