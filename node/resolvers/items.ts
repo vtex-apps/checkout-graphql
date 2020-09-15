@@ -140,7 +140,7 @@ export const mutations = {
 
   updateItems: async (
     _: unknown,
-    { orderItems }: { orderItems: OrderFormItemInput[] },
+    { orderItems, splitItem }: { orderItems: OrderFormItemInput[], splitItem: boolean },
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const {
@@ -168,10 +168,14 @@ export const mutations = {
         }
       })
     }
+    console.log(splitItem)
+    const senSplitItem = false;
+    console.log(senSplitItem)
 
     const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
-      orderItems
+      orderItems,
+      senSplitItem
     )
 
     return newOrderForm

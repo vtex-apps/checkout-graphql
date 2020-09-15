@@ -69,10 +69,10 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-setOrderFormCustomData' }
     )
 
-  public updateItems = (orderFormId: string, orderItems: any) =>
+  public updateItems = (orderFormId: string, orderItems: any, splitItem: boolean) =>
     this.post<CheckoutOrderForm>(
       this.routes.updateItems(orderFormId),
-      { orderItems },
+      { orderItems, noSplitItem: !splitItem},
       { metric: 'checkout-updateItems' }
     )
 
