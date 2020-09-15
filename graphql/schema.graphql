@@ -12,7 +12,7 @@ type Mutation {
     @withOrderFormId
     @withSegment
 
-  updateItems(orderItems: [ItemInput]): OrderForm @withOrderFormId
+  updateItems(orderItems: [ItemInput], splitItem: Boolean = true): OrderForm @withOrderFormId
 
   addItemOffering(offeringInput: OfferingInput): OrderForm @withOrderFormId
   removeItemOffering(offeringInput: OfferingInput): OrderForm @withOrderFormId

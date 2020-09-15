@@ -140,7 +140,7 @@ export const mutations = {
 
   updateItems: async (
     _: unknown,
-    { orderItems }: { orderItems: OrderFormItemInput[] },
+    { orderItems, splitItem }: { orderItems: OrderFormItemInput[], splitItem: boolean },
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const {
@@ -171,7 +171,8 @@ export const mutations = {
 
     const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
-      orderItems
+      orderItems,
+      splitItem
     )
 
     return newOrderForm
