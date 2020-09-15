@@ -168,14 +168,11 @@ export const mutations = {
         }
       })
     }
-    console.log(splitItem)
-    const senSplitItem = false;
-    console.log(senSplitItem)
 
     const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
       orderItems,
-      senSplitItem
+      splitItem
     )
 
     return newOrderForm
