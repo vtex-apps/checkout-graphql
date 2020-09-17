@@ -24,7 +24,11 @@ export const isShippingValid = async (
 
   const address = shipping.selectedAddress
 
-  if (!address?.country) {
+  if (address == null) {
+    return false
+  }
+
+  if (!address.country) {
     return false
   }
 
