@@ -150,6 +150,7 @@ export const getShippingInfo = async ({
     availableAddresses,
     countries,
     deliveryOptions: updatedDeliveryOptions,
-    selectedAddress,
+    logisticsInfo,
+    selectedAddress
   }
 }

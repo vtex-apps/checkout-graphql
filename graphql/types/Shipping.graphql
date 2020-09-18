@@ -3,6 +3,7 @@ type Shipping {
   deliveryOptions: [DeliveryOption]
   selectedAddress: Address
   availableAddresses: [Address]
+  logisticsInfo: [LogisticsInfo]
   isValid: Boolean!
 }
 
@@ -55,4 +56,64 @@ enum AddressType {
   giftRegistry
   pickup
   search
+}
+
+type LogisticsInfo {
+  addressId: String
+  deliveryChannels: [DeliveryChannel]
+  itemId: String
+  itemIndex: Int
+  shipsTo: [String]
+  slas: [SLA]
+  selectedDeliveryChannel: String
+  selectedSla: String
+}
+
+type DeliveryChannel {
+  id: String
+}
+
+type SLA {
+  id: String
+  deliveryChannel: String
+  name: String
+  deliveryIds: [DeliveryId]
+  shippingEstimate: String
+  shippingEstimateDate: String
+  lockTTL: String
+  availableDeliveryWindows: [AvailableDeliveryWindows]
+  deliveryWindow: String
+  price: Int
+  listPrice: Int
+  tax: Int
+  pickupStoreInfo: PickupStoreInfo
+  pickupPointId: String
+  pickupDistance: Float
+  polygonName: String
+  transitTime: String
+}
+
+type PickupStoreInfo {
+  isPickupStore: Boolean
+  friendlyName: String
+  address: Address
+  additionalInfo: String
+  dockId: String
+}
+
+type AvailableDeliveryWindows {
+  startDateUtc: String
+  endDateUtc: String
+  price: Int
+  lisPrice: Int
+  tax: Int
+}
+
+type DeliveryId {
+  courierId: String
+  dockId: String
+  courierName: String
+  quantity: Int
+  kitItemDetails: [String]
+  warehouseId: String
 }
