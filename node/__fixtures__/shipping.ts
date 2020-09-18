@@ -21,7 +21,7 @@ const SLA = {
   tax: 0,
 }
 
-const pickupSLA = {
+export const pickupSLA = {
   ...SLA,
   availableDeliveryWindows: [],
   deliveryChannel: PICKUP_IN_STORE,
@@ -31,7 +31,7 @@ const pickupSLA = {
   shippingEstimate: '1d',
 }
 
-const deliverySLA = {
+export const deliverySLA = {
   ...SLA,
   availableDeliveryWindows: [],
   deliveryChannel: DELIVERY,
@@ -57,7 +57,7 @@ const deliveryId = {
   quantity: 1,
 }
 
-const deliverySLAWithDeliveryIdOne = {
+export const deliverySLAWithDeliveryIdOne = {
   ...SLA,
   availableDeliveryWindows: [],
   deliveryChannel: DELIVERY,
@@ -68,7 +68,7 @@ const deliverySLAWithDeliveryIdOne = {
   deliveryIds: [deliveryIdOne],
 }
 
-const deliverySLAWithDeliveryId = {
+export const deliverySLAWithDeliveryId = {
   ...SLA,
   availableDeliveryWindows: [],
   deliveryChannel: DELIVERY,
@@ -79,7 +79,7 @@ const deliverySLAWithDeliveryId = {
   deliveryIds: [deliveryId],
 }
 
-const deliverySLAExpress = {
+export const deliverySLAExpress = {
   ...SLA,
   availableDeliveryWindows: [],
   deliveryChannel: DELIVERY,
@@ -89,7 +89,7 @@ const deliverySLAExpress = {
   shippingEstimate: '1h',
 }
 
-const scheduledDeliverySLA = {
+export const scheduledDeliverySLA = {
   ...SLA,
   availableDeliveryWindows: [{}],
   deliveryChannel: DELIVERY,

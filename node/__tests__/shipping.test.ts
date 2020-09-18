@@ -1,5 +1,11 @@
 import {
   deliveryAddress,
+  deliverySLA, 
+  pickupSLA,
+  scheduledDeliverySLA,
+  deliverySLAExpress,
+  deliverySLAWithDeliveryIdOne,
+  deliverySLAWithDeliveryId,
   ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO,
   ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS,
   ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO,
@@ -8,8 +14,9 @@ import {
   ORDER_FORM_WITH_SCHEDULED_DELIVERY,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
   ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
-  clients,
+  clients
 } from '../__fixtures__/shipping'
+import { DELIVERY, PICKUP_IN_STORE } from '../constants'
 import { getShippingInfo } from '../utils/shipping'
 
 describe('Shipping Resolvers', () => {
@@ -19,6 +26,7 @@ describe('Shipping Resolvers', () => {
         availableAddresses: [],
         countries: [],
         deliveryOptions: [],
+        logisticsInfo: [],
         selectedAddress: undefined,
       }
 
@@ -35,6 +43,28 @@ describe('Shipping Resolvers', () => {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: null,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [],
+          },
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 1,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: null,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [],
+          },
+        ],
         selectedAddress: deliveryAddress,
       }
 
@@ -58,6 +88,18 @@ describe('Shipping Resolvers', () => {
             price: 100,
           },
         ],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLA, pickupSLA],
+          },
+        ],
         selectedAddress: deliveryAddress,
       }
 
@@ -76,6 +118,18 @@ describe('Shipping Resolvers', () => {
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
+          },
+        ],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLA, scheduledDeliverySLA],
           },
         ],
         selectedAddress: deliveryAddress,
@@ -101,6 +155,18 @@ describe('Shipping Resolvers', () => {
             price: 100,
           },
         ],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLA, scheduledDeliverySLA, pickupSLA],
+          },
+        ],
         selectedAddress: deliveryAddress,
       }
 
@@ -122,6 +188,28 @@ describe('Shipping Resolvers', () => {
             id: 'delivery-SLA',
             isSelected: true,
             price: 200,
+          },
+        ],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLA],
+          },
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 1,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLA, deliverySLAExpress],
           },
         ],
         selectedAddress: deliveryAddress,
@@ -147,6 +235,28 @@ describe('Shipping Resolvers', () => {
             price: 200,
           },
         ],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLAWithDeliveryId],
+          },
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 1,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLAWithDeliveryIdOne, deliverySLAExpress],
+          },
+        ],
         selectedAddress: deliveryAddress,
       }
 
@@ -168,6 +278,28 @@ describe('Shipping Resolvers', () => {
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
+          },
+        ],
+        logisticsInfo: [
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [],
+          },
+          {
+            addressId: deliveryAddress.addressId,
+            deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+            itemId: 'testId2',
+            itemIndex: 0,
+            selectedDeliveryChannel: DELIVERY,
+            selectedSla: deliverySLA.id,
+            shipsTo: ['BRA', 'GBR'],
+            slas: [deliverySLA, pickupSLA],
           },
         ],
         selectedAddress: deliveryAddress,

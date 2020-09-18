@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Property `logisticsInfo` to `Shipping` type
 
+### Changed
+- Updated tests related to shipping, adding logisticsInfo mock
+
 ## [0.39.0] - 2020-09-15
 ### Added
 - `splitItem` parameter on `updateItems` mutation. 
