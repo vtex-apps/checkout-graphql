@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated tests related to shipping, adding logisticsInfo mock
 
+## [0.39.1] - 2020-09-21
+### Fixed
+- Error when trying to read `addressId` of a inexistent delivery address.
+- GraphQL validation errors on `Item.productId` when returning `bundleItems`.
+
 ## [0.39.0] - 2020-09-15
 ### Added
 - `splitItem` parameter on `updateItems` mutation. 

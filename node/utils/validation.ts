@@ -3,7 +3,8 @@
  */
 export const isShippingValid = async (
   orderForm: CheckoutOrderForm,
-  shipping: Shipping,
+  shipping: Omit<Shipping, 'selectedAddress'> &
+    Partial<Pick<Shipping, 'selectedAddress'>>,
   ctx: Context
 ) => {
   if (
@@ -22,6 +23,10 @@ export const isShippingValid = async (
   }
 
   const address = shipping.selectedAddress
+
+  if (address == null) {
+    return false
+  }
 
   if (!address.country) {
     return false

@@ -54,8 +54,12 @@ export const selectDeliveryOption = ({
     shippingData.selectedAddresses
   )
 
+  if (!deliveryAddress) {
+    return shippingData
+  }
+
   return getShippingData(
-    deliveryAddress!,
+    deliveryAddress,
     logisticsInfoWithSelectedDeliveryOption
   )
 }
@@ -92,7 +96,7 @@ export const getShippingInfo = async ({
 
   const selectedAddress =
     orderForm.shippingData &&
-    getSelectedDeliveryAddress(orderForm.shippingData.selectedAddresses)!
+    getSelectedDeliveryAddress(orderForm.shippingData.selectedAddresses)
 
   const availableItemsLogisticsInfo = logisticsInfo
     ? logisticsInfo.filter((item: LogisticsInfo) => item.slas.length)
