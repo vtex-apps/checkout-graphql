@@ -47,7 +47,8 @@ type Mutation {
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
-  setManualPrice(input: ManualPriceInput): OrderForm!
+  setManualPrice(input: ManualPriceInput!): OrderForm!
     @withOrderFormId
+    @withSegment
     @cacheControl(scope: PRIVATE)
 }

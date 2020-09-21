@@ -152,6 +152,6 @@ input BundleItemAttachmentInput {
 }
 
 input ManualPriceInput {
-  itemIndex: Int
-  price: Int
+  itemIndex: Float
+  price: Float
 }
