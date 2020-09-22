@@ -271,6 +271,7 @@ export const mutations = {
     )
     
     return newOrderForm
+  }
 }
 
 interface OfferingInput {

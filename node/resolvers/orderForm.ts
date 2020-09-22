@@ -138,7 +138,7 @@ export const root = {
         ...orderForm.paymentData,
         isValid,
       }
-    }
+    },
   },
   ClientPreferencesData: {
     optInNewsletter: prop('optinNewsLetter'),
