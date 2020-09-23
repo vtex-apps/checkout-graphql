@@ -264,7 +264,7 @@ export const mutations = {
       vtex: { orderFormId },
     } = ctx
 
-    const newOrderForm = await clients.checkout.setManualPrice(
+    const newOrderForm = await clients.checkoutAdmin.setManualPrice(
       orderFormId!,
       itemIndex,
       price
