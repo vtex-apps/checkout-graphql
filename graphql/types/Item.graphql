@@ -33,7 +33,10 @@ type Item {
   productRefId: String
   quantity: Float!
   refId: String
-  seller: String!
+  """
+  Product's seller. Can be null if included inside bundle items.
+  """
+  seller: String
   sellingPrice: Float
   sellingPriceWithAssemblies: Float
   skuName: String
