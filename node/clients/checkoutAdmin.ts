@@ -29,10 +29,17 @@ export class CheckoutAdmin extends JanusClient {
     })
   }
 
-  public setManualPrice = (orderFormId: string, itemIndex: number, price: number) => this.put<CheckoutOrderForm>(
-    this.routes.setManualPrice(orderFormId, itemIndex), {
-      price
-    })
+  public setManualPrice = (
+    orderFormId: string,
+    itemIndex: number,
+    price: number
+  ) =>
+    this.put<CheckoutOrderForm>(
+      this.routes.setManualPrice(orderFormId, itemIndex),
+      {
+        price,
+      }
+    )
 
   protected put = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
@@ -55,7 +62,8 @@ export class CheckoutAdmin extends JanusClient {
   private get routes() {
     const base = '/api/checkout/pub'
     return {
-      setManualPrice: (orderFormId: string, itemIndex: number) => `${base}/orderForm/${orderFormId}/items/${itemIndex}/price`
+      setManualPrice: (orderFormId: string, itemIndex: number) =>
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/price`,
     }
   }
 }

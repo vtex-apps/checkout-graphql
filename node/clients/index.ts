@@ -23,7 +23,7 @@ export class Clients extends IOClients {
     return this.getOrSet('countryDataSettings', CountryDataSettings)
   }
 
-  public get checkoutAdmin(){
+  public get checkoutAdmin() {
     return this.getOrSet('checkoutAdmin', CheckoutAdmin)
   }
 }
