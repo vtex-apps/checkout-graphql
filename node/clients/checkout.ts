@@ -27,9 +27,6 @@ export class Checkout extends JanusClient {
         ...(ctx.storeUserAuthToken
           ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
           : null),
-        ...ctx.adminUserAuthToken
-          ? { VtexIdClientAutCookie: ctx.adminUserAuthToken }
-          : null,
       },
     })
   }
@@ -72,10 +69,14 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-setOrderFormCustomData' }
     )
 
-  public updateItems = (orderFormId: string, orderItems: any, splitItem: boolean) =>
+  public updateItems = (
+    orderFormId: string,
+    orderItems: any,
+    splitItem: boolean
+  ) =>
     this.post<CheckoutOrderForm>(
       this.routes.updateItems(orderFormId),
-      { orderItems, noSplitItem: !splitItem},
+      { orderItems, noSplitItem: !splitItem },
       { metric: 'checkout-updateItems' }
     )
 
@@ -163,7 +164,7 @@ export class Checkout extends JanusClient {
     orderFormId: string,
     itemIndex: number,
     offeringId: string,
-    offeringInfo?: any,
+    offeringInfo?: any
   ) =>
     this.post<CheckoutOrderForm>(
       this.routes.offering(orderFormId, itemIndex),
@@ -174,7 +175,7 @@ export class Checkout extends JanusClient {
   public removeItemOffering = async (
     orderFormId: string,
     itemIndex: number,
-    offeringId: string,
+    offeringId: string
   ) =>
     this.post<CheckoutOrderForm>(
       this.routes.removeOffering(orderFormId, itemIndex, offeringId),
@@ -187,10 +188,15 @@ export class Checkout extends JanusClient {
     itemIndex: number,
     bundleItemId: string,
     attachmentName: string,
-    attachmentContent: any,
+    attachmentContent: any
   ) =>
     this.post<CheckoutOrderForm>(
-      this.routes.bundleItemAttachment(orderFormId, itemIndex, bundleItemId, attachmentName),
+      this.routes.bundleItemAttachment(
+        orderFormId,
+        itemIndex,
+        bundleItemId,
+        attachmentName
+      ),
       { content: attachmentContent },
       { metric: 'checkout-addBundleItemAttachment' }
     )
@@ -200,11 +206,19 @@ export class Checkout extends JanusClient {
     itemIndex: number,
     bundleItemId: string,
     attachmentName: string,
-    attachmentContent: any,
+    attachmentContent: any
   ) =>
     this.delete<CheckoutOrderForm>(
-      this.routes.bundleItemAttachment(orderFormId, itemIndex, bundleItemId, attachmentName),
-      { metric: 'checkout-removeBundleItemAttachment', data: { content: attachmentContent } }
+      this.routes.bundleItemAttachment(
+        orderFormId,
+        itemIndex,
+        bundleItemId,
+        attachmentName
+      ),
+      {
+        metric: 'checkout-removeBundleItemAttachment',
+        data: { content: attachmentContent },
+      }
     )
 
   public updateOrderFormCheckin = (orderFormId: string, checkinPayload: any) =>
@@ -251,10 +265,17 @@ export class Checkout extends JanusClient {
   public getProfile = (email: string) =>
     this.get<CheckoutProfile>(this.routes.profile(email))
 
-  public setManualPrice = (orderFormId: string, itemIndex: number, price: number) => this.put<CheckoutOrderForm>(
-    this.routes.setManualPrice(orderFormId, itemIndex), {
-      price
-    })
+  public setManualPrice = (
+    orderFormId: string,
+    itemIndex: number,
+    price: number
+  ) =>
+    this.put<CheckoutOrderForm>(
+      this.routes.setManualPrice(orderFormId, itemIndex),
+      {
+        price,
+      }
+    )
 
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
@@ -376,14 +397,24 @@ export class Checkout extends JanusClient {
         `${base}/orderForm/${orderFormId}/items/update`,
       offering: (orderFormId: string, itemIndex: number) =>
         `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings`,
-      removeOffering: (orderFormId: string, itemIndex: number, offeringId: string) =>
+      removeOffering: (
+        orderFormId: string,
+        itemIndex: number,
+        offeringId: string
+      ) =>
         `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings/${offeringId}/remove`,
-      bundleItemAttachment: (orderFormId: string, itemIndex: number, bundleItemId: string, attachmentName: string) =>
+      bundleItemAttachment: (
+        orderFormId: string,
+        itemIndex: number,
+        bundleItemId: string,
+        attachmentName: string
+      ) =>
         `${base}/orderForm/${orderFormId}/items/${itemIndex}/bundles/${bundleItemId}/attachments/${attachmentName}`,
       savePaymentToken: (queryString: string) =>
         `${base}/current-user/payment-tokens/${queryString}`,
       getPaymentSession: () => `${base}/payment-session`,
-      setManualPrice: (orderFormId: string, itemIndex: number) => `${base}/orderForm/${orderFormId}/items/${itemIndex}/price`
+      setManualPrice: (orderFormId: string, itemIndex: number) =>
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/price`,
     }
   }
 }
