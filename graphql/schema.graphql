@@ -46,4 +46,8 @@ type Mutation {
   updateOrderFormPayment(input: PaymentDataInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+
+  setManualPrice(input: ManualPriceInput!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
 }

@@ -5,15 +5,5 @@
     "node": true,
     "es6": true,
     "jest": true
-  },
-  "globals": {
-    "metrics": true
-  },
-  "rules": {
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/no-use-before-define": "off",
-    "@typescript-eslint/ban-ts-ignore": "off",
-    "require-atomic-updates": "off",
-    "no-restricted-imports": "off"
   }
 }
