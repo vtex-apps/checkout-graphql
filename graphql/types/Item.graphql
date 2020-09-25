@@ -150,3 +150,8 @@ input BundleItemAttachmentInput {
   attachmentName: String!
   attachmentContent: AttachmentContent!
 }
+
+input ManualPriceInput {
+  itemIndex: Int!
+  price: Float!
+}

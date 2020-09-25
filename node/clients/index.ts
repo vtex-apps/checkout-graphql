@@ -4,6 +4,7 @@ import { Checkout } from './checkout'
 import { SearchGraphQL } from './searchGraphQL'
 import { Session } from './session'
 import { CountryDataSettings } from './countryDataSettings'
+import { CheckoutAdmin } from './checkoutAdmin'
 
 export class Clients extends IOClients {
   public get checkout() {
@@ -20,5 +21,9 @@ export class Clients extends IOClients {
 
   public get countryDataSettings() {
     return this.getOrSet('countryDataSettings', CountryDataSettings)
+  }
+
+  public get checkoutAdmin() {
+    return this.getOrSet('checkoutAdmin', CheckoutAdmin)
   }
 }

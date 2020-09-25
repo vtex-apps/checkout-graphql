@@ -140,7 +140,10 @@ export const mutations = {
 
   updateItems: async (
     _: unknown,
-    { orderItems, splitItem }: { orderItems: OrderFormItemInput[], splitItem: boolean },
+    {
+      orderItems,
+      splitItem,
+    }: { orderItems: OrderFormItemInput[]; splitItem: boolean },
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const {
@@ -191,7 +194,7 @@ export const mutations = {
       orderFormId!,
       offeringInput.itemIndex,
       offeringInput.offeringId,
-      offeringInput.offeringInfo,
+      offeringInput.offeringInfo
     )
 
     return newOrderForm
@@ -209,14 +212,16 @@ export const mutations = {
     const newOrderForm = await clients.checkout.removeItemOffering(
       orderFormId!,
       offeringInput.itemIndex,
-      offeringInput.offeringId,
+      offeringInput.offeringId
     )
 
     return newOrderForm
   },
   addBundleItemAttachment: async (
     _: unknown,
-    { bundleItemAttachmentInput }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
+    {
+      bundleItemAttachmentInput,
+    }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const {
@@ -229,14 +234,16 @@ export const mutations = {
       bundleItemAttachmentInput.itemIndex,
       bundleItemAttachmentInput.bundleItemId,
       bundleItemAttachmentInput.attachmentName,
-      bundleItemAttachmentInput.attachmentContent,
+      bundleItemAttachmentInput.attachmentContent
     )
 
     return newOrderForm
   },
   removeBundleItemAttachment: async (
     _: unknown,
-    { bundleItemAttachmentInput }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
+    {
+      bundleItemAttachmentInput,
+    }: { bundleItemAttachmentInput: BundleItemAttachmentInput },
     ctx: Context
   ) => {
     const {
@@ -249,11 +256,31 @@ export const mutations = {
       bundleItemAttachmentInput.itemIndex,
       bundleItemAttachmentInput.bundleItemId,
       bundleItemAttachmentInput.attachmentName,
-      bundleItemAttachmentInput.attachmentContent,
+      bundleItemAttachmentInput.attachmentContent
     )
 
     return data
-  }
+  },
+  setManualPrice: async (
+    _: unknown,
+    {
+      input: { itemIndex, price },
+    }: { input: { itemIndex: number; price: number } },
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients,
+      vtex: { orderFormId },
+    } = ctx
+
+    const newOrderForm = await clients.checkoutAdmin.setManualPrice(
+      orderFormId!,
+      itemIndex,
+      price
+    )
+
+    return newOrderForm
+  },
 }
 
 interface OfferingInput {

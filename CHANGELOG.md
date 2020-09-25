@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated tests related to shipping, adding logisticsInfo mock
 
+## [0.40.0] - 2020-09-24
+### Added
+- `setManualPrice` mutation.
+- `adminUserAuthToken` to the checkout client.
+
 ## [0.39.1] - 2020-09-21
 ### Fixed
 - Error when trying to read `addressId` of a inexistent delivery address.
