@@ -39,9 +39,10 @@ export const root = {
       _: unknown,
       ctx: Context
     ) => {
+      const checkoutAdminOrderForm = await ctx.clients.checkoutAdmin.orderForm()
+
       return (
-        (await ctx.clients.checkoutAdmin.orderForm())?.allowManualPrice ||
-        orderForm.allowManualPrice
+        checkoutAdminOrderForm?.allowManualPrice || orderForm.allowManualPrice
       )
     },
     userType: async (
