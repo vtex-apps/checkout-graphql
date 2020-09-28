@@ -34,6 +34,16 @@ export const root = {
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),
+    allowManualPrice: async (
+      orderForm: CheckoutOrderForm,
+      _: unknown,
+      ctx: Context
+    ) => {
+      return (
+        (await ctx.clients.checkoutAdmin.orderForm())?.allowManualPrice ||
+        orderForm.allowManualPrice
+      )
+    },
     userType: async (
       orderForm: CheckoutOrderForm,
       __: unknown,
