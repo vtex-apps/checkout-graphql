@@ -109,6 +109,7 @@ declare global {
     parentAssemblyBinding: string | null
     productCategoryIds: string
     priceTags: string[]
+    manualPrice: number
     measurementUnit: string
     additionalInfo: {
       brandName: string

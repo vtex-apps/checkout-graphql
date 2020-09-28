@@ -17,6 +17,7 @@ type Item {
   id: ID!
   imageUrls: ImageUrls
   listPrice: Float
+  manualPrice: Float
   measurementUnit: String
   name: String
   offerings: [Offering!]!
