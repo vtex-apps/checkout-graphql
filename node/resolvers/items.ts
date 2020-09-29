@@ -1,6 +1,3 @@
-import { map } from 'bluebird'
-import { Logger } from '@vtex/api'
-
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
@@ -40,36 +37,36 @@ const getVariations = (skuId: string, skuList: any[]) => {
   }))
 }
 
-export const adjustItems = ({
-  platform,
-  items,
-  searchGraphQL,
-  logger,
-}: {
-  platform: string
-  items: OrderFormItem[]
-  searchGraphQL: SearchGraphQL
-  logger: Logger
-}) =>
-  map(items, async (item: OrderFormItem) => {
-    let product = null
+export const root = {
+  Item: {
+    imageUrls: (item: OrderFormItem, _: unknown, ctx: Context) => {
+      return fixImageUrl(item.imageUrl, ctx.vtex.platform)
+    },
+    skuSpecifications: async (
+      item: OrderFormItem,
+      _: unknown,
+      ctx: Context
+    ) => {
+      const {
+        vtex: { platform, logger },
+        clients: { searchGraphQL },
+      } = ctx
 
-    try {
-      product = await getProductInfo(platform, item, searchGraphQL)
-    } catch (err) {
-      logger.warn({
-        message: 'Error when communicating with vtex.search-graphql',
-        error: err,
-      })
-    }
+      let product = null
 
-    return {
-      ...item,
-      imageUrls: fixImageUrl(item.imageUrl, platform),
-      name: product?.productName ?? item.name,
-      skuSpecifications: getVariations(item.id, product?.items ?? []),
-    }
-  })
+      try {
+        product = await getProductInfo(platform, item, searchGraphQL)
+      } catch (err) {
+        logger.warn({
+          message: 'Error when communicating with vtex.search-graphql',
+          error: err,
+        })
+      }
+
+      return getVariations(item.id, product?.items ?? [])
+    },
+  },
+}
 
 export const mutations = {
   addToCart: async (

@@ -1,7 +1,6 @@
 import { prop, propOr, compose, forEach } from 'ramda'
 
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
-import { adjustItems } from './items'
 import { fillMessages } from './messages'
 import { getShippingInfo } from '../utils/shipping'
 import {
@@ -91,19 +90,6 @@ export const root = {
       }
 
       return newMessages
-    },
-    items: (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
-      const {
-        clients: { searchGraphQL },
-        vtex: { platform, logger },
-      } = ctx
-
-      return adjustItems({
-        platform,
-        items: orderForm.items,
-        searchGraphQL,
-        logger,
-      })
     },
     clientProfileData: async (
       orderForm: CheckoutOrderForm,
