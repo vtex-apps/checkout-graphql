@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated tests related to shipping, adding logisticsInfo mock
 
+## [0.41.0] - 2020-09-28
+### Added
+- `manualPrice` property to `Item` type.
+
 ## [0.40.0] - 2020-09-24
 ### Added
 - `setManualPrice` mutation.
