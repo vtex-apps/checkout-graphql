@@ -2,28 +2,27 @@ export function getFormattedDeliveryOptions(
   deliveryOptions: SLA[],
   logisticsInfo: LogisticsInfo[] | null
 ) {
-  return deliveryOptions.map((sla: SLA) => {
+  return deliveryOptions.map(sla => {
     let price = 0
 
-    const isSelected = logisticsInfo
-      ? logisticsInfo.some((li: LogisticsInfo) => li.selectedSla === sla.id)
-      : false
+    const isSelected =
+      logisticsInfo?.some(li => li.selectedSla === sla.id) ?? false
 
-    if (logisticsInfo) {
-      logisticsInfo.forEach((li: LogisticsInfo) => {
-        const currentSla = li.slas.find(liSla => liSla.id === sla.id)
+    logisticsInfo?.forEach(li => {
+      const currentSla = li.slas.find(liSla => liSla.id === sla.id)
 
-        if (currentSla) {
-          price += currentSla.price
-        }
-      })
-    }
+      if (currentSla) {
+        price += currentSla.price
+      }
+    })
 
     return {
       estimate: sla.shippingEstimate,
       id: sla.id,
       isSelected,
       price,
+      deliveryChannel: sla.deliveryChannel,
+      sla,
     }
   })
 }

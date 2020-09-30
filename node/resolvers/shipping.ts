@@ -1,9 +1,9 @@
 import {
   getShippingData,
-  selectDeliveryOption,
+  selectShippingOption,
   selectAddress,
 } from '../utils/shipping'
-import { AddressType } from '../constants'
+import { AddressType, DELIVERY, PICKUP_IN_STORE } from '../constants'
 import { OrderFormIdArgs } from '../utils/args'
 
 const addressTypes = new Set<string>([
@@ -60,9 +60,34 @@ export const mutations = {
     const { orderFormId = vtex.orderFormId, deliveryOptionId } = args
 
     const orderForm = await checkout.orderForm(orderFormId!)
-    const newShippingData = selectDeliveryOption({
-      deliveryOptionId,
+    const newShippingData = selectShippingOption({
+      slaId: deliveryOptionId,
       shippingData: orderForm.shippingData,
+      deliveryChannel: DELIVERY,
+    })
+
+    const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
+      ...newShippingData,
+      clearAddressIfPostalCodeNotFound: false,
+    })
+
+    return newOrderForm
+  },
+
+  selectPickupOption: async (
+    _: unknown,
+    args: { pickupOptionId: string } & OrderFormIdArgs,
+    ctx: Context
+  ) => {
+    const { clients, vtex } = ctx
+    const { checkout } = clients
+    const { orderFormId = vtex.orderFormId, pickupOptionId } = args
+
+    const orderForm = await checkout.orderForm(orderFormId!)
+    const newShippingData = selectShippingOption({
+      slaId: pickupOptionId,
+      shippingData: orderForm.shippingData,
+      deliveryChannel: PICKUP_IN_STORE,
     })
 
     const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
