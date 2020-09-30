@@ -50,6 +50,9 @@ type Mutation {
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
     @withOrderFormId
 
+  selectPickupOption(orderFormId: ID, pickupOptionId: String): OrderForm!
+    @withOrderFormId
+
   """
   Changes the currently selected address in the shipping data
   of the OrderForm
