@@ -1,5 +1,4 @@
-import flatten from 'lodash/flatten'
-import uniq from 'lodash/uniq'
+// eslint-disable-next-line no-restricted-imports
 import uniqBy from 'lodash/uniqBy'
 
 import {
@@ -12,6 +11,7 @@ import {
   hasDeliveryOption,
 } from './delivery-options'
 import { Clients } from '../clients'
+import { DELIVERY, PICKUP_IN_STORE } from '../constants'
 
 export const getShippingData = (
   address: CheckoutAddress,
@@ -34,19 +34,20 @@ export const getShippingData = (
   return requestPayload
 }
 
-export const selectDeliveryOption = ({
+export const selectShippingOption = ({
   shippingData,
-  deliveryOptionId,
+  slaId,
+  deliveryChannel,
 }: {
   shippingData: ShippingData
-  deliveryOptionId: string
+  slaId: string
+  deliveryChannel: string
 }) => {
   const logisticsInfoWithSelectedDeliveryOption = shippingData.logisticsInfo.map(
     (li: LogisticsInfo) => ({
       ...li,
-      selectedSla: hasDeliveryOption(li.slas, deliveryOptionId)
-        ? deliveryOptionId
-        : li.selectedSla,
+      selectedDeliveryChannel: deliveryChannel,
+      selectedSla: hasDeliveryOption(li.slas, slaId) ? slaId : li.selectedSla,
     })
   )
 
@@ -87,8 +88,8 @@ export const getShippingInfo = async ({
   const logisticsInfo =
     orderForm.shippingData && orderForm.shippingData.logisticsInfo
 
-  const countries = uniq(
-    flatten(logisticsInfo ? logisticsInfo.map(item => item.shipsTo) : [])
+  const countries = Array.from(
+    new Set(logisticsInfo.flatMap(item => item.shipsTo)).values()
   )
 
   const availableAddresses =
@@ -99,18 +100,16 @@ export const getShippingInfo = async ({
     getSelectedDeliveryAddress(orderForm.shippingData.selectedAddresses)
 
   const availableItemsLogisticsInfo = logisticsInfo
-    ? logisticsInfo.filter((item: LogisticsInfo) => item.slas.length)
+    ? logisticsInfo.filter((item: LogisticsInfo) => item.slas.length > 0)
     : []
 
   const deliveryOptions = uniqBy(
-    flatten(
-      availableItemsLogisticsInfo.map((item: LogisticsInfo) => item.slas)
-    ),
+    availableItemsLogisticsInfo.flatMap((item: LogisticsInfo) => item.slas),
     'id'
   )
 
-  // Since at this time Shipping does not show Pickup Points or
-  // Scheduled Delivery/Pickup Options we are filtering from results.
+  // Since at this time shipping does not show scheduled delivery/pickup
+  // we are filtering from them results.
   // Also we will filter deliveryOptions which does not apply to all LogisticsInfo.
   const filteredDeliveryOptions = filterDeliveryOptions(
     deliveryOptions,
@@ -123,7 +122,7 @@ export const getShippingInfo = async ({
   )
 
   const selectedDeliveryOption = updatedDeliveryOptions.find(
-    option => option.isSelected
+    option => option.isSelected && option.deliveryChannel === DELIVERY
   )
 
   const shippingTotalizer = orderForm.totalizers.find(
@@ -135,8 +134,9 @@ export const getShippingInfo = async ({
     shippingTotalizer &&
     selectedDeliveryOption.price !== shippingTotalizer.value
   ) {
-    const newShippingData = selectDeliveryOption({
-      deliveryOptionId: selectedDeliveryOption.id,
+    const newShippingData = selectShippingOption({
+      slaId: selectedDeliveryOption.id,
+      deliveryChannel: DELIVERY,
       shippingData: orderForm.shippingData,
     })
 
@@ -153,7 +153,23 @@ export const getShippingInfo = async ({
   return {
     availableAddresses,
     countries,
-    deliveryOptions: updatedDeliveryOptions,
+    deliveryOptions: updatedDeliveryOptions.filter(
+      ({ deliveryChannel }) => deliveryChannel === DELIVERY
+    ),
+    pickupOptions: updatedDeliveryOptions
+      .filter(({ deliveryChannel }) => deliveryChannel === PICKUP_IN_STORE)
+      .map(pickupOption => {
+        return {
+          id: pickupOption.id,
+          price: pickupOption.price,
+          estimate: pickupOption.estimate,
+          isSelected: pickupOption.isSelected,
+          friendlyName: pickupOption.sla.pickupStoreInfo.friendlyName,
+          additionalInfo: pickupOption.sla.pickupStoreInfo.additionalInfo,
+          storeDistance: pickupOption.sla.pickupDistance,
+          transitTime: pickupOption.sla.transitTime,
+        }
+      }),
     selectedAddress,
   }
 }

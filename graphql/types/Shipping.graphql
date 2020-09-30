@@ -1,16 +1,28 @@
 type Shipping {
   countries: [String]
-  deliveryOptions: [DeliveryOption]
+  deliveryOptions: [DeliveryOption!]!
+  pickupOptions: [PickupOption!]!
   selectedAddress: Address
   availableAddresses: [Address]
   isValid: Boolean!
 }
 
 type DeliveryOption {
-  id: String
-  price: Int
-  estimate: String
-  isSelected: Boolean
+  id: String!
+  price: Int!
+  estimate: String!
+  isSelected: Boolean!
+}
+
+type PickupOption {
+  id: String!
+  price: Int!
+  estimate: String!
+  isSelected: Boolean!
+  friendlyName: String!
+  additionalInfo: String!
+  storeDistance: Float!
+  transitTime: String!
 }
 
 type Address {

@@ -380,6 +380,7 @@ declare global {
     pickupPointId: string | null
     pickupDistance: number | null
     polygonName: string | null
+    transitTime: string | null
   }
 
   interface DeliveryId {
