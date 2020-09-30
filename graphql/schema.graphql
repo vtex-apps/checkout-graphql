@@ -1,6 +1,6 @@
 type Query {
   getCardSessionId: String
-  orderForm: OrderForm
+  orderForm(orderFormId: ID): OrderForm!
     @cacheControl(scope: PRIVATE)
     @withOrderFormId
     @withSegment
@@ -8,46 +8,66 @@ type Query {
 }
 
 type Mutation {
-  addToCart(items: [ItemInput], marketingData: MarketingDataInput): OrderForm
+  addToCart(
+    orderFormId: ID
+    items: [ItemInput]
+    marketingData: MarketingDataInput
+  ): OrderForm! @withOrderFormId @withSegment
+
+  updateItems(
+    orderFormId: ID
+    orderItems: [ItemInput]
+    splitItem: Boolean = true
+  ): OrderForm! @withOrderFormId
+
+  addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
     @withOrderFormId
-    @withSegment
+  removeItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
+    @withOrderFormId
 
-  updateItems(orderItems: [ItemInput], splitItem: Boolean = true): OrderForm @withOrderFormId
+  addBundleItemAttachment(
+    orderFormId: ID
+    bundleItemAttachmentInput: BundleItemAttachmentInput
+  ): OrderForm! @withOrderFormId
+  removeBundleItemAttachment(
+    orderFormId: ID
+    bundleItemAttachmentInput: BundleItemAttachmentInput
+  ): OrderForm! @withOrderFormId
 
-  addItemOffering(offeringInput: OfferingInput): OrderForm @withOrderFormId
-  removeItemOffering(offeringInput: OfferingInput): OrderForm @withOrderFormId
+  insertCoupon(orderFormId: ID, text: String): OrderForm! @withOrderFormId
 
-  addBundleItemAttachment(bundleItemAttachmentInput: BundleItemAttachmentInput): OrderForm @withOrderFormId
-  removeBundleItemAttachment(bundleItemAttachmentInput: BundleItemAttachmentInput): OrderForm @withOrderFormId
+  estimateShipping(orderFormId: ID, address: AddressInput): OrderForm!
+    @withOrderFormId
 
-  insertCoupon(text: String): OrderForm @withOrderFormId
-
-  estimateShipping(address: AddressInput): OrderForm @withOrderFormId
-
-  selectDeliveryOption(deliveryOptionId: String): OrderForm @withOrderFormId
+  selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
+    @withOrderFormId
 
   """
   Changes the currently selected address in the shipping data
   of the OrderForm
   """
-  updateSelectedAddress(input: AddressInput!): OrderForm @withOrderFormId
-
-  savePaymentToken(paymentTokens: [PaymentToken]): SavePaymentTokenPayload
+  updateSelectedAddress(orderFormId: ID, input: AddressInput!): OrderForm!
     @withOrderFormId
 
-  updateOrderFormProfile(input: UserProfileInput!): OrderForm!
-    @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+  savePaymentToken(
+    orderFormId: ID
+    paymentTokens: [PaymentToken]
+  ): SavePaymentTokenPayload @withOrderFormId
 
-  updateClientPreferencesData(input: ClientPreferencesDataInput!): OrderForm!
-    @withOrderFormId
-    @cacheControl(scope: PRIVATE)
-
-  updateOrderFormPayment(input: PaymentDataInput!): OrderForm!
+  updateOrderFormProfile(orderFormId: ID, input: UserProfileInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
-  setManualPrice(input: ManualPriceInput!): OrderForm!
+  updateClientPreferencesData(
+    orderFormId: ID
+    input: ClientPreferencesDataInput!
+  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+
+  updateOrderFormPayment(orderFormId: ID, input: PaymentDataInput!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
+
+  setManualPrice(orderFormId: ID, input: ManualPriceInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 }
