@@ -14,6 +14,7 @@ import {
   mutations as paymentMutations,
 } from './payment'
 import { queries as profileQueries } from './profile'
+import { queries as slaQueries } from './sla'
 
 export const resolvers = {
   MarketingData: {
@@ -53,5 +54,6 @@ export const resolvers = {
     ...orderFormQueries,
     ...paymentQueries,
     ...profileQueries,
+    ...slaQueries,
   },
 }

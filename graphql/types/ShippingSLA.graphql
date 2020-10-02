@@ -1,0 +1,89 @@
+type ShippingData {
+  items: [LogisticsItem]
+  logisticsInfo: [LogisticsInfo]
+  messages: [MessageInfo]
+}
+
+type MessageInfo {
+  code: String
+  text: String
+  status: String
+  fields: MessageFields
+}
+
+type MessageFields {
+  itemIndex: String
+  ean: String
+  skuName: String
+}
+
+type LogisticsInfo {
+  itemIndex: String
+  selectedSla: String
+  slas: [ShippingSLA]
+}
+
+type ShippingSLA {
+  id: String
+  name: String
+  price: Float
+  shippingEstimate: String
+  shippingEstimateDate: String
+  deliveryIds: [DeliveryIds]
+  friendlyName: String
+  pickupStoreInfo: PickupStoreInfo
+}
+
+type PickupStoreInfo {
+  friendlyName: String
+  address: PickupAddress
+  additionalInfo: String
+  dockId: String
+}
+
+type PickupAddress {
+  addressType: String
+  receiverName: String
+  addressId: String
+  postalCode: String
+  city: String
+  state: String
+  country: String
+  street: String
+  number: String
+  neighborhood: String
+  complement: String
+  reference: String
+  geoCoordinates: [Float]
+}
+
+type DeliveryIds {
+  courierId: String
+  warehouseId: String
+  dockId: String
+  courierName: String
+  quantity: Int
+}
+
+type LogisticsItem {
+  id: String
+  requestIndex: Int
+  quantity: Int
+  seller: String
+  sellerChain: [String]
+  tax: Int
+  priceValidUntil: String
+  price: Int
+  listPrice: Int
+  rewardValue: Int
+  sellingPrice: Int
+  measurementUnit: String
+  unitMultiplier: Int
+  availability: String
+}
+
+input ShippingItem {
+  id: String
+  quantity: String
+  seller: String
+}
