@@ -1,20 +1,26 @@
-import {  getShippingInfo } from "../utils/shipping"
+import { getShippingInfo } from '../utils/shipping'
 
 export const queries = {
   shippingSLA: async (_: any, args: any, ctx: Context) => {
     const checkout = ctx.clients.checkout
-    const shippingData = await checkout.simulation(args) as CheckoutOrderForm['shippingData']
+    const shippingData = (await checkout.simulation(
+      args
+    )) as CheckoutOrderForm['shippingData']
 
     // Here we mock an Order Form object to use getShippingInfo
     const orderForm = {
       orderFormId: '',
+      value: 0,
       shippingData: {
         ...shippingData,
-        selectedAddresses: []
+        selectedAddresses: [],
       },
-      totalizers: []
-    } as unknown as CheckoutOrderForm
+      totalizers: [],
+    } as Pick<
+      CheckoutOrderForm,
+      'shippingData' | 'totalizers' | 'orderFormId' | 'value'
+    >
 
-    return await getShippingInfo({ clients: ctx.clients, orderForm})
+    return getShippingInfo({ clients: ctx.clients, orderForm })
   },
 }
