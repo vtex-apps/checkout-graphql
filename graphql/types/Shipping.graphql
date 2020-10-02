@@ -48,6 +48,12 @@ input AddressInput {
   isDisposable: Boolean
 }
 
+input ShippingItem {
+  id: String
+  quantity: String
+  seller: String
+}
+
 enum AddressType {
   residential
   commercial

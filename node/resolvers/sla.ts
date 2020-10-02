@@ -1,6 +1,11 @@
+import {  getShippingInfoForSimulation } from "../utils/shipping"
+
 export const queries = {
-  shippingSLA: (_: any, args: any, ctx: Context) => {
+  shippingSLA: async (_: any, args: any, ctx: Context) => {
     const checkout = ctx.clients.checkout
-    return checkout.simulation(args)
+    const simulationData = await checkout.simulation(args) as CheckoutOrderForm['shippingData']
+
+    console.log({ simulationData })
+    return getShippingInfoForSimulation(simulationData)
   },
 }

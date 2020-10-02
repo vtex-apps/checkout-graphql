@@ -9,7 +9,7 @@ type Query {
     items: [ShippingItem]
     postalCode: String
     country: String
-  ): ShippingData
+  ): Shipping
     @cacheControl(scope: SEGMENT, maxAge: MEDIUM)
     @withSegment
     @withOrderFormId
