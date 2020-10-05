@@ -76,16 +76,17 @@ export const mutations = {
 
   selectPickupOption: async (
     _: unknown,
-    args: { pickupOptionId: string } & OrderFormIdArgs,
+    args: { pickupOptionId: string, itemId: string } & OrderFormIdArgs,
     ctx: Context
   ) => {
     const { clients, vtex } = ctx
     const { checkout } = clients
-    const { orderFormId = vtex.orderFormId, pickupOptionId } = args
+    const { orderFormId = vtex.orderFormId, pickupOptionId, itemId } = args
 
     const orderForm = await checkout.orderForm(orderFormId!)
     const newShippingData = selectShippingOption({
       slaId: pickupOptionId,
+      itemId,
       shippingData: orderForm.shippingData,
       deliveryChannel: PICKUP_IN_STORE,
     })
