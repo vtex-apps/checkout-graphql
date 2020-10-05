@@ -82,7 +82,10 @@ export const getShippingInfo = async ({
   orderForm,
 }: {
   clients: Clients
-  orderForm: CheckoutOrderForm
+  orderForm: Pick<
+    CheckoutOrderForm,
+    'shippingData' | 'totalizers' | 'orderFormId' | 'value'
+  >
 }) => {
   const logisticsInfo =
     orderForm.shippingData && orderForm.shippingData.logisticsInfo

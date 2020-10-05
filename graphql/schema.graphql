@@ -5,6 +5,14 @@ type Query {
     @withOrderFormId
     @withSegment
   checkoutProfile(email: String!): CheckoutProfile @cacheControl(scope: PRIVATE)
+  shippingSLA(
+    items: [ShippingItem]
+    postalCode: String
+    country: String
+  ): Shipping
+    @cacheControl(scope: SEGMENT, maxAge: MEDIUM)
+    @withSegment
+    @withOrderFormId
 }
 
 type Mutation {
