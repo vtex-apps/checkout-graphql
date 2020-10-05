@@ -47,12 +47,14 @@ export const selectShippingOption = ({
 }) => {
   const logisticsInfoWithSelectedDeliveryOption = shippingData.logisticsInfo.map(
     (li: LogisticsInfo) => {
-      const hasItemId = itemId ?? li.itemId
-
       return {
         ...li,
         selectedDeliveryChannel: deliveryChannel,
-        selectedSla: hasDeliveryOption(li.slas, slaId) && li.itemId === hasItemId ? slaId : li.selectedSla,
+        selectedSla:
+          hasDeliveryOption(li.slas, slaId) &&
+          (itemId != null ? li.itemId === itemId : true)
+            ? slaId
+            : li.selectedSla,
       }
     }
   )
