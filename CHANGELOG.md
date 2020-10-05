@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Optional argument `itemId` on `selectPickupOption` mutation, it can select the 
   pickup option for an specific itemId
+- New `selectPickupOption` mutation
+- `pickupOptions` property to `Shipping` type
 
 ## [0.43.0] - 2020-10-05
 ### Addes
