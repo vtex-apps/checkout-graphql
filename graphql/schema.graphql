@@ -50,7 +50,7 @@ type Mutation {
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
     @withOrderFormId
 
-  selectPickupOption(orderFormId: ID, pickupOptionId: String): OrderForm!
+  selectPickupOption(orderFormId: ID, pickupOptionId: String, itemId: String): OrderForm!
     @withOrderFormId
 
   """

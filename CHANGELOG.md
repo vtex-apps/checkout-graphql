@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Optional argument `itemId` on `selectPickupOption` mutation, it can select the 
+  pickup option for an specific itemId
 
 ## [0.43.0] - 2020-10-05
 ### Addes
