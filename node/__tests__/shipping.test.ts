@@ -19,6 +19,7 @@ describe('Shipping Resolvers', () => {
         availableAddresses: [],
         countries: [],
         deliveryOptions: [],
+        pickupOptions: [],
         selectedAddress: undefined,
       }
 
@@ -35,6 +36,7 @@ describe('Shipping Resolvers', () => {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [],
+        pickupOptions: [],
         selectedAddress: deliveryAddress,
       }
 
@@ -52,11 +54,48 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
+            deliveryChannel: "delivery",
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
+            sla: {
+              availableDeliveryWindows: [],
+              deliveryChannel: "delivery",
+              deliveryIds: [],
+              deliveryWindow: null,
+              id: "delivery-SLA",
+              listPrice: 0,
+              lockTTL: null,
+              name: "delivery-SLA",
+              pickupDistance: 0,
+              pickupPointId: null,
+              pickupStoreInfo: {
+                additionalInfo: null,
+                address: null,
+                dockId: null,
+                friendlyName: null,
+                isPickupStore: false,
+              },
+              polygonName: null,
+              price: 100,
+              shippingEstimate: "1db",
+              shippingEstimateDate: null,
+              tax: 0,
+            }
           },
+        ],
+        pickupOptions: [
+          {
+            "additionalInfo": null,
+            "estimate": "1d",
+            "friendlyName": null,
+            "id": "pickup-SLA",
+            "isSelected": false,
+            "price": 100,
+            "storeDistance": 0,
+            "transitTime": undefined,
+          }
         ],
         selectedAddress: deliveryAddress,
       }
@@ -72,12 +111,38 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
+            deliveryChannel: "delivery",
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
+            sla: {
+              availableDeliveryWindows: [],
+              deliveryChannel: "delivery",
+              deliveryIds: [],
+              deliveryWindow: null,
+              id: "delivery-SLA",
+              listPrice: 0,
+              lockTTL: null,
+              name: "delivery-SLA",
+              pickupDistance: 0,
+              pickupPointId: null,
+              pickupStoreInfo: {
+                additionalInfo: null,
+                address: null,
+                dockId: null,
+                friendlyName: null,
+                isPickupStore: false,
+              },
+              polygonName: null,
+              price: 100,
+              shippingEstimate: "1db",
+              shippingEstimateDate: null,
+              tax: 0,
+            }
           },
         ],
+        pickupOptions: [],
         selectedAddress: deliveryAddress,
       }
 
@@ -95,11 +160,48 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
+            deliveryChannel: "delivery",
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
+            sla: {
+              availableDeliveryWindows: [],
+              deliveryChannel: "delivery",
+              deliveryIds: [],
+              deliveryWindow: null,
+              id: "delivery-SLA",
+              listPrice: 0,
+              lockTTL: null,
+              name: "delivery-SLA",
+              pickupDistance: 0,
+              pickupPointId: null,
+              pickupStoreInfo: {
+                additionalInfo: null,
+                address: null,
+                dockId: null,
+                friendlyName: null,
+                isPickupStore: false,
+              },
+              polygonName: null,
+              price: 100,
+              shippingEstimate: "1db",
+              shippingEstimateDate: null,
+              tax: 0,
+            }
           },
+        ],
+        pickupOptions: [
+          {
+            "additionalInfo": null,
+            "estimate": "1d",
+            "friendlyName": null,
+            "id": "pickup-SLA",
+            "isSelected": false,
+            "price": 100,
+            "storeDistance": 0,
+            "transitTime": undefined,
+          }
         ],
         selectedAddress: deliveryAddress,
       }
@@ -118,12 +220,38 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
+            deliveryChannel: "delivery",
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 200,
+            sla: {
+              availableDeliveryWindows: [],
+              deliveryChannel: "delivery",
+              deliveryIds: [],
+              deliveryWindow: null,
+              id: "delivery-SLA",
+              listPrice: 0,
+              lockTTL: null,
+              name: "delivery-SLA",
+              pickupDistance: 0,
+              pickupPointId: null,
+              pickupStoreInfo: {
+                additionalInfo: null,
+                address: null,
+                dockId: null,
+                friendlyName: null,
+                isPickupStore: false,
+              },
+              polygonName: null,
+              price: 100,
+              shippingEstimate: "1db",
+              shippingEstimateDate: null,
+              tax: 0,
+            }
           },
         ],
+        pickupOptions: [],
         selectedAddress: deliveryAddress,
       }
 
@@ -141,12 +269,46 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
+            deliveryChannel: "delivery",
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 200,
+            sla: {
+              availableDeliveryWindows: [],
+              deliveryChannel: "delivery",
+              deliveryIds: [
+                {
+                  courierId: "1",
+                  courierName: "PAC",
+                  dockId: "1fd8f86",
+                  quantity: 1,
+                  warehouseId: "1a105fe",
+                }
+              ],
+              deliveryWindow: null,
+              id: "delivery-SLA",
+              listPrice: 0,
+              lockTTL: null,
+              name: "delivery-SLA",
+              pickupDistance: 0,
+              pickupPointId: null,
+              pickupStoreInfo: {
+                additionalInfo: null,
+                address: null,
+                dockId: null,
+                friendlyName: null,
+                isPickupStore: false,
+              },
+              polygonName: null,
+              price: 100,
+              shippingEstimate: "1db",
+              shippingEstimateDate: null,
+              tax: 0,
+            }
           },
         ],
+        pickupOptions: [],
         selectedAddress: deliveryAddress,
       }
 
@@ -164,11 +326,48 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
+            deliveryChannel: "delivery",
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
+            sla: {
+              availableDeliveryWindows: [],
+              deliveryChannel: "delivery",
+              deliveryIds: [],
+              deliveryWindow: null,
+              id: "delivery-SLA",
+              listPrice: 0,
+              lockTTL: null,
+              name: "delivery-SLA",
+              pickupDistance: 0,
+              pickupPointId: null,
+              pickupStoreInfo: {
+                additionalInfo: null,
+                address: null,
+                dockId: null,
+                friendlyName: null,
+                isPickupStore: false,
+              },
+              polygonName: null,
+              price: 100,
+              shippingEstimate: "1db",
+              shippingEstimateDate: null,
+              tax: 0,
+            }
           },
+        ],
+        pickupOptions: [
+          {
+            "additionalInfo": null,
+            "estimate": "1d",
+            "friendlyName": null,
+            "id": "pickup-SLA",
+            "isSelected": false,
+            "price": 100,
+            "storeDistance": 0,
+            "transitTime": undefined,
+          }
         ],
         selectedAddress: deliveryAddress,
       }
