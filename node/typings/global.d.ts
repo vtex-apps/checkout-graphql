@@ -200,7 +200,7 @@ declare global {
       name: string
       value: number
     }>
-    shippingData: ShippingData
+    shippingData: ShippingData | null
     clientProfileData: ClientProfileData | null
     paymentData: PaymentData
     marketingData: OrderFormMarketingData | null

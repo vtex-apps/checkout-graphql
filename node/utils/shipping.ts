@@ -40,13 +40,13 @@ export const selectShippingOption = ({
   itemId,
   deliveryChannel,
 }: {
-  shippingData: ShippingData
+  shippingData: ShippingData | null
   slaId: string
   itemId?: string
   deliveryChannel: string
 }) => {
-  const logisticsInfoWithSelectedDeliveryOption = shippingData.logisticsInfo.map(
-    (li: LogisticsInfo) => {
+  const logisticsInfoWithSelectedDeliveryOption =
+    shippingData?.logisticsInfo.map((li: LogisticsInfo) => {
       return {
         ...li,
         selectedDeliveryChannel: deliveryChannel,
@@ -56,11 +56,10 @@ export const selectShippingOption = ({
             ? slaId
             : li.selectedSla,
       }
-    }
-  )
+    }) ?? []
 
   const deliveryAddress = getSelectedDeliveryAddress(
-    shippingData.selectedAddresses
+    shippingData?.selectedAddresses ?? []
   )
 
   if (!deliveryAddress) {
@@ -77,9 +76,13 @@ export const selectAddress = ({
   shippingData,
   address,
 }: {
-  shippingData: ShippingData
+  shippingData: ShippingData | null
   address: CheckoutAddress
-}): ShippingData => {
+}): ShippingData | null => {
+  if (!shippingData) {
+    return null
+  }
+
   return {
     ...shippingData,
     selectedAddresses: [address],

@@ -76,7 +76,7 @@ export const mutations = {
 
   selectPickupOption: async (
     _: unknown,
-    args: { pickupOptionId: string, itemId: string } & OrderFormIdArgs,
+    args: { pickupOptionId: string; itemId: string } & OrderFormIdArgs,
     ctx: Context
   ) => {
     const { clients, vtex } = ctx
