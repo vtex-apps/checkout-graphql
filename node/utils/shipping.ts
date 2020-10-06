@@ -96,15 +96,13 @@ export const getShippingInfo = async ({
     'shippingData' | 'totalizers' | 'orderFormId' | 'value'
   >
 }) => {
-  const logisticsInfo =
-    orderForm.shippingData && orderForm.shippingData.logisticsInfo
+  const logisticsInfo = orderForm.shippingData?.logisticsInfo ?? []
 
   const countries = Array.from(
     new Set(logisticsInfo.flatMap(item => item.shipsTo)).values()
   )
 
-  const availableAddresses =
-    (orderForm.shippingData && orderForm.shippingData.availableAddresses) || []
+  const availableAddresses = orderForm.shippingData?.availableAddresses ?? []
 
   const selectedAddress =
     orderForm.shippingData &&
