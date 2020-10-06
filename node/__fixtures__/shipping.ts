@@ -1,4 +1,4 @@
-import { AddressType, DELIVERY, PICKUP_IN_STORE } from '../constants'
+import { AddressType, DELIVERY, PICKUP_IN_POINT } from '../constants'
 import { EMPTY_ORDER_FORM } from './orderForm'
 import { Clients } from '../clients'
 
@@ -24,7 +24,7 @@ const SLA = {
 const pickupSLA = {
   ...SLA,
   availableDeliveryWindows: [],
-  deliveryChannel: PICKUP_IN_STORE,
+  deliveryChannel: PICKUP_IN_POINT,
   id: 'pickup-SLA',
   name: 'pickup-SLA',
   price: 100,
@@ -123,7 +123,7 @@ export const ORDER_FORM_WITH_PICKUPS = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -145,7 +145,7 @@ export const ORDER_FORM_WITH_SCHEDULED_DELIVERY = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -167,7 +167,7 @@ export const ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -189,7 +189,7 @@ export const ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -199,7 +199,7 @@ export const ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO = {
       },
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 1,
         selectedDeliveryChannel: DELIVERY,
@@ -221,7 +221,7 @@ export const ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -231,7 +231,7 @@ export const ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS = {
       },
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 1,
         selectedDeliveryChannel: DELIVERY,
@@ -253,7 +253,7 @@ export const ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -263,7 +263,7 @@ export const ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO = {
       },
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 1,
         selectedDeliveryChannel: DELIVERY,
@@ -285,7 +285,7 @@ export const ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO = {
     logisticsInfo: [
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,
@@ -295,7 +295,7 @@ export const ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO = {
       },
       {
         addressId: deliveryAddress.addressId,
-        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_STORE }],
+        deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
         itemId: 'testId2',
         itemIndex: 0,
         selectedDeliveryChannel: DELIVERY,

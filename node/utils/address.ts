@@ -1,4 +1,4 @@
-import { AddressType, DELIVERY } from '../constants'
+import { AddressType, DELIVERY, PICKUP_IN_POINT } from '../constants'
 
 export function getSelectedDeliveryAddress(
   selectedAddresses: CheckoutAddress[]
@@ -20,16 +20,14 @@ export function filterDeliveryOptions(
   deliveryOptions: SLA[],
   logisticsInfo: LogisticsInfo[]
 ) {
-  return deliveryOptions.filter((deliveryOption: SLA) => {
-    const deliveryOptionIsInEveryLogisticsInfo =
-      logisticsInfo &&
-      logisticsInfo.length > 0 &&
-      logisticsInfo.every((li: LogisticsInfo) =>
-        li.slas.some(sla => sla.id === deliveryOption.id)
-      )
+  return deliveryOptions.filter(deliveryOption => {
+    const deliveryOptionIsInEveryLogisticsInfo = logisticsInfo.every(
+      (li: LogisticsInfo) => li.slas.some(sla => sla.id === deliveryOption.id)
+    )
 
     return (
-      deliveryOption.deliveryChannel === DELIVERY &&
+      (deliveryOption.deliveryChannel === DELIVERY ||
+        deliveryOption.deliveryChannel === PICKUP_IN_POINT) &&
       deliveryOption.availableDeliveryWindows.length === 0 &&
       deliveryOptionIsInEveryLogisticsInfo
     )
