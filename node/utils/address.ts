@@ -1,4 +1,4 @@
-import { AddressType, DELIVERY, PICKUP_IN_STORE } from '../constants'
+import { AddressType, DELIVERY, PICKUP_IN_POINT } from '../constants'
 
 export function getSelectedDeliveryAddress(
   selectedAddresses: CheckoutAddress[]
@@ -27,7 +27,7 @@ export function filterDeliveryOptions(
 
     return (
       (deliveryOption.deliveryChannel === DELIVERY ||
-        deliveryOption.deliveryChannel === PICKUP_IN_STORE) &&
+        deliveryOption.deliveryChannel === PICKUP_IN_POINT) &&
       deliveryOption.availableDeliveryWindows.length === 0 &&
       deliveryOptionIsInEveryLogisticsInfo
     )
