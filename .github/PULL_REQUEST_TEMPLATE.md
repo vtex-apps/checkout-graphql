@@ -14,8 +14,6 @@
 - [ ] Updated/created tests (important for bug fixes).
 - [ ] Deleted the workspace after merging this PR (if applicable).
 
-#### Screenshots or example usage
-
 #### Type of changes
 
 <!--- Add a ✔️ where applicable -->
