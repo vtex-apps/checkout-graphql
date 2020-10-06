@@ -11,7 +11,7 @@ import {
   hasDeliveryOption,
 } from './delivery-options'
 import { Clients } from '../clients'
-import { DELIVERY, PICKUP_IN_STORE } from '../constants'
+import { DELIVERY, PICKUP_IN_POINT } from '../constants'
 
 export const getShippingData = (
   address: CheckoutAddress,
@@ -168,7 +168,7 @@ export const getShippingInfo = async ({
       ({ deliveryChannel }) => deliveryChannel === DELIVERY
     ),
     pickupOptions: updatedDeliveryOptions
-      .filter(({ deliveryChannel }) => deliveryChannel === PICKUP_IN_STORE)
+      .filter(({ deliveryChannel }) => deliveryChannel === PICKUP_IN_POINT)
       .map(pickupOption => {
         return {
           id: pickupOption.id,

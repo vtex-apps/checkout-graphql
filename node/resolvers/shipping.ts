@@ -3,7 +3,7 @@ import {
   selectShippingOption,
   selectAddress,
 } from '../utils/shipping'
-import { AddressType, DELIVERY, PICKUP_IN_STORE } from '../constants'
+import { AddressType, DELIVERY, PICKUP_IN_POINT } from '../constants'
 import { OrderFormIdArgs } from '../utils/args'
 
 const addressTypes = new Set<string>([
@@ -88,7 +88,7 @@ export const mutations = {
       slaId: pickupOptionId,
       itemId,
       shippingData: orderForm.shippingData,
-      deliveryChannel: PICKUP_IN_STORE,
+      deliveryChannel: PICKUP_IN_POINT,
     })
 
     const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
