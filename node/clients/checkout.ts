@@ -346,6 +346,15 @@ export class Checkout extends JanusClient {
     return queryString
   }
 
+  public itemsOrdination = (orderFormId: string, ascending: boolean, criteria: string) => this.post<CheckoutOrderForm>(
+    this.routes.itemsOrdination(orderFormId),
+    {
+      ascending: ascending,
+      criteria: criteria
+    },
+    { metric: 'checkout-orderForm' }
+  )
+
   private get routes() {
     const base = '/api/checkout/pub'
     return {
@@ -402,6 +411,7 @@ export class Checkout extends JanusClient {
       savePaymentToken: (queryString: string) =>
         `${base}/current-user/payment-tokens/${queryString}`,
       getPaymentSession: () => `${base}/payment-session`,
+      itemsOrdination: (orderFormId: string) => `${base}/orderForm/${orderFormId}/itemsOrdination`
     }
   }
 }
