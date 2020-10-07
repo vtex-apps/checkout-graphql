@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `priceTags` on type `Item`.
+
 ## [0.41.1] - 2020-09-29
 ### Fixed
 - GraphQL validation errors on `Item.seller` when included inside `bundleItems`.
