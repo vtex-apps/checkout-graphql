@@ -262,21 +262,21 @@ export const mutations = {
 
   itemsOrdination: async (
     _: unknown,
-    parameters: itemsOrdination,
+    { ascending, criteria }: itemsOrdination,
     ctx: Context
-  ): Promise<CheckoutOrderForm> => {
-    const {
-      clients: { checkout },
-      vtex: { orderFormId },
-    } = ctx
-
+    ): Promise<CheckoutOrderForm> => {
+      
+      const {
+        clients: { checkout },
+        vtex: { orderFormId },
+      } = ctx
+      
     const changeItemsOrdination = await checkout.itemsOrdination(
       orderFormId!,
-      parameters.ascending, 
-      parameters.criteria
+      ascending, 
+      criteria
     )
 
     return changeItemsOrdination
   },
-
 }
