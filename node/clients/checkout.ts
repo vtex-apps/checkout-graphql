@@ -265,6 +265,15 @@ export class Checkout extends JanusClient {
   public getProfile = (email: string) =>
     this.get<CheckoutProfile>(this.routes.profile(email))
 
+  public itemsOrdination = (orderFormId: string, ascending: boolean, criteria: string) => this.post<CheckoutOrderForm>(
+    this.routes.itemsOrdination(orderFormId),
+    {
+      ascending: ascending,
+      criteria: criteria
+    },
+    { metric: 'checkout-orderForm' }
+  )
+
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
@@ -345,15 +354,6 @@ export class Checkout extends JanusClient {
     const queryString = channel ? `?sc=${channel}` : ''
     return queryString
   }
-
-  public itemsOrdination = (orderFormId: string, ascending: boolean, criteria: string) => this.post<CheckoutOrderForm>(
-    this.routes.itemsOrdination(orderFormId),
-    {
-      ascending: ascending,
-      criteria: criteria
-    },
-    { metric: 'checkout-orderForm' }
-  )
 
   private get routes() {
     const base = '/api/checkout/pub'
