@@ -6180,17 +6180,13 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.checkout-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.39.1/public/@types/vtex.checkout-graphql":
-  version "0.39.1"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.39.1/public/@types/vtex.checkout-graphql#edc2680047d4198edad0e3c7dbc6f5e4cb23c03d"
+"vtex.checkout-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.29.1/public/@types/vtex.checkout-graphql":
+  version "0.29.1"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.29.1/public/@types/vtex.checkout-graphql#77ef7285c88c3dfa92c1ce9efde8bc2e89f76d54"
 
-"vtex.country-data-settings@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.2.0/public/@types/vtex.country-data-settings":
-  version "0.2.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.2.0/public/@types/vtex.country-data-settings#b1783cda8026784c05bcdfda4e67a6b20393202b"
-
-"vtex.graphql-server@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.63.0/public/_types/react":
-  version "0.0.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.63.0/public/_types/react#fa7a0347e046eab3dd768998fc9252b2c0dd5aef"
+"vtex.search-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.21.1/public/@types/vtex.search-graphql":
+  version "0.21.1"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.search-graphql@0.21.1/public/@types/vtex.search-graphql#6b708e0948485dc252645451c83383b1a7631705"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"

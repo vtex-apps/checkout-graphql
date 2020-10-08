@@ -260,7 +260,7 @@ export const mutations = {
     return orderFormWithPayments
   },
 
-  itemsOrdination: async (
+  updateItemsOrdination: async (
     _: unknown,
     args: ItemsOrdinationArgs & OrderFormIdArgs,
     ctx: Context
@@ -273,7 +273,7 @@ export const mutations = {
       orderFormId = vtex.orderFormId,
     } = args
       
-    const changeItemsOrdination = await checkout.itemsOrdination(
+    const changeItemsOrdination = await checkout.updateItemsOrdination(
       orderFormId!,
       ascending, 
       criteria

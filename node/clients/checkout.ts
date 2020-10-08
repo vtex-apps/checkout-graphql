@@ -265,7 +265,7 @@ export class Checkout extends JanusClient {
   public getProfile = (email: string) =>
     this.get<CheckoutProfile>(this.routes.profile(email))
 
-  public itemsOrdination = (orderFormId: string, ascending: boolean, criteria: string) => this.post<CheckoutOrderForm>(
+  public updateItemsOrdination = (orderFormId: string, ascending: boolean, criteria: string) => this.post<CheckoutOrderForm>(
     this.routes.itemsOrdination(orderFormId),
     {
       ascending: ascending,
