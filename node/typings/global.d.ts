@@ -535,6 +535,6 @@ declare global {
 
   interface ItemsOrdinationArgs {
     ascending: boolean, 
-    criteria: string
+    criteria: ItemsOrdinationCriteria
   }
 }

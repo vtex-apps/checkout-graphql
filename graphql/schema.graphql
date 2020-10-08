@@ -82,7 +82,7 @@ type Mutation {
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
-  updateItemsOrdination(orderFormId: ID, ascending: Boolean!, criteria: String!): OrderForm!
+  updateItemsOrdination(orderFormId: ID, ascending: Boolean!, criteria: ItemsOrdinationCriteria!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
