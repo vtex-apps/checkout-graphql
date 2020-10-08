@@ -68,6 +68,6 @@ input ClientPreferencesDataInput {
 }
 
 enum ItemsOrdinationCriteria {
-  name,
+  name
   add_time
 }

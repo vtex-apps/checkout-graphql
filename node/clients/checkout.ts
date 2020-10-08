@@ -414,4 +414,5 @@ export class Checkout extends JanusClient {
       updateItemsOrdination: (orderFormId: string) => `${base}/orderForm/${orderFormId}/itemsOrdination`
     }
   }
+  
 }
