@@ -43,7 +43,7 @@ type Item {
   skuSpecifications: [SKUSpecification!]!
   uniqueId: String!
   unitMultiplier: Float
-  priceTags: [PriceTags]
+  priceTags: [PriceTag]
 }
 
 type ImageUrls {
@@ -161,7 +161,7 @@ input ManualPriceInput {
   price: Float!
 }
 
-type PriceTags {
+type PriceTag {
   identifier: String
   isPercentual: Boolean
   name: String
