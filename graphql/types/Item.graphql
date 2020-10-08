@@ -43,7 +43,7 @@ type Item {
   skuSpecifications: [SKUSpecification!]!
   uniqueId: String!
   unitMultiplier: Float
-  priceTags: [PriceTag]
+  priceTags: [PriceTag!]!
 }
 
 type ImageUrls {
