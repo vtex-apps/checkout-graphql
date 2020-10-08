@@ -81,4 +81,9 @@ type Mutation {
   setManualPrice(orderFormId: ID, input: ManualPriceInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+
+  updateItemsOrdination(orderFormId: ID, ascending: Boolean!, criteria: ItemsOrdinationCriteria!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
+
 }

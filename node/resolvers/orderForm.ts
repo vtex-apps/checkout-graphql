@@ -259,4 +259,26 @@ export const mutations = {
 
     return orderFormWithPayments
   },
+
+  updateItemsOrdination: async (
+    _: unknown,
+    args: ItemsOrdinationArgs & OrderFormIdArgs,
+    ctx: Context
+    ): Promise<CheckoutOrderForm> => {
+      
+    const { clients: { checkout }, vtex } = ctx
+    const {
+      ascending,
+      criteria,
+      orderFormId = vtex.orderFormId,
+    } = args
+      
+    const changeItemsOrdination = await checkout.updateItemsOrdination(
+      orderFormId!,
+      ascending, 
+      criteria
+    )
+
+    return changeItemsOrdination
+  },
 }

@@ -265,6 +265,15 @@ export class Checkout extends JanusClient {
   public getProfile = (email: string) =>
     this.get<CheckoutProfile>(this.routes.profile(email))
 
+  public updateItemsOrdination = (orderFormId: string, ascending: boolean, criteria: string) => this.post<CheckoutOrderForm>(
+    this.routes.updateItemsOrdination(orderFormId),
+    {
+      ascending: ascending,
+      criteria: criteria
+    },
+    { metric: 'checkout-orderForm' }
+  )
+
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
@@ -402,6 +411,7 @@ export class Checkout extends JanusClient {
       savePaymentToken: (queryString: string) =>
         `${base}/current-user/payment-tokens/${queryString}`,
       getPaymentSession: () => `${base}/payment-session`,
+      updateItemsOrdination: (orderFormId: string) => `${base}/orderForm/${orderFormId}/itemsOrdination`
     }
   }
 }
