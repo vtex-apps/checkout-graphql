@@ -280,6 +280,6 @@ export const mutations = {
     )
 
     return changeItemsOrdination
-  },
+  },  
   
 }
