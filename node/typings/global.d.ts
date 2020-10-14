@@ -532,4 +532,10 @@ declare global {
   interface PaymentDataInput {
     payments: PaymentInput[]
   }
+
+  interface ItemsOrdinationArgs {
+    ascending: boolean,
+    criteria: ItemsOrdinationCriteria
+  }
+
 }
