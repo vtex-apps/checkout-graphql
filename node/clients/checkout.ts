@@ -28,7 +28,7 @@ export class Checkout extends JanusClient {
           ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
           : null),
       },
-    })
+    }, 'beta')
   }
 
   public savePaymentToken = (paymentTokens: any) => {
