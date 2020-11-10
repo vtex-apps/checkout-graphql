@@ -562,4 +562,8 @@ declare global {
     ascending: boolean
     criteria: ItemsOrdinationCriteria
   }
+
+  interface OpenTextField {
+    value?: string
+  }
 }

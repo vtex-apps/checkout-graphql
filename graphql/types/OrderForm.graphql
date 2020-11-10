@@ -14,6 +14,11 @@ type OrderForm {
   clientProfileData: ClientData
   clientPreferencesData: ClientPreferencesData
   allowManualPrice: Boolean
+  openTextField: OpenTextField
+}
+
+type OpenTextField {
+  value: String
 }
 
 enum UserType {
@@ -70,4 +75,8 @@ input ClientPreferencesDataInput {
 enum ItemsOrdinationCriteria {
   name
   add_time
+}
+
+input OrderFormOpenTextInput {
+  value: String
 }

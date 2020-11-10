@@ -204,6 +204,10 @@ interface MutationUpdateOrderFormPaymentArgs {
   input: PaymentDataInput
 }
 
+interface MutationUpdateOrderFormOpenTextField {
+  input: OpenTextField
+}
+
 export const mutations = {
   updateOrderFormProfile: async (
     _: unknown,
@@ -262,7 +266,6 @@ export const mutations = {
 
     return orderFormWithPayments
   },
-
   updateItemsOrdination: async (
     _: unknown,
     args: ItemsOrdinationArgs & OrderFormIdArgs,
@@ -297,5 +300,21 @@ export const mutations = {
     const updatedOrderForm = await checkout.clearMessages(orderFormId!)
 
     return updatedOrderForm
+  },
+
+  updateOrderFormOpenTextField: async (
+    _: unknown,
+    args: MutationUpdateOrderFormOpenTextField & OrderFormIdArgs,
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const { clients: { checkout }, vtex } = ctx
+    const { orderFormId = vtex.orderFormId, input } = args
+
+    const orderFormWithOpenTextField = await checkout.updateOrderFromOpenTextField(
+      orderFormId!,
+      input
+    )
+
+    return orderFormWithOpenTextField
   },
 }

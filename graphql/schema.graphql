@@ -94,4 +94,9 @@ type Mutation {
   clearOrderFormMessages(orderFormId: ID): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
+
+  updateOrderFormOpenTextField(orderFormId: ID, input: OrderFormOpenTextInput!): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
+
 }

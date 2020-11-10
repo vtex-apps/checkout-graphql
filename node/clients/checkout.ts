@@ -137,6 +137,16 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormClientPreferencesData' }
     )
 
+  public updateOrderFromOpenTextField = (
+    orderFromId: string,
+    openTextField: OpenTextField
+  ) =>
+    this.post<CheckoutOrderForm>(
+      this.routes.attachmentsData(orderFromId, 'openTextField'),
+      openTextField,
+      { metric: 'checkout-updateOrderFromOpenTextField' }
+    )
+
   public addAssemblyOptions = async (
     orderFormId: string,
     itemId: string | number,
