@@ -22,7 +22,8 @@ type Item {
   name: String
   offerings: [Offering!]!
   options: [AssemblyOptionType]
-  parentAssemblyBinding: String
+  parentAssemblyBinding: String,
+  parentItemIndex: Int
   price: Float
   productCategories: ProductCategoriesObject
   productCategoryIds: String
