@@ -165,8 +165,11 @@ export const queries = {
     args: OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
-    const { clients, vtex } = ctx
+    const { clients, vtex, graphql: { cacheControl } } = ctx
     const { orderFormId = vtex.orderFormId } = args
+
+    cacheControl.noCache = true
+    cacheControl.noStore = true
 
     const { data: newOrderForm, headers } = await clients.checkout.orderFormRaw(
       orderFormId
