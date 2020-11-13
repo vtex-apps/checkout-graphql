@@ -1,10 +1,10 @@
 type Query {
   getCardSessionId: String
   orderForm(orderFormId: ID): OrderForm!
-    @cacheControl(scope: PRIVATE)
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
     @withOrderFormId
     @withSegment
-  checkoutProfile(email: String!): CheckoutProfile @cacheControl(scope: PRIVATE)
+  checkoutProfile(email: String!): CheckoutProfile @cacheControl(maxAge: ZERO, scope: PRIVATE)
   shippingSLA(
     items: [ShippingItem]
     postalCode: String
