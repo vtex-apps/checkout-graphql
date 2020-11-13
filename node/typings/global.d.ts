@@ -10,6 +10,12 @@ declare global {
     dataSources: SearchGraphQLDataSources
     originalPath: string
     vtex: CustomIOContext
+    graphql: {
+      cacheControl: {
+        noStore: boolean
+        noCache: boolean
+      }
+    }
   }
 
   interface CustomIOContext extends IOContext {
