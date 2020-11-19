@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Mutation `clearOrderFormMessages` to clear the messages in the order form.
 
 ## [0.47.0] - 2020-11-13
 ### Changed

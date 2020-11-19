@@ -50,8 +50,11 @@ type Mutation {
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
     @withOrderFormId
 
-  selectPickupOption(orderFormId: ID, pickupOptionId: String, itemId: String): OrderForm!
-    @withOrderFormId
+  selectPickupOption(
+    orderFormId: ID
+    pickupOptionId: String
+    itemId: String
+  ): OrderForm! @withOrderFormId
 
   """
   Changes the currently selected address in the shipping data
@@ -82,8 +85,13 @@ type Mutation {
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
-  updateItemsOrdination(orderFormId: ID, ascending: Boolean!, criteria: ItemsOrdinationCriteria!): OrderForm!
+  updateItemsOrdination(
+    orderFormId: ID
+    ascending: Boolean!
+    criteria: ItemsOrdinationCriteria!
+  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+
+  clearOrderFormMessages(orderFormId: ID): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
-
 }
