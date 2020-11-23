@@ -9,6 +9,7 @@ type Shipping {
 
 type DeliveryOption {
   id: String!
+  channel: String!
   price: Int!
   estimate: String!
   isSelected: Boolean!
@@ -16,6 +17,8 @@ type DeliveryOption {
 
 type PickupOption {
   id: String!
+  address: Address
+  channel: String!
   price: Int!
   estimate: String!
   isSelected: Boolean!
@@ -23,6 +26,14 @@ type PickupOption {
   additionalInfo: String!
   storeDistance: Float!
   transitTime: String!
+  businessHours: [BusinessHour!]!
+}
+
+type BusinessHour {
+  dayNumber: String!
+  closed: Boolean!
+  closingTime: String!
+  openingTime: String!
 }
 
 type Address {

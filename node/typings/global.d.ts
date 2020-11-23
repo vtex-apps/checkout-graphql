@@ -87,6 +87,19 @@ declare global {
     value: string
   }
 
+  interface BusinessHour {
+    DayOfWeek: number
+    ClosingTime: string
+    OpeningTime: string
+  }
+
+  interface NormalizedBusinessHour {
+    dayNumber: string | number
+    closed: boolean
+    closingTime: string
+    openingTime: string
+  }
+
   interface PhoneSchema {
     countryCode: string
     mask?: string
@@ -335,16 +348,18 @@ declare global {
     logisticsInfo: LogisticsInfo[]
     selectedAddresses: CheckoutAddress[]
     availableAddresses: CheckoutAddress[]
-    pickupPoints: Array<{
-      friendlyName: string
-      address: CheckoutAddress
-      additionalInfo: string
-      id: string
-      businessHours: Array<{
-        DayOfWeek: number
-        OpeningTime: string
-        ClosingTime: string
-      }>
+    pickupPoints: PickupPoint[]
+  }
+
+  interface PickupPoint {
+    friendlyName: string
+    address: CheckoutAddress
+    additionalInfo: string
+    id: string
+    businessHours: Array<{
+      DayOfWeek: number
+      OpeningTime: string
+      ClosingTime: string
     }>
   }
 
@@ -540,8 +555,7 @@ declare global {
   }
 
   interface ItemsOrdinationArgs {
-    ascending: boolean,
+    ascending: boolean
     criteria: ItemsOrdinationCriteria
   }
-
 }

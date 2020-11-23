@@ -22,6 +22,7 @@ export function getFormattedDeliveryOptions(
       isSelected,
       price,
       deliveryChannel: sla.deliveryChannel,
+      pickupPointId: sla.pickupPointId,
       sla,
     }
   })
