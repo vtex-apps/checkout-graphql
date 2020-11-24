@@ -82,8 +82,12 @@ export const mutations = {
       clients,
       vtex,
       vtex: { logger },
+      graphql: { cacheControl },
     } = ctx
     const { orderFormId = vtex.orderFormId, items, marketingData = {} } = args
+
+    cacheControl.noCache = true
+    cacheControl.noStore = true
 
     const { checkout } = clients
     const shouldUpdateMarketingData =
@@ -143,9 +147,16 @@ export const mutations = {
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
-    const { clients, vtex } = ctx
+    const {
+      clients,
+      vtex,
+      graphql: { cacheControl },
+    } = ctx
     const { orderFormId = vtex.orderFormId, orderItems, splitItem } = args
     const { checkout } = clients
+
+    cacheControl.noCache = true
+    cacheControl.noStore = true
 
     if (orderItems.some((item: OrderFormItemInput) => !item.index)) {
       const orderForm = await checkout.orderForm(orderFormId!)
