@@ -6180,9 +6180,9 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.checkout-graphql@https://jeff--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.46.0+build1605698393/public/@types/vtex.checkout-graphql":
-  version "0.46.0"
-  resolved "https://jeff--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.46.0+build1605698393/public/@types/vtex.checkout-graphql#8df015e5d37d3320f2c85a371d324b3fd16abc44"
+"vtex.checkout-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.47.0/public/@types/vtex.checkout-graphql":
+  version "0.47.0"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.47.0/public/@types/vtex.checkout-graphql#4206974436b5fabeb23eb165628c43994ce4c1bf"
 
 "vtex.country-data-settings@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.3.0/public/@types/vtex.country-data-settings":
   version "0.3.0"

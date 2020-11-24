@@ -176,7 +176,7 @@ export const getShippingInfo = async ({
         return {
           id: pickupOption.id,
           address: pickupOption.sla.pickupStoreInfo.address,
-          channel: pickupOption.sla.deliveryChannel,
+          deliveryChannel: pickupOption.sla.deliveryChannel,
           price: pickupOption.price,
           estimate: pickupOption.estimate,
           isSelected: pickupOption.isSelected,

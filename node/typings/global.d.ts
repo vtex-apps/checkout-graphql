@@ -356,11 +356,7 @@ declare global {
     address: CheckoutAddress
     additionalInfo: string
     id: string
-    businessHours: Array<{
-      DayOfWeek: number
-      OpeningTime: string
-      ClosingTime: string
-    }>
+    businessHours: BusinessHour[]
   }
 
   interface LogisticsInfo {

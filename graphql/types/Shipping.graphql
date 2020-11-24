@@ -9,7 +9,7 @@ type Shipping {
 
 type DeliveryOption {
   id: String!
-  channel: String!
+  deliveryChannel: String!
   price: Int!
   estimate: String!
   isSelected: Boolean!
@@ -18,7 +18,7 @@ type DeliveryOption {
 type PickupOption {
   id: String!
   address: Address
-  channel: String!
+  deliveryChannel: String!
   price: Int!
   estimate: String!
   isSelected: Boolean!
