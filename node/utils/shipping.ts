@@ -187,7 +187,7 @@ export const getShippingInfo = async ({
           businessHours: formatBusinessHoursList(
             pickupPoints.find(
               (pp: PickupPoint) => pp.id === pickupOption.pickupPointId
-            )!.businessHours
+            )?.businessHours ?? []
           ),
         }
       }),
