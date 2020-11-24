@@ -20,13 +20,13 @@ type Mutation {
     orderFormId: ID
     items: [ItemInput]
     marketingData: MarketingDataInput
-  ): OrderForm! @withOrderFormId @withSegment
+  ): OrderForm! @withOrderFormId @withSegment @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateItems(
     orderFormId: ID
     orderItems: [ItemInput]
     splitItem: Boolean = true
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
     @withOrderFormId
