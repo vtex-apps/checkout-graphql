@@ -48,26 +48,26 @@ describe('Shipping Resolvers', () => {
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing pickup point SLAs', async () => {
+    it('should get shipping info', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
-            deliveryChannel: "delivery",
+            deliveryChannel: 'delivery',
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
             sla: {
               availableDeliveryWindows: [],
-              deliveryChannel: "delivery",
+              deliveryChannel: 'delivery',
               deliveryIds: [],
               deliveryWindow: null,
-              id: "delivery-SLA",
+              id: 'delivery-SLA',
               listPrice: 0,
               lockTTL: null,
-              name: "delivery-SLA",
+              name: 'delivery-SLA',
               pickupDistance: 0,
               pickupPointId: null,
               pickupStoreInfo: {
@@ -79,23 +79,35 @@ describe('Shipping Resolvers', () => {
               },
               polygonName: null,
               price: 100,
-              shippingEstimate: "1db",
+              shippingEstimate: '1db',
               shippingEstimateDate: null,
               tax: 0,
-            }
+            },
           },
         ],
         pickupOptions: [
           {
-            "additionalInfo": null,
-            "estimate": "1d",
-            "friendlyName": null,
-            "id": "pickup-SLA",
-            "isSelected": false,
-            "price": 100,
-            "storeDistance": 0,
-            "transitTime": undefined,
-          }
+            additionalInfo: null,
+            address: null,
+            deliveryChannel: 'pickup-in-point',
+            estimate: '1d',
+            friendlyName: null,
+            id: 'pickup-SLA',
+            isSelected: false,
+            price: 100,
+            storeDistance: 0,
+            transitTime: undefined,
+            businessHours: [
+              {
+                dayNumber: '1to5',
+                closed: true,
+                openingTime: '',
+                closingTime: '',
+              },
+              { dayNumber: 6, closed: true, openingTime: '', closingTime: '' },
+              { dayNumber: 0, closed: true, openingTime: '', closingTime: '' },
+            ],
+          },
         ],
         selectedAddress: deliveryAddress,
       }
@@ -111,20 +123,20 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
-            deliveryChannel: "delivery",
+            deliveryChannel: 'delivery',
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
             sla: {
               availableDeliveryWindows: [],
-              deliveryChannel: "delivery",
+              deliveryChannel: 'delivery',
               deliveryIds: [],
               deliveryWindow: null,
-              id: "delivery-SLA",
+              id: 'delivery-SLA',
               listPrice: 0,
               lockTTL: null,
-              name: "delivery-SLA",
+              name: 'delivery-SLA',
               pickupDistance: 0,
               pickupPointId: null,
               pickupStoreInfo: {
@@ -136,10 +148,10 @@ describe('Shipping Resolvers', () => {
               },
               polygonName: null,
               price: 100,
-              shippingEstimate: "1db",
+              shippingEstimate: '1db',
               shippingEstimateDate: null,
               tax: 0,
-            }
+            },
           },
         ],
         pickupOptions: [],
@@ -154,26 +166,26 @@ describe('Shipping Resolvers', () => {
       ).toEqual(expectedResult)
     })
 
-    it('should get shipping info removing scheduled delivery and pickup SLAs', async () => {
+    it('should get shipping info with delivery and pickup SLAs but removing scheduled delivery ones', async () => {
       const expectedResult = {
         availableAddresses: [deliveryAddress],
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
-            deliveryChannel: "delivery",
+            deliveryChannel: 'delivery',
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
             sla: {
               availableDeliveryWindows: [],
-              deliveryChannel: "delivery",
+              deliveryChannel: 'delivery',
               deliveryIds: [],
               deliveryWindow: null,
-              id: "delivery-SLA",
+              id: 'delivery-SLA',
               listPrice: 0,
               lockTTL: null,
-              name: "delivery-SLA",
+              name: 'delivery-SLA',
               pickupDistance: 0,
               pickupPointId: null,
               pickupStoreInfo: {
@@ -185,23 +197,35 @@ describe('Shipping Resolvers', () => {
               },
               polygonName: null,
               price: 100,
-              shippingEstimate: "1db",
+              shippingEstimate: '1db',
               shippingEstimateDate: null,
               tax: 0,
-            }
+            },
           },
         ],
         pickupOptions: [
           {
-            "additionalInfo": null,
-            "estimate": "1d",
-            "friendlyName": null,
-            "id": "pickup-SLA",
-            "isSelected": false,
-            "price": 100,
-            "storeDistance": 0,
-            "transitTime": undefined,
-          }
+            additionalInfo: null,
+            address: null,
+            deliveryChannel: 'pickup-in-point',
+            estimate: '1d',
+            friendlyName: null,
+            id: 'pickup-SLA',
+            isSelected: false,
+            price: 100,
+            storeDistance: 0,
+            transitTime: undefined,
+            businessHours: [
+              {
+                dayNumber: '1to5',
+                closed: true,
+                openingTime: '',
+                closingTime: '',
+              },
+              { dayNumber: 6, closed: true, openingTime: '', closingTime: '' },
+              { dayNumber: 0, closed: true, openingTime: '', closingTime: '' },
+            ],
+          },
         ],
         selectedAddress: deliveryAddress,
       }
@@ -220,20 +244,20 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
-            deliveryChannel: "delivery",
+            deliveryChannel: 'delivery',
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 200,
             sla: {
               availableDeliveryWindows: [],
-              deliveryChannel: "delivery",
+              deliveryChannel: 'delivery',
               deliveryIds: [],
               deliveryWindow: null,
-              id: "delivery-SLA",
+              id: 'delivery-SLA',
               listPrice: 0,
               lockTTL: null,
-              name: "delivery-SLA",
+              name: 'delivery-SLA',
               pickupDistance: 0,
               pickupPointId: null,
               pickupStoreInfo: {
@@ -245,10 +269,10 @@ describe('Shipping Resolvers', () => {
               },
               polygonName: null,
               price: 100,
-              shippingEstimate: "1db",
+              shippingEstimate: '1db',
               shippingEstimateDate: null,
               tax: 0,
-            }
+            },
           },
         ],
         pickupOptions: [],
@@ -269,28 +293,28 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
-            deliveryChannel: "delivery",
+            deliveryChannel: 'delivery',
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 200,
             sla: {
               availableDeliveryWindows: [],
-              deliveryChannel: "delivery",
+              deliveryChannel: 'delivery',
               deliveryIds: [
                 {
-                  courierId: "1",
-                  courierName: "PAC",
-                  dockId: "1fd8f86",
+                  courierId: '1',
+                  courierName: 'PAC',
+                  dockId: '1fd8f86',
                   quantity: 1,
-                  warehouseId: "1a105fe",
-                }
+                  warehouseId: '1a105fe',
+                },
               ],
               deliveryWindow: null,
-              id: "delivery-SLA",
+              id: 'delivery-SLA',
               listPrice: 0,
               lockTTL: null,
-              name: "delivery-SLA",
+              name: 'delivery-SLA',
               pickupDistance: 0,
               pickupPointId: null,
               pickupStoreInfo: {
@@ -302,10 +326,10 @@ describe('Shipping Resolvers', () => {
               },
               polygonName: null,
               price: 100,
-              shippingEstimate: "1db",
+              shippingEstimate: '1db',
               shippingEstimateDate: null,
               tax: 0,
-            }
+            },
           },
         ],
         pickupOptions: [],
@@ -326,20 +350,20 @@ describe('Shipping Resolvers', () => {
         countries: ['BRA', 'GBR'],
         deliveryOptions: [
           {
-            deliveryChannel: "delivery",
+            deliveryChannel: 'delivery',
             estimate: '1db',
             id: 'delivery-SLA',
             isSelected: true,
             price: 100,
             sla: {
               availableDeliveryWindows: [],
-              deliveryChannel: "delivery",
+              deliveryChannel: 'delivery',
               deliveryIds: [],
               deliveryWindow: null,
-              id: "delivery-SLA",
+              id: 'delivery-SLA',
               listPrice: 0,
               lockTTL: null,
-              name: "delivery-SLA",
+              name: 'delivery-SLA',
               pickupDistance: 0,
               pickupPointId: null,
               pickupStoreInfo: {
@@ -351,23 +375,35 @@ describe('Shipping Resolvers', () => {
               },
               polygonName: null,
               price: 100,
-              shippingEstimate: "1db",
+              shippingEstimate: '1db',
               shippingEstimateDate: null,
               tax: 0,
-            }
+            },
           },
         ],
         pickupOptions: [
           {
-            "additionalInfo": null,
-            "estimate": "1d",
-            "friendlyName": null,
-            "id": "pickup-SLA",
-            "isSelected": false,
-            "price": 100,
-            "storeDistance": 0,
-            "transitTime": undefined,
-          }
+            additionalInfo: null,
+            estimate: '1d',
+            address: null,
+            deliveryChannel: 'pickup-in-point',
+            friendlyName: null,
+            id: 'pickup-SLA',
+            isSelected: false,
+            price: 100,
+            storeDistance: 0,
+            transitTime: undefined,
+            businessHours: [
+              {
+                dayNumber: '1to5',
+                closed: true,
+                openingTime: '',
+                closingTime: '',
+              },
+              { dayNumber: 6, closed: true, openingTime: '', closingTime: '' },
+              { dayNumber: 0, closed: true, openingTime: '', closingTime: '' },
+            ],
+          },
         ],
         selectedAddress: deliveryAddress,
       }
