@@ -17,7 +17,7 @@ type DeliveryOption {
 
 type PickupOption {
   id: String!
-  address: Address
+  address: Address!
   deliveryChannel: String!
   price: Int!
   estimate: String!
