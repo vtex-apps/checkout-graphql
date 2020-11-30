@@ -27,21 +27,18 @@ const doesWeekDaysHaveTheSameHours = (
 ) => {
   const weekDays = businessHours.slice(MONDAY_INDEX, FRIDAY_INDEX)
 
-  let previousOpeningTime = weekDays[0].openingTime
-  let previousClosingTime = weekDays[0].closingTime
+  const firstOpeningTime = weekDays[0].openingTime
+  const firstClosingTime = weekDays[0].closingTime
 
   for (let i = 1; i < weekDays.length; i++) {
     const currentDay = weekDays[i]
 
     if (
-      currentDay.openingTime !== previousOpeningTime ||
-      currentDay.closingTime !== previousClosingTime
+      currentDay.openingTime !== firstOpeningTime ||
+      currentDay.closingTime !== firstClosingTime
     ) {
       return false
     }
-
-    previousOpeningTime = currentDay.openingTime
-    previousClosingTime = currentDay.closingTime
   }
 
   return true
