@@ -481,10 +481,18 @@ declare global {
     availableAddresses: CheckoutAddress[]
     countries: string[]
     deliveryOptions: DeliveryOption[]
+    pickupOptions: PickupOption[]
     selectedAddress: CheckoutAddress | null
   }
 
   interface DeliveryOption {
+    id: string
+    price: number
+    estimate: string
+    isSelected: boolean
+  }
+
+  interface PickupOption {
     id: string
     price: number
     estimate: string
