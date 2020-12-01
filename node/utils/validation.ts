@@ -7,14 +7,12 @@ export const isShippingValid = async (
     Partial<Pick<Shipping, 'selectedAddress'>>,
   ctx: Context
 ) => {
-  if (
-    !(
-      shipping.selectedAddress &&
-      shipping.deliveryOptions?.some(
-        deliveryOption => deliveryOption?.isSelected
-      )
-    )
-  ) {
+  const selectedShippingOption =
+    shipping.deliveryOptions?.some(
+      deliveryOption => deliveryOption?.isSelected
+    ) || shipping.pickupOptions?.some(pickupOption => pickupOption?.isSelected)
+
+  if (!(shipping.selectedAddress && selectedShippingOption)) {
     return false
   }
 

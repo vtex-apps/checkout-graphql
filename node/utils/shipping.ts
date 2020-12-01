@@ -12,6 +12,7 @@ import {
 } from './delivery-options'
 import { Clients } from '../clients'
 import { DELIVERY, PICKUP_IN_POINT } from '../constants'
+import { formatBusinessHoursList } from './pickup'
 
 export const getShippingData = (
   address: CheckoutAddress,
@@ -100,6 +101,7 @@ export const getShippingInfo = async ({
   >
 }) => {
   const logisticsInfo = orderForm.shippingData?.logisticsInfo ?? []
+  const pickupPoints = orderForm.shippingData?.pickupPoints ?? []
 
   const countries = Array.from(
     new Set(logisticsInfo.flatMap(item => item.shipsTo)).values()
@@ -173,6 +175,8 @@ export const getShippingInfo = async ({
       .map(pickupOption => {
         return {
           id: pickupOption.id,
+          address: pickupOption.sla.pickupStoreInfo.address,
+          deliveryChannel: pickupOption.sla.deliveryChannel,
           price: pickupOption.price,
           estimate: pickupOption.estimate,
           isSelected: pickupOption.isSelected,
@@ -180,6 +184,11 @@ export const getShippingInfo = async ({
           additionalInfo: pickupOption.sla.pickupStoreInfo.additionalInfo,
           storeDistance: pickupOption.sla.pickupDistance,
           transitTime: pickupOption.sla.transitTime,
+          businessHours: formatBusinessHoursList(
+            pickupPoints.find(
+              (pp: PickupPoint) => pp.id === pickupOption.pickupPointId
+            )?.businessHours ?? []
+          ),
         }
       }),
     selectedAddress,

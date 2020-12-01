@@ -1,3 +1,5 @@
+import { PICKUP_IN_POINT } from '../constants/index'
+
 export function getFormattedDeliveryOptions(
   deliveryOptions: SLA[],
   logisticsInfo: LogisticsInfo[] | null
@@ -23,6 +25,9 @@ export function getFormattedDeliveryOptions(
       price,
       deliveryChannel: sla.deliveryChannel,
       sla,
+      ...(sla.deliveryChannel === PICKUP_IN_POINT
+        ? { pickupPointId: sla.pickupPointId }
+        : {}),
     }
   })
 }
