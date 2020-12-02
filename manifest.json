@@ -1,7 +1,7 @@
 {
   "name": "checkout-graphql",
   "vendor": "vtex",
-  "version": "0.49.1",
+  "version": "0.50.0",
   "title": "Checkout GraphQL",
   "description": "Checkout GraphQL API",
   "builders": {
