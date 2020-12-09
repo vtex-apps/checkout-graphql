@@ -165,7 +165,11 @@ export const queries = {
     args: OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
-    const { clients, vtex, graphql: { cacheControl } } = ctx
+    const {
+      clients,
+      vtex,
+      graphql: { cacheControl },
+    } = ctx
     const { orderFormId = vtex.orderFormId } = args
 
     cacheControl.noCache = true
@@ -206,6 +210,10 @@ interface MutationUpdateOrderFormPaymentArgs {
 
 interface MutationUpdateOrderFormOpenTextField {
   input: OpenTextField
+}
+
+interface MutationUpdateOrderFormMarketingData {
+  input: OrderFormMarketingData
 }
 
 export const mutations = {
@@ -307,7 +315,10 @@ export const mutations = {
     args: MutationUpdateOrderFormOpenTextField & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
-    const { clients: { checkout }, vtex } = ctx
+    const {
+      clients: { checkout },
+      vtex,
+    } = ctx
     const { orderFormId = vtex.orderFormId, input } = args
 
     const orderFormWithOpenTextField = await checkout.updateOrderFromOpenTextField(
@@ -316,5 +327,25 @@ export const mutations = {
     )
 
     return orderFormWithOpenTextField
+  },
+
+  updateOrderFormMarketingData: async (
+    _: unknown,
+    args: MutationUpdateOrderFormMarketingData & OrderFormIdArgs,
+    ctx: Context
+  ): Promise<CheckoutOrderForm> => {
+    const {
+      clients: { checkout },
+      vtex,
+    } = ctx
+
+    const { orderFormId = vtex.orderFormId, input } = args
+
+    const updatedOrderForm = await checkout.updateOrderFormMarketingData(
+      orderFormId!,
+      input
+    )
+
+    return updatedOrderForm
   },
 }

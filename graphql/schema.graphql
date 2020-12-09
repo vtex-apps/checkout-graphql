@@ -99,4 +99,7 @@ type Mutation {
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
+  updateOrderFormMarketingData(input: MarketingDataInput!): OrderForm! 
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
 }
