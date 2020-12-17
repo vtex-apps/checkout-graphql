@@ -129,7 +129,11 @@ export const mutations = {
         previousItems
       )
 
-      return checkout.orderForm(orderFormId!)
+      try {
+        return checkout.orderForm(orderFormId!)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     return newOrderForm
