@@ -34,6 +34,7 @@ export const root = {
   OrderForm: {
     id: prop('orderFormId'),
     marketingData: propOr({}, 'marketingData'),
+    storePreferencesData: propOr({}, 'storePreferencesData'),
     allowManualPrice: async (
       orderForm: CheckoutOrderForm,
       _: unknown,
