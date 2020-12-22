@@ -50,7 +50,7 @@ type MarketingData {
   utmiPart: String
   utmiPage: String
   coupon: String
-  marketingTags: [String!]!
+  marketingTags: [String!]
 }
 
 input MarketingDataInput {
@@ -61,7 +61,7 @@ input MarketingDataInput {
   utmiPart: String
   utmiPage: String
   coupon: String
-  marketingTags: [String!]!
+  marketingTags: [String!]
 }
 
 type Totalizer {

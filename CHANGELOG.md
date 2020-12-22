@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - `storePreferencesData` to `orderForm` query
+
+## [0.53.1] - 2020-12-22
+### Changed
+- Field `marketingTags` is optional in marketing data input.
+
 ## [0.53.0] - 2020-12-22
 ### Added
 - Mutation `updateOrderFormMarketingData`.
