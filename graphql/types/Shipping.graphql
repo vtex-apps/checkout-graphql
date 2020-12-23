@@ -24,7 +24,7 @@ type PickupOption {
   isSelected: Boolean!
   friendlyName: String!
   additionalInfo: String
-  storeDistance: Float!
+  storeDistance: Float
   transitTime: String!
   businessHours: [BusinessHour!]!
 }
