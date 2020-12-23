@@ -4,7 +4,8 @@ type Query {
     @cacheControl(maxAge: ZERO, scope: PRIVATE)
     @withOrderFormId
     @withSegment
-  checkoutProfile(email: String!): CheckoutProfile @cacheControl(maxAge: ZERO, scope: PRIVATE)
+  checkoutProfile(email: String!): CheckoutProfile
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
   shippingSLA(
     items: [ShippingItem]
     postalCode: String
@@ -20,6 +21,7 @@ type Mutation {
     orderFormId: ID
     items: [ItemInput]
     marketingData: MarketingDataInput
+    salesChannel: String
   ): OrderForm! @withOrderFormId @withSegment
 
   updateItems(
@@ -95,11 +97,12 @@ type Mutation {
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 
-  updateOrderFormOpenTextField(orderFormId: ID, input: OrderFormOpenTextInput!): OrderForm!
-    @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+  updateOrderFormOpenTextField(
+    orderFormId: ID
+    input: OrderFormOpenTextInput!
+  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
 
-  updateOrderFormMarketingData(input: MarketingDataInput!): OrderForm! 
+  updateOrderFormMarketingData(input: MarketingDataInput!): OrderForm!
     @withOrderFormId
     @cacheControl(scope: PRIVATE)
 }

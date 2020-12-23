@@ -75,6 +75,7 @@ export const mutations = {
     args: {
       items: OrderFormItemInput[]
       marketingData: Partial<OrderFormMarketingData>
+      salesChannel?: string
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
@@ -83,7 +84,12 @@ export const mutations = {
       vtex,
       vtex: { logger },
     } = ctx
-    const { orderFormId = vtex.orderFormId, items, marketingData = {} } = args
+    const {
+      orderFormId = vtex.orderFormId,
+      items,
+      marketingData = {},
+      salesChannel,
+    } = args
 
     const { checkout } = clients
     const shouldUpdateMarketingData =
@@ -100,7 +106,11 @@ export const mutations = {
      * while spreading their properties, since the second one will always
      * contain the most recent orderForm.
      */
-    let newOrderForm = await checkout.addItem(orderFormId!, cleanItems)
+    let newOrderForm = await checkout.addItem(
+      orderFormId!,
+      cleanItems,
+      salesChannel
+    )
 
     try {
       if (shouldUpdateMarketingData) {
