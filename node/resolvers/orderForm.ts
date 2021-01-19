@@ -30,6 +30,28 @@ const isWhitelistedSetCookie = (cookie: string) => {
 const replaceDomain = (host: string) => (cookie: string) =>
   cookie.replace(/domain=.+?(;|$)/, `domain=${host};`)
 
+const isCallCenterOperator = async (orderFormId: string, ctx: Context) => {
+  const {
+    clients: { customSession },
+    vtex: { logger },
+    cookies,
+  } = ctx
+
+  const sessionCookie = cookies.get(VTEX_SESSION)
+
+  if (sessionCookie === undefined) {
+    logger.warn(
+      `Can't request session details: "${VTEX_SESSION}" is undefined. ofid=${orderFormId}`
+    )
+
+    return false
+  }
+
+  const { sessionData } = await customSession.getSession(sessionCookie, ['*'])
+
+  return sessionData?.namespaces?.impersonate?.canImpersonate?.value === 'true'
+}
+
 export const root = {
   OrderForm: {
     id: prop('orderFormId'),
@@ -40,41 +62,30 @@ export const root = {
       _: unknown,
       ctx: Context
     ) => {
-      const checkoutAdminOrderForm = await ctx.clients.checkoutAdmin.orderForm()
-
-      return (
-        checkoutAdminOrderForm?.allowManualPrice || orderForm.allowManualPrice
+      const isCallCenter = await isCallCenterOperator(
+        orderForm.orderFormId,
+        ctx
       )
+
+      if (!isCallCenter) {
+        return false
+      }
+
+      const adminOrderForm = await ctx.clients.checkoutAdmin.orderForm()
+
+      return adminOrderForm?.allowManualPrice || orderForm.allowManualPrice
     },
     userType: async (
       orderForm: CheckoutOrderForm,
       __: unknown,
       ctx: Context
     ) => {
-      const {
-        clients: { customSession },
-        cookies,
-        vtex: { logger },
-      } = ctx
+      const isCallCenter = await isCallCenterOperator(
+        orderForm.orderFormId,
+        ctx
+      )
 
-      const sessionCookie = cookies.get(VTEX_SESSION)
-
-      if (sessionCookie === undefined) {
-        logger.warn(
-          `Can't request session details: "${VTEX_SESSION}" is undefined. ofid=${orderForm.orderFormId}`
-        )
-
-        return 'STORE_USER'
-      }
-
-      const { sessionData } = await customSession.getSession(sessionCookie, [
-        '*',
-      ])
-
-      const isCallCenterOperator =
-        sessionData?.namespaces?.impersonate?.canImpersonate?.value === 'true'
-
-      if (isCallCenterOperator) {
+      if (isCallCenter) {
         return 'CALL_CENTER_OPERATOR'
       }
 
