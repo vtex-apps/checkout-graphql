@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "vtex.country-data-settings": "0.x",
-    "vtex.graphql-server": "1.x"
+    "vtex.graphql-server": "1.x",
+    "vtex.messages": "1.x"
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
@@ -18,6 +19,9 @@
     "smartcheckout"
   ],
   "policies": [
+    {
+      "name": "vtex.messages:translate-messages"
+    },
     {
       "name": "outbound-access",
       "attrs": {

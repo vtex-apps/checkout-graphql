@@ -22,8 +22,8 @@ type PickupOption {
   price: Int!
   estimate: String!
   isSelected: Boolean!
-  friendlyName: String!
-  additionalInfo: String
+  friendlyName: String! @translatableV2
+  additionalInfo: String @translatableV2
   storeDistance: Float
   transitTime: String!
   businessHours: [BusinessHour!]!
