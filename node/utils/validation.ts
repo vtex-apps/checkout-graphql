@@ -16,7 +16,7 @@ export const isShippingValid = async (
     return false
   }
 
-  if (!orderForm.canEditData) {
+  if (!orderForm.canEditData && !shipping.selectedAddress?.isDisposable) {
     return true
   }
 
