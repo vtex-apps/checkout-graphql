@@ -1597,10 +1597,10 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
   integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
 
-"@vtex/api@6.39.0":
-  version "6.39.0"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.39.0.tgz#5f5b6c54713f4e3c6671d86feb3faec543b449f2"
-  integrity sha512-YoHLnMb0V2LMxoXQgIskbsHNkG/TprXjsE60RItHNjALx2b6/+gYFLSa8x/sJp+O6OJQQT3pSkFT7Ff5A8ER9g==
+"@vtex/api@6.39.1":
+  version "6.39.1"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.39.1.tgz#ad675cf46404b0d21476ac441626843b6950c4a2"
+  integrity sha512-w3FghXguk4b+bOSOihB8I4+gGt7JljRCXFgirK9XiHDOr+uPsUEGhC4JeeQ42aBIEQeyGmQQOsyvZ+qZp2C/oA==
   dependencies:
     "@types/koa" "^2.11.0"
     "@types/koa-compose" "^3.2.3"
@@ -2576,6 +2576,11 @@ dataloader@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.4.0.tgz#bca11d867f5d3f1b9ed9f737bd15970c65dff5c8"
   integrity sha512-68s5jYdlvasItOJnCuI2Q9s4q98g0pCyL3HrcKJu8KNugUl8ahgmZYg38ysLTgQjjXX3H8CJLkAvWrclWfcalw==
+
+dataloader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-2.0.0.tgz#41eaf123db115987e21ca93c005cd7753c55fe6f"
+  integrity sha512-YzhyDAwA4TaQIhM5go+vCLmU0UikghC/t9DTQYZR2M/UvZ1MdOhPezSDZcjj9uqQJOMqjLcpWtyW2iNINdlatQ==
 
 debug@=3.1.0, debug@~3.1.0:
   version "3.1.0"
@@ -5693,7 +5698,7 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-"stats-lite@github:vtex/node-stats-lite#dist":
+stats-lite@vtex/node-stats-lite#dist:
   version "2.2.0"
   resolved "https://codeload.github.com/vtex/node-stats-lite/tar.gz/1b0d39cc41ef7aaecfd541191f877887a2044797"
   dependencies:
