@@ -1,30 +1,26 @@
+import { Logger } from '@vtex/api'
+
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
 import { OrderFormIdArgs } from '../utils/args'
 
-const GOCOMMERCE = 'gocommerce'
-
 const getProductInfo = async (
-  platform: string,
   item: OrderFormItem,
-  searchGraphQL: SearchGraphQL
+  searchGraphQL: SearchGraphQL,
+  logger: Logger
 ) => {
-  let response
+  try {
+    const response = await searchGraphQL.product(item.productId)
 
-  if (platform === GOCOMMERCE) {
-    const slug = item.detailUrl.split('/')[1]
-    response = await searchGraphQL.product({ slug })
-  } else {
-    response = await searchGraphQL.product({
-      identifier: {
-        field: 'id',
-        value: item.productId,
-      },
+    return response
+  } catch (err) {
+    logger.warn({
+      message: 'Error when communicating with vtex.search-graphql',
+      error: err,
     })
+    return null
   }
-
-  return response.data!.product
 }
 
 const getVariations = (skuId: string, skuList: any[]) => {
@@ -40,6 +36,29 @@ const getVariations = (skuId: string, skuList: any[]) => {
 
 export const root = {
   Item: {
+    name: async (item: OrderFormItem, _: unknown, ctx: Context) => {
+      const {
+        vtex: { logger },
+        clients: { searchGraphQL },
+      } = ctx
+
+      const product = await getProductInfo(item, searchGraphQL, logger)
+
+      return product?.productName ?? item.name
+    },
+    skuName: async (item: OrderFormItem, _: unknown, ctx: Context) => {
+      const {
+        vtex: { logger },
+        clients: { searchGraphQL },
+      } = ctx
+
+      const product = await getProductInfo(item, searchGraphQL, logger)
+
+      return (
+        product?.items.find(({ itemId }) => itemId === item.id)?.name ??
+        item.skuName
+      )
+    },
     imageUrls: (item: OrderFormItem, _: unknown, ctx: Context) => {
       return fixImageUrl(item.imageUrl, ctx.vtex.platform)
     },
@@ -49,20 +68,11 @@ export const root = {
       ctx: Context
     ) => {
       const {
-        vtex: { platform, logger },
+        vtex: { logger },
         clients: { searchGraphQL },
       } = ctx
 
-      let product = null
-
-      try {
-        product = await getProductInfo(platform, item, searchGraphQL)
-      } catch (err) {
-        logger.warn({
-          message: 'Error when communicating with vtex.search-graphql',
-          error: err,
-        })
-      }
+      const product = await getProductInfo(item, searchGraphQL, logger)
 
       return getVariations(item.id, product?.items ?? [])
     },

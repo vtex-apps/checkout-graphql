@@ -7,8 +7,6 @@ import {
   Serializable,
 } from '@vtex/api'
 
-import { ProductArgs } from './searchGraphQL/productQuery'
-
 export class GraphQLServer extends AppClient {
   protected graphql: GraphQLClient
 
@@ -17,13 +15,13 @@ export class GraphQLServer extends AppClient {
     this.graphql = new GraphQLClient(this.http)
   }
 
-  public query = async <T extends Serializable>(
+  public query = async <TResponse extends Serializable, TArgs extends object>(
     query: string,
     variables: any,
     extensions: any,
     config: RequestConfig
   ) => {
-    return this.graphql.query<T, ProductArgs>(
+    return this.graphql.query<TResponse, TArgs>(
       {
         extensions,
         query,

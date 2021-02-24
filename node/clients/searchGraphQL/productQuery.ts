@@ -1,31 +1,29 @@
 export interface ProductResponse {
-  product: {
-    productName: string
-    items: Array<{
-      itemId: string
+  productName: string
+  productId: string
+  items: Array<{
+    itemId: string
+    name: string
+    variations: Array<{
       name: string
-      variations: Array<{
-        name: string
-        values: string[]
-      }>
+      values: string[]
     }>
-  }
+  }>
+}
+
+export interface ProductsByIdentifierResponse {
+  productsByIdentifier: ProductResponse[]
 }
 
 export interface ProductArgs {
-  identifier?: ProductUniqueIdentifier
-  slug?: string
-}
-
-interface ProductUniqueIdentifier {
-  field: 'id' | 'slug' | 'ean' | 'reference' | 'sku'
-  value: string
+  values: string[]
 }
 
 export const query = `
-query Product($identifier: ProductUniqueIdentifier, $slug: String) {
-  product(identifier: $identifier, slug: $slug) {
+query Product($values: [ID!]!) {
+  productsByIdentifier(field: id, values: $values) {
     productName
+    productId
     items {
       itemId
       name
