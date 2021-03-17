@@ -43,13 +43,16 @@ export class Checkout extends JanusClient {
     return this.get<PaymentSession>(this.routes.getPaymentSession())
   }
 
-  public addItem = (orderFormId: string, items: any, salesChannel?: string) =>
-    this.post<CheckoutOrderForm>(
+  public addItem = (orderFormId: string, items: any, salesChannel?: string, allowOutdatedData?: any) =>
+    this.patch<CheckoutOrderForm>(
       this.routes.addItem(
         orderFormId,
         this.getChannelQueryString(salesChannel)
       ),
-      { orderItems: items },
+      { 
+        orderItems: items,
+        allowedOutdatedData: allowOutdatedData
+      },
       { metric: 'checkout-addItem' }
     )
 

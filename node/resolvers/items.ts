@@ -85,7 +85,8 @@ export const mutations = {
     args: {
       items: OrderFormItemInput[]
       marketingData: Partial<OrderFormMarketingData>
-      salesChannel?: string
+      salesChannel?: string,
+      allowOutdatedData?: String[]
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
@@ -99,6 +100,7 @@ export const mutations = {
       items,
       marketingData = {},
       salesChannel,
+      allowOutdatedData
     } = args
 
     const { checkout } = clients
@@ -119,8 +121,11 @@ export const mutations = {
     let newOrderForm = await checkout.addItem(
       orderFormId!,
       cleanItems,
-      salesChannel
+      salesChannel,
+      allowOutdatedData
     )
+    
+    console.log({newOrderForm})
 
     try {
       if (shouldUpdateMarketingData) {
