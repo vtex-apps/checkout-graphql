@@ -43,7 +43,7 @@ export class Checkout extends JanusClient {
     return this.get<PaymentSession>(this.routes.getPaymentSession())
   }
 
-  public addItem = (orderFormId: string, items: any, salesChannel?: string, allowOutdatedData?: any) =>
+  public addItem = (orderFormId: string, items: any, salesChannel?: string, allowOutdatedData?: string[]) =>
     this.patch<CheckoutOrderForm>(
       this.routes.addItem(
         orderFormId,

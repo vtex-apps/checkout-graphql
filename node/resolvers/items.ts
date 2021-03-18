@@ -124,8 +124,6 @@ export const mutations = {
       salesChannel,
       allowOutdatedData
     )
-    
-    console.log({newOrderForm})
 
     try {
       if (shouldUpdateMarketingData) {
