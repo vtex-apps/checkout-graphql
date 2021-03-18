@@ -86,7 +86,7 @@ export const mutations = {
       items: OrderFormItemInput[]
       marketingData: Partial<OrderFormMarketingData>
       salesChannel?: string,
-      allowOutdatedData?: String[]
+      allowOutdatedData?: string[]
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
