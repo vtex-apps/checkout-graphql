@@ -85,7 +85,7 @@ export const mutations = {
     args: {
       items: OrderFormItemInput[]
       marketingData: Partial<OrderFormMarketingData>
-      salesChannel?: string,
+      salesChannel?: string
       allowOutdatedData?: string[]
     } & OrderFormIdArgs,
     ctx: Context
@@ -100,7 +100,7 @@ export const mutations = {
       items,
       marketingData = {},
       salesChannel,
-      allowOutdatedData
+      allowOutdatedData,
     } = args
 
     const { checkout } = clients
@@ -108,7 +108,9 @@ export const mutations = {
       Object.keys(marketingData ?? {}).length > 0
 
     const { items: previousItems } = await checkout.orderForm(orderFormId!)
-    const cleanItems = items.map(({ options, ...rest }) => rest)
+    const cleanItems = items.map(
+      ({ options, index, uniqueId, ...rest }) => rest
+    )
     const withOptions = items.filter(
       ({ options }) => !!options && options.length > 0
     )
@@ -170,7 +172,9 @@ export const mutations = {
     const { orderFormId = vtex.orderFormId, orderItems, splitItem } = args
     const { checkout } = clients
 
-    if (orderItems.some((item: OrderFormItemInput) => !item.index)) {
+    const cleanItems = orderItems.map(({ id, ...rest }) => rest)
+
+    if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
       const orderForm = await checkout.orderForm(orderFormId!)
 
       const idToIndex = orderForm.items.reduce(
@@ -183,7 +187,7 @@ export const mutations = {
         {} as Record<string, number>
       )
 
-      orderItems.forEach((item: OrderFormItemInput) => {
+      cleanItems.forEach((item: OrderFormItemInput) => {
         if (!item.index && item.uniqueId) {
           item.index = idToIndex[item.uniqueId]
         }
@@ -192,7 +196,7 @@ export const mutations = {
 
     const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
-      orderItems,
+      cleanItems,
       splitItem
     )
 
