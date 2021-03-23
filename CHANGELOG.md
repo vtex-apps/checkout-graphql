@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Parameter `allowOutdatedData` to `addToCart` mutation.
+
 ## [0.56.2] - 2021-02-24
 ### Changed
 - Reuse Product and SKU name from `search-graphql` query to translate product names in
