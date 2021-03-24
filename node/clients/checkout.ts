@@ -43,15 +43,20 @@ export class Checkout extends JanusClient {
     return this.get<PaymentSession>(this.routes.getPaymentSession())
   }
 
-  public addItem = (orderFormId: string, items: any, salesChannel?: string, allowOutdatedData?: string[]) =>
+  public addItem = (
+    orderFormId: string,
+    items: Array<Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'>>,
+    salesChannel?: string,
+    allowOutdatedData?: string[]
+  ) =>
     this.patch<CheckoutOrderForm>(
       this.routes.addItem(
         orderFormId,
         this.getChannelQueryString(salesChannel)
       ),
-      { 
+      {
         orderItems: items,
-        allowedOutdatedData: allowOutdatedData
+        allowedOutdatedData: allowOutdatedData,
       },
       { metric: 'checkout-addItem' }
     )
@@ -77,7 +82,7 @@ export class Checkout extends JanusClient {
 
   public updateItems = (
     orderFormId: string,
-    orderItems: any,
+    orderItems: Array<Omit<OrderFormItemInput, 'id'>>,
     splitItem: boolean
   ) =>
     this.post<CheckoutOrderForm>(
