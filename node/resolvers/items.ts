@@ -3,6 +3,7 @@ import { Logger } from '@vtex/api'
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
+import { generateSubscriptionDataEntry } from '../utils/subscriptions'
 import { OrderFormIdArgs } from '../utils/args'
 
 const getProductInfo = async (
@@ -115,6 +116,19 @@ export const mutations = {
       ({ options }) => !!options && options.length > 0
     )
 
+    const subscriptionOptionsOnly = withOptions
+      .map(itemWithOptions => ({
+        itemIndex: itemWithOptions.index as number,
+        options: itemWithOptions.options as AssemblyOptionInput[],
+      }))
+      .filter(item =>
+        Boolean(item?.options?.[0].assemblyId.includes('vtex.subscription'))
+      )
+
+    const newSubscriptionDataEntries = generateSubscriptionDataEntry(
+      subscriptionOptionsOnly
+    )
+
     /**
      * Always be sure to make these requests in the same order you use
      * while spreading their properties, since the second one will always
@@ -152,6 +166,21 @@ export const mutations = {
           orderFormId: orderFormId!,
         },
         previousItems
+      )
+
+      const updatedSubscriptionData = newOrderForm.subscriptionData
+        ? {
+            subscriptions: newOrderForm.subscriptionData.subscriptions.concat(
+              newSubscriptionDataEntries
+            ),
+          }
+        : {
+            subscriptions: newSubscriptionDataEntries,
+          }
+
+      await checkout.updateSubscriptionDataField(
+        orderFormId!,
+        updatedSubscriptionData
       )
 
       return checkout.orderForm(orderFormId!)
