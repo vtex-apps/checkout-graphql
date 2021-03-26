@@ -29,6 +29,7 @@ type Mutation {
     orderFormId: ID
     orderItems: [ItemInput]
     splitItem: Boolean = true
+    allowOutdatedData: [String!]
   ): OrderForm! @withOrderFormId
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
