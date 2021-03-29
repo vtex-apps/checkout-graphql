@@ -116,19 +116,6 @@ export const mutations = {
       ({ options }) => !!options && options.length > 0
     )
 
-    const subscriptionOptionsOnly = withOptions
-      .map(itemWithOptions => ({
-        itemIndex: (itemWithOptions.index as number) + previousItems.length,
-        options: itemWithOptions.options as AssemblyOptionInput[],
-      }))
-      .filter(item =>
-        Boolean(item?.options?.[0].assemblyId.includes('vtex.subscription'))
-      )
-
-    const newSubscriptionDataEntries = generateSubscriptionDataEntry(
-      subscriptionOptionsOnly
-    )
-
     /**
      * Always be sure to make these requests in the same order you use
      * while spreading their properties, since the second one will always
@@ -168,18 +155,33 @@ export const mutations = {
         previousItems
       )
 
-      const updatedSubscriptionData = {
-        subscriptions: newOrderForm.subscriptionData
-          ? newOrderForm.subscriptionData.subscriptions.concat(
-              newSubscriptionDataEntries
-            )
-          : newSubscriptionDataEntries,
-      }
+      const subscriptionOptionsOnly = withOptions
+        .map(itemWithOptions => ({
+          itemIndex: (itemWithOptions.index as number) + previousItems.length,
+          options: itemWithOptions.options as AssemblyOptionInput[],
+        }))
+        .filter(item =>
+          Boolean(item?.options?.[0].assemblyId.includes('vtex.subscription'))
+        )
 
-      await checkout.updateSubscriptionDataField(
-        orderFormId!,
-        updatedSubscriptionData
+      const newSubscriptionDataEntries = generateSubscriptionDataEntry(
+        subscriptionOptionsOnly
       )
+
+      if (newSubscriptionDataEntries.length > 0) {
+        const updatedSubscriptionData = {
+          subscriptions: newOrderForm.subscriptionData
+            ? newOrderForm.subscriptionData.subscriptions.concat(
+                newSubscriptionDataEntries
+              )
+            : newSubscriptionDataEntries,
+        }
+
+        await checkout.updateSubscriptionDataField(
+          orderFormId!,
+          updatedSubscriptionData
+        )
+      }
 
       return checkout.orderForm(orderFormId!)
     }
@@ -201,10 +203,10 @@ export const mutations = {
 
     const cleanItems = orderItems.map(({ id, ...rest }) => rest)
 
-    const currentOrderForm = await checkout.orderForm(orderFormId!)
-
     if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
-      const idToIndex = currentOrderForm.items.reduce(
+      const orderForm = await checkout.orderForm(orderFormId!)
+
+      const idToIndex = orderForm.items.reduce(
         (acc: Record<string, number>, item: OrderFormItem, index: number) => {
           if (acc[item.uniqueId] === undefined) {
             acc[item.uniqueId] = index
