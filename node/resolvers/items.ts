@@ -3,7 +3,10 @@ import { Logger } from '@vtex/api'
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
-import { generateSubscriptionDataEntry } from '../utils/subscriptions'
+import {
+  adjustSubscriptionItemIndexes,
+  generateSubscriptionDataEntry,
+} from '../utils/subscriptions'
 import { OrderFormIdArgs } from '../utils/args'
 
 const getProductInfo = async (
@@ -201,10 +204,10 @@ export const mutations = {
 
     const cleanItems = orderItems.map(({ id, ...rest }) => rest)
 
-    if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
-      const orderForm = await checkout.orderForm(orderFormId!)
+    const currentOrderForm = await checkout.orderForm(orderFormId!)
 
-      const idToIndex = orderForm.items.reduce(
+    if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
+      const idToIndex = currentOrderForm.items.reduce(
         (acc: Record<string, number>, item: OrderFormItem, index: number) => {
           if (acc[item.uniqueId] === undefined) {
             acc[item.uniqueId] = index
@@ -226,6 +229,36 @@ export const mutations = {
       cleanItems,
       splitItem
     )
+
+    if (
+      newOrderForm.subscriptionData &&
+      newOrderForm.subscriptionData.subscriptions.length > 0
+    ) {
+      const removedItemIndexes = cleanItems
+        .map(item => item.index)
+        .filter(Boolean)
+
+      const currentSubscriptionDataEntries =
+        newOrderForm.subscriptionData.subscriptions
+
+      const remainingSubscriptions = currentSubscriptionDataEntries.filter(
+        subscription => !removedItemIndexes.includes(subscription.itemIndex)
+      )
+
+      const newSubscriptionData = {
+        subscriptions: adjustSubscriptionItemIndexes(
+          remainingSubscriptions,
+          removedItemIndexes as number[]
+        ),
+      }
+
+      const updatedOrderForm = await checkout.updateSubscriptionDataField(
+        orderFormId!,
+        newSubscriptionData
+      )
+
+      return updatedOrderForm
+    }
 
     return newOrderForm
   },
