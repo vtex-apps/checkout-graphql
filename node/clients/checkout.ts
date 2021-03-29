@@ -56,15 +56,12 @@ export class Checkout extends JanusClient {
         orderFormId,
         this.getChannelQueryString(options?.salesChannel)
       ),
-      (options?.splitItem === undefined) ?
       { 
         orderItems: items,
-        allowedOutdatedData: options?.allowOutdatedData
-      } :
-      {
-        orderItems: items,
         allowedOutdatedData: options?.allowOutdatedData,
-        noSplitItem: !(options.splitItem)
+        ...(options?.splitItem !== undefined
+          ? {noSplitItem: !(options.splitItem)}
+          : {})
       },
       { metric: 'checkout-addItem' }
     )

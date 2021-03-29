@@ -233,7 +233,7 @@ export const mutations = {
       cleanItems,
       {
         allowOutdatedData,
-        splitItem: splitItem
+        splitItem
       }
     )
 
