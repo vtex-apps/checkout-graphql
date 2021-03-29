@@ -5,9 +5,7 @@ const SUBSCRIPTION_KEY_PREFIX = `${SUBSCRIPTION_PREFIX}.key`
 
 const SUBSCRIPTION_KEY_FREQUENCY = `${SUBSCRIPTION_KEY_PREFIX}.frequency`
 
-export function parseFrequency(frequency?: string) {
-  if (frequency == null) return
-
+export function parseFrequency(frequency: string) {
   const match = frequency.match(FREQUENCY_PATTERN)
 
   if (!match) {
@@ -40,8 +38,12 @@ export function generateSubscriptionDataEntry(
       item.options?.[0].inputValues[SUBSCRIPTION_KEY_FREQUENCY]
     )
 
+    if (!planFrequency) {
+      return null
+    }
+
     const subscriptionPlan = {
-      frequency: planFrequency!,
+      frequency: planFrequency,
       type: planType,
       validity: {},
     }
@@ -53,5 +55,8 @@ export function generateSubscriptionDataEntry(
     }
   })
 
-  return subscriptionDataEntries
+  // Remove null entries caused by invalid frequencies
+  const validSubscriptionDataEntries = subscriptionDataEntries.filter(Boolean)
+
+  return validSubscriptionDataEntries as SubscriptionDataEntry[]
 }
