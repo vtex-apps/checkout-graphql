@@ -118,7 +118,7 @@ export const mutations = {
 
     const subscriptionOptionsOnly = withOptions
       .map(itemWithOptions => ({
-        itemIndex: itemWithOptions.index as number,
+        itemIndex: (itemWithOptions.index as number) + previousItems.length,
         options: itemWithOptions.options as AssemblyOptionInput[],
       }))
       .filter(item =>
@@ -168,15 +168,13 @@ export const mutations = {
         previousItems
       )
 
-      const updatedSubscriptionData = newOrderForm.subscriptionData
-        ? {
-            subscriptions: newOrderForm.subscriptionData.subscriptions.concat(
+      const updatedSubscriptionData = {
+        subscriptions: newOrderForm.subscriptionData
+          ? newOrderForm.subscriptionData.subscriptions.concat(
               newSubscriptionDataEntries
-            ),
-          }
-        : {
-            subscriptions: newSubscriptionDataEntries,
-          }
+            )
+          : newSubscriptionDataEntries,
+      }
 
       await checkout.updateSubscriptionDataField(
         orderFormId!,
