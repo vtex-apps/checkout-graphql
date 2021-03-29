@@ -3,10 +3,7 @@ import { Logger } from '@vtex/api'
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
-import {
-  adjustSubscriptionItemIndexes,
-  generateSubscriptionDataEntry,
-} from '../utils/subscriptions'
+import { generateSubscriptionDataEntry } from '../utils/subscriptions'
 import { OrderFormIdArgs } from '../utils/args'
 
 const getProductInfo = async (
@@ -229,36 +226,6 @@ export const mutations = {
       cleanItems,
       splitItem
     )
-
-    if (
-      newOrderForm.subscriptionData &&
-      newOrderForm.subscriptionData.subscriptions.length > 0
-    ) {
-      const removedItemIndexes = cleanItems
-        .map(item => item.index)
-        .filter(Boolean)
-
-      const currentSubscriptionDataEntries =
-        newOrderForm.subscriptionData.subscriptions
-
-      const remainingSubscriptions = currentSubscriptionDataEntries.filter(
-        subscription => !removedItemIndexes.includes(subscription.itemIndex)
-      )
-
-      const newSubscriptionData = {
-        subscriptions: adjustSubscriptionItemIndexes(
-          remainingSubscriptions,
-          removedItemIndexes as number[]
-        ),
-      }
-
-      const updatedOrderForm = await checkout.updateSubscriptionDataField(
-        orderFormId!,
-        newSubscriptionData
-      )
-
-      return updatedOrderForm
-    }
 
     return newOrderForm
   },

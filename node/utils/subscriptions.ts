@@ -60,20 +60,3 @@ export function generateSubscriptionDataEntry(
 
   return validSubscriptionDataEntries as SubscriptionDataEntry[]
 }
-
-export function adjustSubscriptionItemIndexes(
-  subscriptions: SubscriptionDataEntry[],
-  removedIndexes: number[]
-) {
-  const updatedSubscriptions = subscriptions
-
-  removedIndexes.forEach(removedIdx => {
-    subscriptions.forEach((subscription, idx) => {
-      if (subscription.itemIndex > removedIdx) {
-        updatedSubscriptions[idx].itemIndex--
-      }
-    })
-  })
-
-  return updatedSubscriptions
-}
