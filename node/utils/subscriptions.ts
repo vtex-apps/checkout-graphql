@@ -32,10 +32,18 @@ export function generateSubscriptionDataEntry(
   const defaultExecutionCount = 0
 
   const subscriptionDataEntries = subscriptionsFromAssemblyOptions.map(item => {
-    const { itemIndex } = item
+    const { itemIndex, options } = item
+
+    const subscriptionFrequencyOption = options.find(option =>
+      Boolean(option.inputValues[SUBSCRIPTION_KEY_FREQUENCY])
+    )
+
+    if (!subscriptionFrequencyOption) {
+      return null
+    }
 
     const planFrequency = parseFrequency(
-      item.options?.[0].inputValues[SUBSCRIPTION_KEY_FREQUENCY]
+      subscriptionFrequencyOption.inputValues[SUBSCRIPTION_KEY_FREQUENCY]
     )
 
     if (!planFrequency) {
