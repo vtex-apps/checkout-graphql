@@ -161,7 +161,9 @@ export const mutations = {
           options: itemWithOptions.options as AssemblyOptionInput[],
         }))
         .filter(item =>
-          Boolean(item?.options?.[0].assemblyId.includes('vtex.subscription'))
+          item.options.some(option =>
+            option.assemblyId.includes('vtex.subscription')
+          )
         )
 
       const newSubscriptionDataEntries = generateSubscriptionDataEntry(
