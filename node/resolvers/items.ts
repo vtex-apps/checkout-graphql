@@ -121,14 +121,10 @@ export const mutations = {
      * while spreading their properties, since the second one will always
      * contain the most recent orderForm.
      */
-    let newOrderForm = await checkout.addItem(
-      orderFormId!,
-      cleanItems,
-      {
-        salesChannel,
-        allowOutdatedData
-      }
-    )
+    let newOrderForm = await checkout.addItem(orderFormId!, cleanItems, {
+      salesChannel,
+      allowOutdatedData,
+    })
 
     try {
       if (shouldUpdateMarketingData) {
@@ -197,13 +193,18 @@ export const mutations = {
     _: unknown,
     args: {
       orderItems: OrderFormItemInput[]
-      splitItem: boolean,
+      splitItem: boolean
       allowOutdatedData?: string[]
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const { clients, vtex } = ctx
-    const { orderFormId = vtex.orderFormId, orderItems, splitItem, allowOutdatedData } = args
+    const {
+      orderFormId = vtex.orderFormId,
+      orderItems,
+      splitItem,
+      allowOutdatedData,
+    } = args
     const { checkout } = clients
 
     const cleanItems = orderItems.map(({ id, ...rest }) => rest)
@@ -233,7 +234,7 @@ export const mutations = {
       cleanItems,
       {
         allowOutdatedData,
-        splitItem
+        splitItem,
       }
     )
 

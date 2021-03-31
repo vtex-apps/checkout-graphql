@@ -47,21 +47,22 @@ export class Checkout extends JanusClient {
     orderFormId: string,
     items: Array<Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'>>,
     options?: {
-      salesChannel?: string,
-      allowOutdatedData?: string[],
-      splitItem?: boolean 
-    }) =>
+      salesChannel?: string
+      allowOutdatedData?: string[]
+      splitItem?: boolean
+    }
+  ) =>
     this.patch<CheckoutOrderForm>(
       this.routes.addItem(
         orderFormId,
         this.getChannelQueryString(options?.salesChannel)
       ),
-      { 
+      {
         orderItems: items,
         allowedOutdatedData: options?.allowOutdatedData,
         ...(options?.splitItem !== undefined
-          ? {noSplitItem: !(options.splitItem)}
-          : {})
+          ? { noSplitItem: !options.splitItem }
+          : {}),
       },
       { metric: 'checkout-addItem' }
     )
