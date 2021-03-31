@@ -22,14 +22,14 @@ type Mutation {
     items: [ItemInput]
     marketingData: MarketingDataInput
     salesChannel: String
-    allowOutdatedData: [String!]
+    allowedOutdatedData: [String!]
   ): OrderForm! @withOrderFormId @withSegment
 
   updateItems(
     orderFormId: ID
     orderItems: [ItemInput]
     splitItem: Boolean = true
-    allowOutdatedData: [String!]
+    allowedOutdatedData: [String!]
   ): OrderForm! @withOrderFormId
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!

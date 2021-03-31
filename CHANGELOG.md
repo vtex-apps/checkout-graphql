@@ -6,8 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## Added
+### Changed
 - `updateItems` mutation using the same endopoint as `addToCart` mutation
+- `allowOutdatedData`became `allowedOutdatedData`so as not to be confused for a boolean
 
 ## [0.57.2] - 2021-04-05
 ### Fixed

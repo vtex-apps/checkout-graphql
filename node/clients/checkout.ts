@@ -48,7 +48,7 @@ export class Checkout extends JanusClient {
     items: Array<Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'>>,
     options?: {
       salesChannel?: string
-      allowOutdatedData?: string[]
+      allowedOutdatedData?: string[]
       splitItem?: boolean
     }
   ) =>
@@ -59,7 +59,7 @@ export class Checkout extends JanusClient {
       ),
       {
         orderItems: items,
-        allowedOutdatedData: options?.allowOutdatedData,
+        allowedOutdatedData: options?.allowedOutdatedData,
         ...(options?.splitItem !== undefined
           ? { noSplitItem: !options.splitItem }
           : {}),
