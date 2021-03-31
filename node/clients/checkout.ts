@@ -46,23 +46,17 @@ export class Checkout extends JanusClient {
   public addItem = (
     orderFormId: string,
     items: Array<Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'>>,
-    options?: {
-      salesChannel?: string
-      allowedOutdatedData?: string[]
-      splitItem?: boolean
-    }
+    salesChannel?: string,
+    allowedOutdatedData?: string[]
   ) =>
     this.patch<CheckoutOrderForm>(
       this.routes.addItem(
         orderFormId,
-        this.getChannelQueryString(options?.salesChannel)
+        this.getChannelQueryString(salesChannel)
       ),
       {
         orderItems: items,
-        allowedOutdatedData: options?.allowedOutdatedData,
-        ...(options?.splitItem !== undefined
-          ? { noSplitItem: !options.splitItem }
-          : {}),
+        allowedOutdatedData,
       },
       { metric: 'checkout-addItem' }
     )
@@ -84,6 +78,22 @@ export class Checkout extends JanusClient {
       this.routes.orderFormCustomData(orderFormId, appId, field),
       { value },
       { metric: 'checkout-setOrderFormCustomData' }
+    )
+
+  public updateItems = (
+    orderFormId: string,
+    orderItems: Array<Omit<OrderFormItemInput, 'id'>>,
+    splitItem: boolean,
+    allowedOutdatedData?: string[]
+  ) =>
+    this.patch<CheckoutOrderForm>(
+      this.routes.addItem(orderFormId, this.getChannelQueryString(undefined)),
+      {
+        orderItems,
+        noSplitItem: !splitItem,
+        allowedOutdatedData,
+      },
+      { metric: 'checkout-updateItemsm' }
     )
 
   public updateOrderFormIgnoreProfile = (

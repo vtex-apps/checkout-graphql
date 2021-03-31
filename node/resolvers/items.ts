@@ -121,10 +121,12 @@ export const mutations = {
      * while spreading their properties, since the second one will always
      * contain the most recent orderForm.
      */
-    let newOrderForm = await checkout.addItem(orderFormId!, cleanItems, {
+    let newOrderForm = await checkout.addItem(
+      orderFormId!,
+      cleanItems,
       salesChannel,
-      allowedOutdatedData,
-    })
+      allowedOutdatedData
+    )
 
     try {
       if (shouldUpdateMarketingData) {
@@ -229,13 +231,11 @@ export const mutations = {
       })
     }
 
-    const newOrderForm = await clients.checkout.addItem(
+    const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
       cleanItems,
-      {
-        allowedOutdatedData,
-        splitItem,
-      }
+      splitItem,
+      allowedOutdatedData
     )
 
     return newOrderForm
