@@ -93,7 +93,7 @@ export class Checkout extends JanusClient {
         noSplitItem: !splitItem,
         allowedOutdatedData,
       },
-      { metric: 'checkout-updateItemsm' }
+      { metric: 'checkout-updateItems' }
     )
 
   public updateOrderFormIgnoreProfile = (
