@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - `updateItems` mutation using the same endopoint as `addToCart` mutation
-- `allowOutdatedData`became `allowedOutdatedData`so as not to be confused for a boolean
+- `allowOutdatedData` became `allowedOutdatedData` so as not to be confused for a boolean
 
 ## [0.57.2] - 2021-04-05
 ### Fixed
