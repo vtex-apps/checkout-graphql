@@ -172,6 +172,23 @@ declare global {
     composition: Composition | null
   }
 
+  interface SubscriptionDataEntry {
+    executionCount: number
+    itemIndex: number
+    plan: {
+      frequency: {
+        interval: number
+        periodicity: 'YEAR' | 'MONTH' | 'WEEK' | 'DAY'
+      }
+      type: string
+      validity: {}
+    }
+  }
+
+  interface SubscriptionData {
+    subscriptions: SubscriptionDataEntry[]
+  }
+
   interface MetadataItem {
     id: string
     name: string
@@ -260,7 +277,7 @@ declare global {
       rateAndBenefitsIdentifiers: any[]
       teaser: any[]
     }
-    subscriptionData: any | null
+    subscriptionData: SubscriptionData | null
     itemsOrdination: any | null
   }
 
