@@ -1,6 +1,6 @@
 {
   "name": "vtex.checkout-graphql",
-  "version": "0.57.1",
+  "version": "0.57.2",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
