@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Field `isGift` to `Item` type.
+
 ## [0.57.2] - 2021-04-05
 ### Fixed
 - `subscriptionData` property in the `orderForm` would never be updated.
