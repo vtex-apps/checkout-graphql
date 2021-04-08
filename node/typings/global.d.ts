@@ -465,6 +465,7 @@ declare global {
       at2x: string
       at3x: string
     }
+    isGift: boolean
     listPrice: number
     measurementUnit: string
     name: string
