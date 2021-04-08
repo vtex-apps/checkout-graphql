@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Field `isGift` to `Item` type.
 
+## [0.58.0] - 2021-04-06
+### Changed
+- `updateItems` mutation using the same endopoint as `addToCart` mutation
+- `allowOutdatedData` became `allowedOutdatedData` so as not to be confused for a boolean
+
 ## [0.57.2] - 2021-04-05
 ### Fixed
 - `subscriptionData` property in the `orderForm` would never be updated.

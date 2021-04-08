@@ -87,7 +87,7 @@ export const mutations = {
       items: OrderFormItemInput[]
       marketingData: Partial<OrderFormMarketingData>
       salesChannel?: string
-      allowOutdatedData?: string[]
+      allowedOutdatedData?: string[]
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
@@ -101,7 +101,7 @@ export const mutations = {
       items,
       marketingData = {},
       salesChannel,
-      allowOutdatedData,
+      allowedOutdatedData,
     } = args
 
     const { checkout } = clients
@@ -125,7 +125,7 @@ export const mutations = {
       orderFormId!,
       cleanItems,
       salesChannel,
-      allowOutdatedData
+      allowedOutdatedData
     )
 
     try {
@@ -196,11 +196,17 @@ export const mutations = {
     args: {
       orderItems: OrderFormItemInput[]
       splitItem: boolean
+      allowedOutdatedData?: string[]
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const { clients, vtex } = ctx
-    const { orderFormId = vtex.orderFormId, orderItems, splitItem } = args
+    const {
+      orderFormId = vtex.orderFormId,
+      orderItems,
+      splitItem,
+      allowedOutdatedData,
+    } = args
     const { checkout } = clients
 
     const cleanItems = orderItems.map(({ id, ...rest }) => rest)
@@ -228,7 +234,8 @@ export const mutations = {
     const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
       cleanItems,
-      splitItem
+      splitItem,
+      allowedOutdatedData
     )
 
     return newOrderForm

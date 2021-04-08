@@ -4,7 +4,10 @@ export const queries = {
     { email }: { email: string },
     ctx: Context
   ): Promise<CheckoutProfile> => {
-    const { clients, graphql: { cacheControl } } = ctx
+    const {
+      clients,
+      graphql: { cacheControl },
+    } = ctx
 
     cacheControl.noCache = true
     cacheControl.noStore = true
