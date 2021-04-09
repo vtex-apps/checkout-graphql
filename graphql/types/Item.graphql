@@ -45,7 +45,7 @@ type Item {
   uniqueId: String!
   unitMultiplier: Float
   priceTags: [PriceTag!]!
-  isGift: Boolean
+  isGift: Boolean!
 }
 
 type ImageUrls {
