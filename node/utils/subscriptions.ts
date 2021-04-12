@@ -6,7 +6,7 @@ const SUBSCRIPTION_KEY_PREFIX = `${SUBSCRIPTION_PREFIX}.key`
 const SUBSCRIPTION_KEY_FREQUENCY = `${SUBSCRIPTION_KEY_PREFIX}.frequency`
 
 export function parseFrequency(frequency: string) {
-  const match = frequency.match(FREQUENCY_PATTERN)
+  const match = frequency.trim().match(FREQUENCY_PATTERN)
 
   if (!match) {
     return
