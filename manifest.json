@@ -1,7 +1,7 @@
 {
   "name": "checkout-graphql",
   "vendor": "vtex",
-  "version": "0.58.0",
+  "version": "0.59.0",
   "title": "Checkout GraphQL",
   "description": "Checkout GraphQL API",
   "builders": {
@@ -15,7 +15,9 @@
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
-  "registries": ["smartcheckout"],
+  "registries": [
+    "smartcheckout"
+  ],
   "policies": [
     {
       "name": "vtex.messages:translate-messages"
