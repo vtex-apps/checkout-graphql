@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.59.1] - 2021-04-13
+
 ### Fixed
 - Preventing `frequency` from `subscriptions` with whitespaces on the edges with `trim()`
 
