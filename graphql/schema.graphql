@@ -1,6 +1,6 @@
 type Query {
   getCardSessionId: String
-  orderForm(orderFormId: ID): OrderForm!
+  orderForm(orderFormId: ID, refreshOutdatedData: Boolean): OrderForm!
     @cacheControl(maxAge: ZERO, scope: PRIVATE)
     @withOrderFormId
     @withSegment
