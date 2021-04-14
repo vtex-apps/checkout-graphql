@@ -35,12 +35,12 @@ type CurrencyFormatInfo {
 }
 
 type CustomData {
-  customApps: [CustomApp]
+  CustomApp: [CustomApp]
 }
 
-scalar CustomFields
+scalar CustomData
 type CustomApp {
-  fields: CustomFields
+  fields: CustomData
   id: String
   major: Int
 }
