@@ -262,17 +262,23 @@ export class Checkout extends JanusClient {
       metric: 'checkout-updateOrderFormCheckin',
     })
 
-  public orderForm = (orderFormId: string) => {
+  public orderForm = (orderFormId: string, refreshOutdatedData = false) => {
     return this.post<CheckoutOrderForm>(
-      this.routes.orderForm(orderFormId),
+      this.routes.orderForm(
+        orderFormId,
+        this.getOrderFormQueryString(refreshOutdatedData)
+      ),
       {},
       { metric: 'checkout-orderForm' }
     )
   }
 
-  public orderFormRaw = (orderFormId?: string) => {
+  public orderFormRaw = (orderFormId?: string, refreshOutdatedData = false) => {
     return this.postRaw<CheckoutOrderForm>(
-      this.routes.orderForm(orderFormId),
+      this.routes.orderForm(
+        orderFormId,
+        this.getOrderFormQueryString(refreshOutdatedData)
+      ),
       {},
       { metric: 'checkout-orderForm' }
     )
@@ -396,6 +402,13 @@ export class Checkout extends JanusClient {
     return queryString
   }
 
+  private getOrderFormQueryString = (refreshOutdatedData?: boolean) => {
+    if (refreshOutdatedData)
+      return `?refreshOutdatedData=${refreshOutdatedData}`
+
+    return ''
+  }
+
   private get routes() {
     const base = '/api/checkout/pub'
     return {
@@ -419,8 +432,8 @@ export class Checkout extends JanusClient {
         `${base}/orderForm/${orderFormId}/messages/clear`,
       insertCoupon: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/coupons`,
-      orderForm: (orderFormId?: string) =>
-        `${base}/orderForm/${orderFormId ?? ''}`,
+      orderForm: (orderFormId?: string, queryString?: string) =>
+        `${base}/orderForm/${orderFormId ?? ''}${queryString}`,
       orderFormCustomData: (
         orderFormId: string,
         appId: string,

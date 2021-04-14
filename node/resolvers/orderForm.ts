@@ -1,4 +1,5 @@
 import { prop, propOr, compose, forEach } from 'ramda'
+import { QueryOrderFormArgs } from 'vtex.checkout-graphql'
 
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
 import { fillMessages } from './messages'
@@ -174,7 +175,7 @@ export async function forwardCheckoutCookies(
 export const queries = {
   orderForm: async (
     _: unknown,
-    args: OrderFormIdArgs,
+    args: QueryOrderFormArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
     const {
@@ -182,13 +183,14 @@ export const queries = {
       vtex,
       graphql: { cacheControl },
     } = ctx
-    const { orderFormId = vtex.orderFormId } = args
+    const { orderFormId = vtex.orderFormId, refreshOutdatedData } = args
 
     cacheControl.noCache = true
     cacheControl.noStore = true
 
     const { data: newOrderForm, headers } = await clients.checkout.orderFormRaw(
-      orderFormId
+      orderFormId ?? undefined,
+      refreshOutdatedData ?? undefined
     )
 
     /**

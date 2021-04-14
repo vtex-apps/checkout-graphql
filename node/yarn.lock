@@ -6185,17 +6185,21 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-"vtex.checkout-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.47.0/public/@types/vtex.checkout-graphql":
-  version "0.47.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.47.0/public/@types/vtex.checkout-graphql#4206974436b5fabeb23eb165628c43994ce4c1bf"
+"vtex.checkout-graphql@https://contextualpipeline--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.58.0+build1618252266/public/@types/vtex.checkout-graphql":
+  version "0.58.0"
+  resolved "https://contextualpipeline--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.58.0+build1618252266/public/@types/vtex.checkout-graphql#b9bf97c4c699925adb6f1f8ee36b3b37faaebb65"
 
-"vtex.country-data-settings@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.3.0/public/@types/vtex.country-data-settings":
-  version "0.3.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.3.0/public/@types/vtex.country-data-settings#3225ad842acdb749c9283b10daa8af3f05785abf"
+"vtex.country-data-settings@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.4.0/public/@types/vtex.country-data-settings":
+  version "0.4.0"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.4.0/public/@types/vtex.country-data-settings#bd202ad3fedd99d8da51df86b68316beab1bdce1"
 
-"vtex.graphql-server@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.65.2/public/_types/react":
+"vtex.graphql-server@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.66.3/public/_types/react":
   version "0.0.0"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.65.2/public/_types/react#fa7a0347e046eab3dd768998fc9252b2c0dd5aef"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.66.3/public/_types/react#fa7a0347e046eab3dd768998fc9252b2c0dd5aef"
+
+"vtex.messages@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.63.0/public/@types/vtex.messages":
+  version "1.63.0"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.63.0/public/@types/vtex.messages#97cb0ea6df0bd2cc144f40ceb48b7fa6180e5033"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
