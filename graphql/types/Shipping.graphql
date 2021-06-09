@@ -25,7 +25,7 @@ type PickupOption {
   friendlyName: String! @translatableV2
   additionalInfo: String @translatableV2
   storeDistance: Float
-  transitTime: String!
+  transitTime: String
   businessHours: [BusinessHour!]!
 }
 
