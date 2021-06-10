@@ -27,9 +27,9 @@
     "@vtex/test-tools": "^3.1.0",
     "@vtex/tsconfig": "^0.2.0",
     "typescript": "3.9.7",
-    "vtex.checkout-graphql": "https://contextualpipeline--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.58.0+build1618252266/public/@types/vtex.checkout-graphql",
+    "vtex.checkout-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.60.0/public/@types/vtex.checkout-graphql",
     "vtex.country-data-settings": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.4.0/public/@types/vtex.country-data-settings",
-    "vtex.graphql-server": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.66.3/public/_types/react",
-    "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.63.0/public/@types/vtex.messages"
+    "vtex.graphql-server": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.66.4/public/_types/react",
+    "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.64.0/public/@types/vtex.messages"
   }
 }
