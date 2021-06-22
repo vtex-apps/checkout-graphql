@@ -4,11 +4,10 @@ export function getSelectedDeliveryAddress(
   selectedAddresses: CheckoutAddress[]
 ) {
   return selectedAddresses.find((address: CheckoutAddress) => {
-    const isSearch = address.addressType === AddressType.SEARCH
     const isPickup = address.addressType === AddressType.PICKUP
     const isInStore = address.addressType === AddressType.INSTORE
 
-    return !isSearch && !isPickup && !isInStore
+    return !isPickup && !isInStore
   })
 }
 
