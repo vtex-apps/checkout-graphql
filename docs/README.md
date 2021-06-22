@@ -4,6 +4,17 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
+## Warning 🚨
+
+This repository contains **experimental** code for the VTEX Checkout.
+
+This code is "experimental" for various reasons:
+- Some are not tested as rigorously as the main code.
+- Some are tested but not maintained.
+- It can suffer from significant changes (breaking changes) without further notice.
+
+**Use it at your own risk!** ☠️
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
