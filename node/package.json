@@ -12,7 +12,7 @@
     "dataloader": "^2.0.0",
     "graphql": "^14.0.0",
     "graphql-tools": "^4.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "ramda": "^0.26.1"
   },
   "devDependencies": {
