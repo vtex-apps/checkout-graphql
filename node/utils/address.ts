@@ -1,8 +1,6 @@
 import { AddressType, DELIVERY, PICKUP_IN_POINT } from '../constants'
 
-export function getSelectedDeliveryAddress(
-  selectedAddresses: CheckoutAddress[]
-) {
+export function getSelectedAddress(selectedAddresses: CheckoutAddress[]) {
   return selectedAddresses.find((address: CheckoutAddress) => {
     const isPickup = address.addressType === AddressType.PICKUP
     const isInStore = address.addressType === AddressType.INSTORE
