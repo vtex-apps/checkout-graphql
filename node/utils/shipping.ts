@@ -4,7 +4,7 @@ import uniqBy from 'lodash/uniqBy'
 import {
   addressHasGeocoordinates,
   filterDeliveryOptions,
-  getSelectedDeliveryAddress,
+  getSelectedAddress,
 } from './address'
 import {
   getFormattedDeliveryOptions,
@@ -59,7 +59,7 @@ export const selectShippingOption = ({
       }
     }) ?? []
 
-  const deliveryAddress = getSelectedDeliveryAddress(
+  const deliveryAddress = getSelectedAddress(
     shippingData?.selectedAddresses ?? []
   )
 
@@ -111,7 +111,7 @@ export const getShippingInfo = async ({
 
   const selectedAddress =
     orderForm.shippingData &&
-    getSelectedDeliveryAddress(orderForm.shippingData.selectedAddresses)
+    getSelectedAddress(orderForm.shippingData.selectedAddresses)
 
   const availableItemsLogisticsInfo = logisticsInfo
     ? logisticsInfo.filter((item: LogisticsInfo) => item.slas.length > 0)
