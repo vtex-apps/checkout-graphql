@@ -23,13 +23,13 @@
     "@types/lodash": "^4.14.138",
     "@types/node": "^12.0.0",
     "@types/ramda": "types/npm-ramda#dist",
-    "@vtex/api": "6.42.1",
+    "@vtex/api": "6.44.0",
     "@vtex/test-tools": "^3.1.0",
     "@vtex/tsconfig": "^0.2.0",
     "typescript": "3.9.7",
-    "vtex.checkout-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.checkout-graphql@0.60.0/public/@types/vtex.checkout-graphql",
+    "vtex.checkout-graphql": "https://leo--checkoutio.myvtex.com/_v/private/typings/linked/v1/vtex.checkout-graphql@0.61.0+build1629398874/public/@types/vtex.checkout-graphql",
     "vtex.country-data-settings": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.country-data-settings@0.4.0/public/@types/vtex.country-data-settings",
-    "vtex.graphql-server": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.66.4/public/_types/react",
-    "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.64.0/public/@types/vtex.messages"
+    "vtex.graphql-server": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.graphql-server@1.66.5/public/_types/react",
+    "vtex.messages": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.messages@1.64.1/public/@types/vtex.messages"
   }
 }

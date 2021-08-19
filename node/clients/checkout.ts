@@ -2,12 +2,12 @@ import {
   InstanceOptions,
   IOContext,
   IOResponse,
-  JanusClient,
+  ExternalClient,
   RequestConfig,
 } from '@vtex/api'
 import { UserProfileInput } from 'vtex.checkout-graphql'
 
-import { checkoutCookieFormat, statusToError } from '../utils'
+import { statusToError } from '../utils'
 
 export interface SimulationData {
   country: string
@@ -18,16 +18,10 @@ export interface SimulationData {
   marketingData?: Record<string, string>
 }
 
-export class Checkout extends JanusClient {
+export class Checkout extends ExternalClient {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super(ctx, {
+    super(`http://portal.vtexcommercestable.com.br`, ctx, {
       ...options,
-      headers: {
-        ...options?.headers,
-        ...(ctx.storeUserAuthToken
-          ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
-          : null),
-      },
     })
   }
 
@@ -47,12 +41,14 @@ export class Checkout extends JanusClient {
     orderFormId: string,
     items: Array<Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'>>,
     salesChannel?: string,
-    allowedOutdatedData?: string[]
+    allowedOutdatedData?: string[],
+    account?: string,
   ) =>
     this.patch<CheckoutOrderForm>(
       this.routes.addItem(
         orderFormId,
-        this.getChannelQueryString(salesChannel)
+        this.getChannelQueryString(salesChannel),
+        account,
       ),
       {
         orderItems: items,
@@ -84,10 +80,11 @@ export class Checkout extends JanusClient {
     orderFormId: string,
     orderItems: Array<Omit<OrderFormItemInput, 'id'>>,
     splitItem: boolean,
-    allowedOutdatedData?: string[]
+    allowedOutdatedData?: string[],
+    account?: string,
   ) =>
     this.patch<CheckoutOrderForm>(
-      this.routes.addItem(orderFormId, this.getChannelQueryString(undefined)),
+      this.routes.addItem(orderFormId, this.getChannelQueryString(undefined), account),
       {
         orderItems,
         noSplitItem: !splitItem,
@@ -135,10 +132,11 @@ export class Checkout extends JanusClient {
 
   public updateOrderFormMarketingData = (
     orderFormId: string,
-    marketingData: any
+    marketingData: any,
+    account?: string,
   ) =>
     this.post<CheckoutOrderForm>(
-      this.routes.attachmentsData(orderFormId, 'marketingData'),
+      this.routes.attachmentsData(orderFormId, 'marketingData', account),
       marketingData,
       { metric: 'checkout-updateOrderFormMarketingData' }
     )
@@ -262,22 +260,24 @@ export class Checkout extends JanusClient {
       metric: 'checkout-updateOrderFormCheckin',
     })
 
-  public orderForm = (orderFormId: string, refreshOutdatedData = false) => {
+  public orderForm = (orderFormId?: string, refreshOutdatedData = false, account?: string) => {
     return this.post<CheckoutOrderForm>(
       this.routes.orderForm(
         orderFormId,
-        this.getOrderFormQueryString(refreshOutdatedData)
+        this.getOrderFormQueryString(refreshOutdatedData),
+        account,
       ),
       {},
       { metric: 'checkout-orderForm' }
     )
   }
 
-  public orderFormRaw = (orderFormId?: string, refreshOutdatedData = false) => {
+  public orderFormRaw = (orderFormId?: string, refreshOutdatedData = false, account?: string) => {
     return this.postRaw<CheckoutOrderForm>(
       this.routes.orderForm(
         orderFormId,
-        this.getOrderFormQueryString(refreshOutdatedData)
+        this.getOrderFormQueryString(refreshOutdatedData),
+        account,
       ),
       {},
       { metric: 'checkout-orderForm' }
@@ -285,7 +285,7 @@ export class Checkout extends JanusClient {
   }
 
   public orders = () =>
-    this.get(this.routes.orders, { metric: 'checkout-orders' })
+    this.get(this.routes.orders(), { metric: 'checkout-orders' })
 
   public simulation = (simulation: SimulationData) =>
     this.post(
@@ -324,7 +324,7 @@ export class Checkout extends JanusClient {
   protected get = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      // ...this.getCommonHeaders(),
     }
     return this.http.get<T>(url, config).catch(statusToError) as Promise<T>
   }
@@ -332,7 +332,7 @@ export class Checkout extends JanusClient {
   protected post = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      // ...this.getCommonHeaders(),
     }
     return this.http.post<T>(url, data, config).catch(statusToError) as Promise<
       T
@@ -346,7 +346,7 @@ export class Checkout extends JanusClient {
   ) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      // ...this.getCommonHeaders(),
     }
     return this.http
       .postRaw<T>(url, data, config)
@@ -356,7 +356,7 @@ export class Checkout extends JanusClient {
   protected delete = <T>(url: string, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      // ...this.getCommonHeaders(),
     }
     return this.http.delete<T>(url, config).catch(statusToError) as Promise<
       IOResponse<T>
@@ -370,7 +370,7 @@ export class Checkout extends JanusClient {
   ) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      // ...this.getCommonHeaders(),
     }
     return this.http
       .patch<T>(url, data, config)
@@ -380,20 +380,20 @@ export class Checkout extends JanusClient {
   protected put = <T>(url: string, data?: any, config: RequestConfig = {}) => {
     config.headers = {
       ...config.headers,
-      ...this.getCommonHeaders(),
+      // ...this.getCommonHeaders(),
     }
     return this.http.put<T>(url, data, config).catch(statusToError) as Promise<
       T
     >
   }
 
-  private getCommonHeaders = () => {
-    const { orderFormId } = (this.context as unknown) as CustomIOContext
-    const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
-    return {
-      Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
-    }
-  }
+  // private getCommonHeaders = () => {
+  //   const { orderFormId } = (this.context as unknown) as CustomIOContext
+  //   const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
+  //   return {
+  //     Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
+  //   }
+  // }
 
   private getChannelQueryString = (salesChannel?: string) => {
     const { segment } = (this.context as unknown) as CustomIOContext
@@ -412,61 +412,65 @@ export class Checkout extends JanusClient {
   private get routes() {
     const base = '/api/checkout/pub'
     return {
-      addItem: (orderFormId: string, queryString: string) =>
-        `${base}/orderForm/${orderFormId}/items${queryString}`,
+      addItem: (orderFormId: string, queryString: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/items${queryString}${queryString ? '&' : '?'}an=${account ?? this.context.account}`,
       assemblyOptions: (
         orderFormId: string,
         itemId: string | number,
-        assemblyOptionsId: string
+        assemblyOptionsId: string,
+        account?: string,
       ) =>
         `${base}/orderForm/${orderFormId}/items/${itemId}/assemblyOptions/${encodeURI(
           assemblyOptionsId
-        )}`,
-      attachmentsData: (orderFormId: string, field: string) =>
-        `${base}/orderForm/${orderFormId}/attachments/${field}`,
-      cancelOrder: (orderFormId: string) =>
-        `${base}/orders/${orderFormId}/user-cancel-request`,
-      checkin: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/checkIn`,
-      clearMessages: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/messages/clear`,
-      insertCoupon: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/coupons`,
-      orderForm: (orderFormId?: string, queryString?: string) =>
-        `${base}/orderForm/${orderFormId ?? ''}${queryString}`,
+        )}?an=${account ?? this.context.account}`,
+      attachmentsData: (orderFormId: string, field: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/attachments/${field}?an=${account ?? this.context.account}`,
+      cancelOrder: (orderFormId: string, account?: string) =>
+        `${base}/orders/${orderFormId}/user-cancel-request?an=${account ?? this.context.account}`,
+      checkin: (orderFormId: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/checkIn?an=${account ?? this.context.account}`,
+      clearMessages: (orderFormId: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/messages/clear?an=${account ?? this.context.account}`,
+      insertCoupon: (orderFormId: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/coupons?an=${account ?? this.context.account}`,
+      orderForm: (orderFormId?: string, queryString?: string, account?: string) =>
+        `${base}/orderForm/${orderFormId ?? ''}${queryString}${queryString ? '&' : '?'}an=${account ?? this.context.account}`,
       orderFormCustomData: (
         orderFormId: string,
         appId: string,
-        field: string
-      ) => `${base}/orderForm/${orderFormId}/customData/${appId}/${field}`,
-      orders: `${base}/orders`,
-      orderFormProfile: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/profile`,
-      profile: (email: string) => `${base}/profiles/?email=${email}`,
-      simulation: (queryString: string) =>
-        `${base}/orderForms/simulation${queryString}`,
-      updateItems: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/items/update`,
-      offering: (orderFormId: string, itemIndex: number) =>
-        `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings`,
+        field: string,
+        account?: string
+      ) => `${base}/orderForm/${orderFormId}/customData/${appId}/${field}?an=${account ?? this.context.account}`,
+      orders: (account?: string) => `${base}/orders?an=${account ?? this.context.account}`,
+      orderFormProfile: (orderFormId: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/profile?an=${account ?? this.context.account}`,
+      profile: (email: string, account?: string) => `${base}/profiles/?email=${email}?an=${account ?? this.context.account}`,
+      simulation: (queryString: string, account?: string) =>
+        `${base}/orderForms/simulation${queryString}${queryString ? '&' : '?'}an=${account ?? this.context.account}`,
+      updateItems: (orderFormId: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/items/update?an=${account ?? this.context.account}`,
+      offering: (orderFormId: string, itemIndex: number, account?: string) =>
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings?an=${account ?? this.context.account}`,
       removeOffering: (
         orderFormId: string,
         itemIndex: number,
-        offeringId: string
+        offeringId: string,
+        account?: string,
       ) =>
-        `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings/${offeringId}/remove`,
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/offerings/${offeringId}/remove?an=${account ?? this.context.account}`,
       bundleItemAttachment: (
         orderFormId: string,
         itemIndex: number,
         bundleItemId: string,
-        attachmentName: string
+        attachmentName: string,
+        account?: string,          
       ) =>
-        `${base}/orderForm/${orderFormId}/items/${itemIndex}/bundles/${bundleItemId}/attachments/${attachmentName}`,
-      savePaymentToken: (queryString: string) =>
-        `${base}/current-user/payment-tokens/${queryString}`,
+        `${base}/orderForm/${orderFormId}/items/${itemIndex}/bundles/${bundleItemId}/attachments/${attachmentName}?an=${account ?? this.context.account}`,
+      savePaymentToken: (queryString: string, account?: string) =>
+        `${base}/current-user/payment-tokens/${queryString}${queryString ? '&' : '?'}an=${account ?? this.context.account}`,
       getPaymentSession: () => `${base}/payment-session`,
-      updateItemsOrdination: (orderFormId: string) =>
-        `${base}/orderForm/${orderFormId}/itemsOrdination`,
+      updateItemsOrdination: (orderFormId: string, account?: string) =>
+        `${base}/orderForm/${orderFormId}/itemsOrdination?an=${account ?? this.context.account}`,
     }
   }
 }

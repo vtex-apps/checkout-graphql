@@ -88,6 +88,7 @@ export const mutations = {
       marketingData: Partial<OrderFormMarketingData>
       salesChannel?: string
       allowedOutdatedData?: string[]
+      partnerAccount?: string
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
@@ -102,13 +103,16 @@ export const mutations = {
       marketingData = {},
       salesChannel,
       allowedOutdatedData,
+      partnerAccount,
     } = args
+    const account = partnerAccount ?? vtex.account
 
     const { checkout } = clients
     const shouldUpdateMarketingData =
       Object.keys(marketingData ?? {}).length > 0
 
-    const { items: previousItems } = await checkout.orderForm(orderFormId!)
+    const { items: previousItems } = await checkout.orderForm(orderFormId, false, account)
+
     const cleanItems = items.map(
       ({ options, index, uniqueId, ...rest }) => rest
     )
@@ -125,14 +129,20 @@ export const mutations = {
       orderFormId!,
       cleanItems,
       salesChannel,
-      allowedOutdatedData
+      allowedOutdatedData,
+      account,
     )
+
+    if (partnerAccount) {
+      return newOrderForm
+    }
 
     try {
       if (shouldUpdateMarketingData) {
         newOrderForm = await checkout.updateOrderFormMarketingData(
           orderFormId!,
-          marketingData
+          marketingData,
+          account,
         )
       }
     } catch (err) {
@@ -197,6 +207,7 @@ export const mutations = {
       orderItems: OrderFormItemInput[]
       splitItem: boolean
       allowedOutdatedData?: string[]
+      partnerAccount?: string,
     } & OrderFormIdArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
@@ -206,13 +217,15 @@ export const mutations = {
       orderItems,
       splitItem,
       allowedOutdatedData,
+      partnerAccount,
     } = args
     const { checkout } = clients
+    var account = partnerAccount ?? vtex.account
 
     const cleanItems = orderItems.map(({ id, ...rest }) => rest)
 
     if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
-      const orderForm = await checkout.orderForm(orderFormId!)
+      const orderForm = await checkout.orderForm(orderFormId!, false, account)
 
       const idToIndex = orderForm.items.reduce(
         (acc: Record<string, number>, item: OrderFormItem, index: number) => {
@@ -235,7 +248,8 @@ export const mutations = {
       orderFormId!,
       cleanItems,
       splitItem,
-      allowedOutdatedData
+      allowedOutdatedData,
+      account,
     )
 
     return newOrderForm

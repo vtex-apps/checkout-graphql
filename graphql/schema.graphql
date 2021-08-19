@@ -1,8 +1,12 @@
 type Query {
   getCardSessionId: String
-  orderForm(orderFormId: ID, refreshOutdatedData: Boolean): OrderForm!
-    @cacheControl(maxAge: ZERO, scope: PRIVATE)
-    @withOrderFormId
+  orderForm(
+    orderFormId: ID, 
+    refreshOutdatedData: Boolean, 
+    partnerAccount: String
+  ): OrderForm! 
+    @cacheControl(maxAge: ZERO, scope: PRIVATE) 
+    @withOrderFormId 
     @withSegment
   checkoutProfile(email: String!): CheckoutProfile
     @cacheControl(maxAge: ZERO, scope: PRIVATE)
@@ -23,6 +27,7 @@ type Mutation {
     marketingData: MarketingDataInput
     salesChannel: String
     allowedOutdatedData: [String!]
+    partnerAccount: String
   ): OrderForm! @withOrderFormId @withSegment
 
   updateItems(
@@ -30,6 +35,7 @@ type Mutation {
     orderItems: [ItemInput]
     splitItem: Boolean = true
     allowedOutdatedData: [String!]
+    partnerAccount: String
   ): OrderForm! @withOrderFormId
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!

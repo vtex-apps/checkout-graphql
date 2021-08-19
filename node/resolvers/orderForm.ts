@@ -183,14 +183,15 @@ export const queries = {
       vtex,
       graphql: { cacheControl },
     } = ctx
-    const { orderFormId = vtex.orderFormId, refreshOutdatedData } = args
+    const { orderFormId = vtex.orderFormId, refreshOutdatedData, partnerAccount } = args
 
     cacheControl.noCache = true
     cacheControl.noStore = true
 
     const { data: newOrderForm, headers } = await clients.checkout.orderFormRaw(
       orderFormId ?? undefined,
-      refreshOutdatedData ?? undefined
+      refreshOutdatedData ?? undefined,
+      partnerAccount ?? undefined,
     )
 
     /**
