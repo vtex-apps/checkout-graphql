@@ -144,6 +144,16 @@ declare global {
     availability: string
     unitMultiplier: number
     skuSpecifications: SKUSpecification[]
+    priceDefinition: {
+      calculatedSellingPrice: number
+      sellingPrices: SellingPrice[]
+      total: number
+    }
+  }
+
+  interface SellingPrice {
+    quantity: number
+    value: number
   }
 
   interface SKUSpecification {

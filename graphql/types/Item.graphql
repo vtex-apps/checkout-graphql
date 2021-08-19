@@ -46,6 +46,18 @@ type Item {
   unitMultiplier: Float
   priceTags: [PriceTag!]!
   isGift: Boolean!
+  priceDefinition: PriceDefinition
+}
+
+type PriceDefinition {
+  calculatedSellingPrice: Float
+  sellingPrices: [SellingPrice]
+  total: Float
+}
+
+type SellingPrice {
+  quantity: Float
+  value: Float
 }
 
 type ImageUrls {
