@@ -73,7 +73,7 @@ function extractSessionCookie(headers: Record<string, string>) {
     const parsedCookie = parseCookie.parse(setCookie)
     const sessionCookie = parsedCookie[SESSION_COOKIE]
     if (sessionCookie != null) {
-        return sessionCookie
+      return sessionCookie
     }
   }
 
