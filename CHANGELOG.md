@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.61.1] - 2021-08-27
+
 ## [0.61.0] - 2021-06-22
 ### Changed
 - Addresses with type `search` are not being filtered from the `selectedAddresses` anymore.
