@@ -50,14 +50,14 @@ type Item {
 }
 
 type PriceDefinition {
-  calculatedSellingPrice: Float
-  sellingPrices: [SellingPrice]
-  total: Float
+  calculatedSellingPrice: Float!
+  sellingPrices: [SellingPrice!]!
+  total: Float!
 }
 
 type SellingPrice {
-  quantity: Float
-  value: Float
+  quantity: Float!
+  value: Float!
 }
 
 type ImageUrls {
