@@ -473,6 +473,6 @@ export class Checkout extends JanusClient {
 
 export class CheckoutNoCookies extends Checkout {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super({...ctx, orderFormId: null} as any, { ...options, headers: {} })
+    super({ ...ctx, orderFormId: null } as any, { ...options, headers: {} })
   }
 }

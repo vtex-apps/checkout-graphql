@@ -193,9 +193,12 @@ export const queries = {
       refreshOutdatedData ?? undefined
     )
 
-    const hasBrokenCookie = newOrderForm?.clientProfileData?.email?.startsWith('vrn--vtexsphinx--aws-us-east-1')
+    const hasBrokenCookie = newOrderForm?.clientProfileData?.email?.startsWith(
+      'vrn--vtexsphinx--aws-us-east-1'
+    )
+
     if (hasBrokenCookie) {
-      vtex.logger.info({message: "Broken order form", orderFormId})
+      vtex.logger.info({ message: 'Broken order form', orderFormId })
       const obj = await clients.checkoutNoCookies.orderFormRaw(undefined, true)
       newOrderForm = obj.data
       headers = obj.headers
@@ -210,7 +213,8 @@ export const queries = {
     const storeSettings: StoreSettings = await clients.apps.getAppSettings(
       'vtex.store@2.x'
     )
-    if (storeSettings.enableOrderFormOptimization || hasBrokenCookie) {
+
+    if (storeSettings.enableOrderFormOptimization) {
       forwardCheckoutCookies(headers, ctx)
     }
 
