@@ -1,6 +1,6 @@
 import { IOClients } from '@vtex/api'
 
-import { Checkout } from './checkout'
+import { Checkout, CheckoutNoCookies } from './checkout'
 import { SearchGraphQL } from './searchGraphQL'
 import { Session } from './session'
 import { CountryDataSettings } from './countryDataSettings'
@@ -9,6 +9,10 @@ import { CheckoutAdmin } from './checkoutAdmin'
 export class Clients extends IOClients {
   public get checkout() {
     return this.getOrSet('checkout', Checkout)
+  }
+
+  public get checkoutNoCookies() {
+    return this.getOrSet('checkoutNoCookies', CheckoutNoCookies)
   }
 
   public get searchGraphQL() {
