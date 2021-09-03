@@ -1,6 +1,9 @@
+import { CarbonEstimate } from 'vtex.checkout-graphql'
+
 import { PICKUP_IN_POINT } from '../constants/index'
 
-export function getFormattedDeliveryOptions(
+export async function getFormattedDeliveryOptions(
+  carbonEstimate: Record<string, CarbonEstimate>,
   deliveryOptions: SLA[],
   logisticsInfo: LogisticsInfo[] | null
 ) {
@@ -20,6 +23,7 @@ export function getFormattedDeliveryOptions(
 
     return {
       estimate: sla.shippingEstimate,
+      carbonEstimate: carbonEstimate[sla.id],
       id: sla.id,
       isSelected,
       price,

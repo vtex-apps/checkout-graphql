@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import uniqBy from 'lodash/uniqBy'
+import { CarbonEstimate } from 'vtex.checkout-graphql'
 
 import {
   addressHasGeocoordinates,
@@ -13,6 +14,9 @@ import {
 import { Clients } from '../clients'
 import { DELIVERY, PICKUP_IN_POINT } from '../constants'
 import { formatBusinessHoursList } from './pickup'
+
+export const ORDER_FORM_BUCKET = 'order-form'
+const NULL_IF_NOT_FOUND = true
 
 export const getShippingData = (
   address: CheckoutAddress,
@@ -97,7 +101,7 @@ export const getShippingInfo = async ({
   clients: Clients
   orderForm: Pick<
     CheckoutOrderForm,
-    'shippingData' | 'totalizers' | 'orderFormId' | 'value'
+    'orderFormId' | 'shippingData' | 'totalizers' | 'orderFormId' | 'value'
   >
 }) => {
   const logisticsInfo = orderForm.shippingData?.logisticsInfo ?? []
@@ -130,7 +134,15 @@ export const getShippingInfo = async ({
     availableItemsLogisticsInfo
   )
 
-  const updatedDeliveryOptions = getFormattedDeliveryOptions(
+  const carbonEstimate =
+    (await clients.vbase.getJSON<Record<string, CarbonEstimate> | null>(
+      ORDER_FORM_BUCKET,
+      orderForm.orderFormId,
+      NULL_IF_NOT_FOUND
+    )) ?? {}
+
+  const updatedDeliveryOptions = await getFormattedDeliveryOptions(
+    carbonEstimate,
     filteredDeliveryOptions,
     availableItemsLogisticsInfo
   )
@@ -192,5 +204,38 @@ export const getShippingInfo = async ({
         }
       }),
     selectedAddress,
+  }
+}
+
+export async function calculateCarbonEstimate({
+  clients,
+  dockId,
+  orderForm,
+}: {
+  clients: Clients
+  dockId: string
+  orderForm: CheckoutOrderForm
+}): Promise<CarbonEstimate> {
+  const dock = await clients.logisticsRest.getLoadingDock({ id: dockId })
+  if (dock.address?.postalCode == null) {
+    return { cost: 0, carbonKg: 0 }
+  }
+
+  try {
+    console.log(dockId, JSON.stringify(dock.address, null, 2))
+
+    const estimate = await clients.cloverly.estimateShipping({
+      zipFrom: dock.address.postalCode,
+      zipTo: '10001',
+    })
+
+    console.log(JSON.stringify(estimate, null, 2))
+
+    return {
+      cost: estimate.total_cost_in_usd_cents,
+      carbonKg: estimate.equivalent_carbon_in_kg,
+    }
+  } catch {
+    return { cost: 0, carbonKg: 0 }
   }
 }

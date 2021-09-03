@@ -1,4 +1,4 @@
-import { LRUCache, Service, RecorderState } from '@vtex/api'
+import { LRUCache, Service, RecorderState, AuthType } from '@vtex/api'
 
 import { Clients } from './clients'
 import { schemaDirectives } from './directives'
@@ -21,6 +21,9 @@ export default new Service<Clients, RecorderState, CustomContext>({
     options: {
       checkout: {
         timeout: TEN_SECONDS_MS,
+      },
+      logisticsRest: {
+        authType: AuthType.bearer,
       },
       default: {
         retries: 2,

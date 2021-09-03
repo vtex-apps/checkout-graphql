@@ -51,6 +51,13 @@ type Mutation {
   estimateShipping(orderFormId: ID, address: AddressInput): OrderForm!
     @withOrderFormId
 
+  clearCarbonFreeShipping(orderFormId: ID): OrderForm!
+    @withOrderFormId
+
+  estimateCarbonFreeShipping(orderFormId: ID): OrderForm!
+    @withOrderFormId
+    @cacheControl(scope: PRIVATE)
+
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
     @withOrderFormId
 

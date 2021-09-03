@@ -11,6 +11,7 @@
   "dependencies": {
     "vtex.country-data-settings": "0.x",
     "vtex.graphql-server": "1.x",
+    "vtex.logistics-carrier-graphql": "0.x",
     "vtex.messages": "1.x"
   },
   "credentialType": "absolute",
@@ -21,6 +22,16 @@
   "policies": [
     {
       "name": "vtex.messages:translate-messages"
+    },
+    {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.cloverly.com",
+        "path": "/2019-03-beta/*"
+      }
     },
     {
       "name": "outbound-access",
@@ -38,6 +49,20 @@
     },
     {
       "name": "vtex.graphql-server:resolve-graphql"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/logistics/pvt/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercebeta.com.br",
+        "path": "/api/logistics/pvt/*"
+      }
     }
   ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"

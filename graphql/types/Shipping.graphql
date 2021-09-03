@@ -12,6 +12,7 @@ type DeliveryOption {
   deliveryChannel: String!
   price: Int!
   estimate: String!
+  carbonEstimate: CarbonEstimate
   isSelected: Boolean!
 }
 
@@ -21,12 +22,18 @@ type PickupOption {
   deliveryChannel: String!
   price: Int!
   estimate: String!
+  carbonEstimate: CarbonEstimate
   isSelected: Boolean!
   friendlyName: String! @translatableV2
   additionalInfo: String @translatableV2
   storeDistance: Float
   transitTime: String
   businessHours: [BusinessHour!]!
+}
+
+type CarbonEstimate {
+  cost: Float!
+  carbonKg: Float!
 }
 
 type BusinessHour {

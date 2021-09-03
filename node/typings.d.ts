@@ -4,6 +4,8 @@ import { Context as KoaContext } from 'koa'
 import CheckoutDataSource from './dataSources/checkout'
 
 declare global {
+  type FIXME = any
+
   interface IOContext extends ioContext {
     params: {
       [param: string]: string

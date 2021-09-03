@@ -142,6 +142,44 @@ export const root = {
         isValid,
       }
     },
+    totalizers: async (
+      orderForm: CheckoutOrderForm,
+      _: unknown,
+      ctx: Context
+    ) => {
+      const shippingInfo = await getShippingInfo({
+        orderForm,
+        clients: ctx.clients,
+      })
+      const selectedDeliveryOption = shippingInfo.deliveryOptions.find(
+        option => option.isSelected
+      )
+
+      if (selectedDeliveryOption?.carbonEstimate == null) {
+        return orderForm.totalizers
+      }
+
+      return orderForm.totalizers.concat({
+        id: 'CarbonEstimate',
+        name: 'Entrega verde',
+        value: selectedDeliveryOption.carbonEstimate.cost,
+      })
+    },
+    value: async (orderForm: CheckoutOrderForm, _: unknown, ctx: Context) => {
+      const shippingInfo = await getShippingInfo({
+        orderForm,
+        clients: ctx.clients,
+      })
+      const selectedDeliveryOption = shippingInfo.deliveryOptions.find(
+        option => option.isSelected
+      )
+
+      if (selectedDeliveryOption?.carbonEstimate == null) {
+        return orderForm.value
+      }
+
+      return orderForm.value + selectedDeliveryOption.carbonEstimate.cost
+    },
     paymentData: (orderForm: CheckoutOrderForm) => {
       const isValid = isPaymentValid(orderForm.paymentData)
 
