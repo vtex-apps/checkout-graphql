@@ -50,6 +50,7 @@ type MarketingData {
   utmiPart: String
   utmiPage: String
   coupon: String
+  gclid: String
   marketingTags: [String!]
 }
 
@@ -61,6 +62,7 @@ input MarketingDataInput {
   utmiPart: String
   utmiPage: String
   coupon: String
+  gclid: String
   marketingTags: [String!]
 }
 

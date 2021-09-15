@@ -24,6 +24,7 @@ declare global {
   }
 
   interface OrderFormMarketingData {
+    gclid?: string
     utmCampaign?: string
     utmMedium?: string
     utmSource?: string

@@ -21,6 +21,9 @@ export const resolvers = {
     coupon: (marketingData: OrderFormMarketingData) => {
       return marketingData.coupon ?? ''
     },
+    gclid: (marketingData: OrderFormMarketingData) => {
+      return marketingData.gclid ?? ''
+    },
     utmCampaign: (marketingData: OrderFormMarketingData) => {
       return marketingData.utmCampaign ?? ''
     },
