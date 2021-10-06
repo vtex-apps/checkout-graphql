@@ -6,11 +6,7 @@ export const queries = {
   ): Promise<CheckoutProfile> => {
     const {
       clients,
-      graphql: { cacheControl },
     } = ctx
-
-    cacheControl.noCache = true
-    cacheControl.noStore = true
 
     const profile = await clients.checkout.getProfile(email)
 

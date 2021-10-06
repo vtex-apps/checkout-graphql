@@ -1,11 +1,11 @@
 type Query {
   getCardSessionId: String
   orderForm(orderFormId: ID, refreshOutdatedData: Boolean): OrderForm!
-    @cacheControl(maxAge: ZERO, scope: PRIVATE)
+    @noCache
     @withOrderFormId
     @withSegment
   checkoutProfile(email: String!): CheckoutProfile
-    @cacheControl(maxAge: ZERO, scope: PRIVATE)
+    @noCache
   shippingSLA(
     items: [ShippingItem]
     postalCode: String
@@ -23,88 +23,88 @@ type Mutation {
     marketingData: MarketingDataInput
     salesChannel: String
     allowedOutdatedData: [String!]
-  ): OrderForm! @withOrderFormId @withSegment
+  ): OrderForm! @withOrderFormId @withSegment @noCache
 
   updateItems(
     orderFormId: ID
     orderItems: [ItemInput]
     splitItem: Boolean = true
     allowedOutdatedData: [String!]
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @noCache
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @noCache
   removeItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @noCache
 
   addBundleItemAttachment(
     orderFormId: ID
     bundleItemAttachmentInput: BundleItemAttachmentInput
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @noCache
   removeBundleItemAttachment(
     orderFormId: ID
     bundleItemAttachmentInput: BundleItemAttachmentInput
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @noCache
 
-  insertCoupon(orderFormId: ID, text: String): OrderForm! @withOrderFormId
+  insertCoupon(orderFormId: ID, text: String): OrderForm! @withOrderFormId @noCache
 
   estimateShipping(orderFormId: ID, address: AddressInput): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @noCache
 
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @noCache
 
   selectPickupOption(
     orderFormId: ID
     pickupOptionId: String
     itemId: String
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @noCache
 
   """
   Changes the currently selected address in the shipping data
   of the OrderForm
   """
   updateSelectedAddress(orderFormId: ID, input: AddressInput!): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @noCache
 
   savePaymentToken(
     orderFormId: ID
     paymentTokens: [PaymentToken]
-  ): SavePaymentTokenPayload @withOrderFormId
+  ): SavePaymentTokenPayload @withOrderFormId @noCache
 
   updateOrderFormProfile(orderFormId: ID, input: UserProfileInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @noCache
 
   updateClientPreferencesData(
     orderFormId: ID
     input: ClientPreferencesDataInput!
-  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+  ): OrderForm! @withOrderFormId @noCache
 
   updateOrderFormPayment(orderFormId: ID, input: PaymentDataInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @noCache
 
   setManualPrice(orderFormId: ID, input: ManualPriceInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @noCache
 
   updateItemsOrdination(
     orderFormId: ID
     ascending: Boolean!
     criteria: ItemsOrdinationCriteria!
-  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+  ): OrderForm! @withOrderFormId @noCache
 
   clearOrderFormMessages(orderFormId: ID): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @noCache
 
   updateOrderFormOpenTextField(
     orderFormId: ID
     input: OrderFormOpenTextInput!
-  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+  ): OrderForm! @withOrderFormId @noCache
 
   updateOrderFormMarketingData(input: MarketingDataInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @noCache
 }
