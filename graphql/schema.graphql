@@ -23,88 +23,88 @@ type Mutation {
     marketingData: MarketingDataInput
     salesChannel: String
     allowedOutdatedData: [String!]
-  ): OrderForm! @withOrderFormId @withSegment
+  ): OrderForm! @withOrderFormId @withSegment @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateItems(
     orderFormId: ID
     orderItems: [ItemInput]
     splitItem: Boolean = true
     allowedOutdatedData: [String!]
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
   removeItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   addBundleItemAttachment(
     orderFormId: ID
     bundleItemAttachmentInput: BundleItemAttachmentInput
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
   removeBundleItemAttachment(
     orderFormId: ID
     bundleItemAttachmentInput: BundleItemAttachmentInput
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
-  insertCoupon(orderFormId: ID, text: String): OrderForm! @withOrderFormId
+  insertCoupon(orderFormId: ID, text: String): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   estimateShipping(orderFormId: ID, address: AddressInput): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   selectPickupOption(
     orderFormId: ID
     pickupOptionId: String
     itemId: String
-  ): OrderForm! @withOrderFormId
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   """
   Changes the currently selected address in the shipping data
   of the OrderForm
   """
   updateSelectedAddress(orderFormId: ID, input: AddressInput!): OrderForm!
-    @withOrderFormId
+    @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   savePaymentToken(
     orderFormId: ID
     paymentTokens: [PaymentToken]
-  ): SavePaymentTokenPayload @withOrderFormId
+  ): SavePaymentTokenPayload @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateOrderFormProfile(orderFormId: ID, input: UserProfileInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateClientPreferencesData(
     orderFormId: ID
     input: ClientPreferencesDataInput!
-  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateOrderFormPayment(orderFormId: ID, input: PaymentDataInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   setManualPrice(orderFormId: ID, input: ManualPriceInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateItemsOrdination(
     orderFormId: ID
     ascending: Boolean!
     criteria: ItemsOrdinationCriteria!
-  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   clearOrderFormMessages(orderFormId: ID): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateOrderFormOpenTextField(
     orderFormId: ID
     input: OrderFormOpenTextInput!
-  ): OrderForm! @withOrderFormId @cacheControl(scope: PRIVATE)
+  ): OrderForm! @withOrderFormId @cacheControl(maxAge: ZERO, scope: PRIVATE)
 
   updateOrderFormMarketingData(input: MarketingDataInput!): OrderForm!
     @withOrderFormId
-    @cacheControl(scope: PRIVATE)
+    @cacheControl(maxAge: ZERO, scope: PRIVATE)
 }
