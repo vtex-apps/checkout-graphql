@@ -1,0 +1,48 @@
+name: PR actions
+'on':
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  danger-ci:
+    name: Danger CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+      - name: Danger CI
+        uses: vtex/danger@master
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+  linter:
+    name: Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+        env:
+          RUNNER_TEMP: /tmp
+      - name: yarn install
+        run: yarn install --frozen-lockfile
+      - name: Lint project
+        uses: vtex/action-lint@master
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+        env:
+          RUNNER_TEMP: /tmp
+      - name: update submodules
+        run: git submodule update --init --recursive
+      - uses: vtex/action-io-app-test@master
