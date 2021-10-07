@@ -4,7 +4,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "lint": "eslint --ext js,jsx,ts,tsx .",
-    "lint:ci": "eslint $(git diff --name-only HEAD | grep -E '.(js|jsx|ts|tsx)$' | xargs)",
     "format": "prettier --write \"**/*.{ts,js,json}\""
   },
   "husky": {
