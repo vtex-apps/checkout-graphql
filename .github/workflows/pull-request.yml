@@ -31,7 +31,7 @@ jobs:
       - name: yarn install
         run: yarn install --frozen-lockfile
       - name: Lint project
-        uses: vtex/action-lint@master
+        run: yarn lint:ci
   tests:
     name: Tests
     runs-on: ubuntu-latest
