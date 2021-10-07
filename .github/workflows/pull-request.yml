@@ -31,7 +31,7 @@ jobs:
       - name: yarn install
         run: yarn install --frozen-lockfile
       - name: Lint project
-        run: yarn eslint $(git diff --name-only ${{ github.event.pull_request.base.ref }} | grep -E '.(js|jsx|ts|tsx)$' | xargs)
+        run: yarn eslint $(git diff --name-only -- ${{ github.event.pull_request.base.ref }} | grep -E '.(js|jsx|ts|tsx)$' | xargs)
   tests:
     name: Tests
     runs-on: ubuntu-latest
