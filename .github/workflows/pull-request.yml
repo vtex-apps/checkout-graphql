@@ -28,14 +28,21 @@ jobs:
           node-version: 12.x
         env:
           RUNNER_TEMP: /tmp
+
       - name: yarn install
         run: yarn install --frozen-lockfile
+
+      - name: Fetch target branch
+        env:
+          BASE: ${{ github['base_ref'] }}
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${BASE}:refs/remotes/origin/${BASE}
+
       - name: Lint project
         # run: yarn run eslint $(git diff --name-only -- ${{ github.event.pull_request.base.ref }} | grep -E '.(js|jsx|ts|tsx)$' | xargs)
         # run: yarn run eslint $(git diff --name-only -- main | grep -E '.(js|jsx|ts|tsx)$' | xargs)
         # run: yarn eslint $(git diff main --name-only | grep -E '.(js|jsx|ts|tsx)$' | xargs)
         # run: yarn eslint $(git diff --name-only -- main) --ext .js,.jsx,.ts,.tsx
-        run: yarn eslint $(git diff --name-only origin/main -- .) --ext .js,.jsx,.ts,.tsx
+        run: yarn eslint $(git diff --name-only main -- .) --ext .js,.jsx,.ts,.tsx
         # run: yarn eslint --ext .js,.jsx,.ts,.tsx
   tests:
     name: Tests
