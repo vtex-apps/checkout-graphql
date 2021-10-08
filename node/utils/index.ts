@@ -20,9 +20,7 @@ export function statusToError(e: any) {
   const { response } = e as AxiosError
   const { status } = response!
 
-  const foo = 'bar'
-
-  if (status === 401 && foo) {
+  if (status === 401) {
     throw new AuthenticationError(e)
   }
   if (status === 403) {
