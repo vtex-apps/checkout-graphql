@@ -34,7 +34,8 @@ jobs:
 
       - name: Fetch target branch
         env:
-          BASE: ${{ github['base_ref'] }}
+          # BASE: ${{ github['base_ref'] }}
+          BASE: ${{ github.event.pull_request.base.ref }}
         run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${BASE}:refs/remotes/origin/${BASE}
 
       - name: Lint project
