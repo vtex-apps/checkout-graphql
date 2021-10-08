@@ -34,17 +34,11 @@ jobs:
 
       - name: Fetch target branch
         env:
-          # BASE: ${{ github['base_ref'] }}
-          BASE: ${{ github.event.pull_request.base.ref }}
-        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${BASE}:refs/remotes/origin/${BASE}
+          TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}
 
       - name: Lint project
-        # run: yarn run eslint $(git diff --name-only -- ${{ github.event.pull_request.base.ref }} | grep -E '.(js|jsx|ts|tsx)$' | xargs)
-        # run: yarn run eslint $(git diff --name-only -- main | grep -E '.(js|jsx|ts|tsx)$' | xargs)
-        # run: yarn eslint $(git diff main --name-only | grep -E '.(js|jsx|ts|tsx)$' | xargs)
-        # run: yarn eslint $(git diff --name-only -- main) --ext .js,.jsx,.ts,.tsx
-        run: yarn eslint $(git diff --name-only origin/main -- .) --ext .js,.jsx,.ts,.tsx
-        # run: yarn eslint --ext .js,.jsx,.ts,.tsx
+        run: yarn eslint $(git diff --name-only origin/${TARGET_BRANCH} -- .) --ext .js,.jsx,.ts,.tsx
   tests:
     name: Tests
     runs-on: ubuntu-latest
