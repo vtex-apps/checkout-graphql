@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add an auth directive in graphql with logs.
+
 ## [0.63.0] - 2021-10-07
 
 ## [0.62.0] - 2021-09-28
