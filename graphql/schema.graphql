@@ -1,17 +1,18 @@
 type Query {
-  getCardSessionId: String
+  getCardSessionId: String @withAuthMetrics
   orderForm(orderFormId: ID, refreshOutdatedData: Boolean): OrderForm!
     @noCache
+    @withAuthMetrics
     @withOrderFormId
     @withSegment
-  checkoutProfile(email: String!): CheckoutProfile
-    @noCache
+  checkoutProfile(email: String!): CheckoutProfile @withAuthMetrics @noCache
   shippingSLA(
     items: [ShippingItem]
     postalCode: String
     country: String
   ): Shipping
     @cacheControl(scope: SEGMENT, maxAge: MEDIUM)
+    @withAuthMetrics
     @withSegment
     @withOrderFormId
 }
@@ -23,69 +24,84 @@ type Mutation {
     marketingData: MarketingDataInput
     salesChannel: String
     allowedOutdatedData: [String!]
-  ): OrderForm! @withOrderFormId @withSegment @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @withSegment @noCache
 
   updateItems(
     orderFormId: ID
     orderItems: [ItemInput]
     splitItem: Boolean = true
     allowedOutdatedData: [String!]
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
 
   addItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
-    @withOrderFormId @noCache
+    @withAuthMetrics
+    @withOrderFormId
+    @noCache
   removeItemOffering(orderFormId: ID, offeringInput: OfferingInput): OrderForm!
-    @withOrderFormId @noCache
+    @withAuthMetrics
+    @withOrderFormId
+    @noCache
 
   addBundleItemAttachment(
     orderFormId: ID
     bundleItemAttachmentInput: BundleItemAttachmentInput
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
   removeBundleItemAttachment(
     orderFormId: ID
     bundleItemAttachmentInput: BundleItemAttachmentInput
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
 
-  insertCoupon(orderFormId: ID, text: String): OrderForm! @withOrderFormId @noCache
+  insertCoupon(orderFormId: ID, text: String): OrderForm!
+    @withOrderFormId
+    @noCache
 
   estimateShipping(orderFormId: ID, address: AddressInput): OrderForm!
-    @withOrderFormId @noCache
+    @withAuthMetrics
+    @withOrderFormId
+    @noCache
 
   selectDeliveryOption(orderFormId: ID, deliveryOptionId: String): OrderForm!
-    @withOrderFormId @noCache
+    @withAuthMetrics
+    @withOrderFormId
+    @noCache
 
   selectPickupOption(
     orderFormId: ID
     pickupOptionId: String
     itemId: String
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
 
   """
   Changes the currently selected address in the shipping data
   of the OrderForm
   """
   updateSelectedAddress(orderFormId: ID, input: AddressInput!): OrderForm!
-    @withOrderFormId @noCache
+    @withAuthMetrics
+    @withOrderFormId
+    @noCache
 
   savePaymentToken(
     orderFormId: ID
     paymentTokens: [PaymentToken]
-  ): SavePaymentTokenPayload @withOrderFormId @noCache
+  ): SavePaymentTokenPayload @withAuthMetrics @withOrderFormId @noCache
 
   updateOrderFormProfile(orderFormId: ID, input: UserProfileInput!): OrderForm!
+    @withAuthMetrics
     @withOrderFormId
     @noCache
 
   updateClientPreferencesData(
     orderFormId: ID
     input: ClientPreferencesDataInput!
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
 
   updateOrderFormPayment(orderFormId: ID, input: PaymentDataInput!): OrderForm!
+    @withAuthMetrics
     @withOrderFormId
     @noCache
 
   setManualPrice(orderFormId: ID, input: ManualPriceInput!): OrderForm!
+    @withAuthMetrics
     @withOrderFormId
     @noCache
 
@@ -93,18 +109,20 @@ type Mutation {
     orderFormId: ID
     ascending: Boolean!
     criteria: ItemsOrdinationCriteria!
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
 
   clearOrderFormMessages(orderFormId: ID): OrderForm!
+    @withAuthMetrics
     @withOrderFormId
     @noCache
 
   updateOrderFormOpenTextField(
     orderFormId: ID
     input: OrderFormOpenTextInput!
-  ): OrderForm! @withOrderFormId @noCache
+  ): OrderForm! @withAuthMetrics @withOrderFormId @noCache
 
   updateOrderFormMarketingData(input: MarketingDataInput!): OrderForm!
+    @withAuthMetrics
     @withOrderFormId
     @noCache
 }
