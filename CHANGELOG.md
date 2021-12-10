@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.64.1] - 2021-12-10
+
 ### Fixed
 - Ensure `itemIndex` property on `checkout-updateSubscriptionDataField` request
 
