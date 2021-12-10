@@ -114,13 +114,9 @@ export const mutations = {
     )
 
     // Filter only the items with options and ensure that they have a proper index property
-    const withOptions = items.reduce((acc: OrderFormItemInput[], item: OrderFormItemInput, currentIndex: number) => {
-      if (item.options && item.options.length > 0) {
-        return [ ...acc, { ...item, index: item.index ?? currentIndex } ]
-      }
-
-      return acc
-    }, [])
+    const withOptions = items
+      .map((item, currentIndex) => ({ ...item, index: item.index ?? currentIndex }))
+      .filter(({ options }) => !!options && options.length > 0)
 
     /**
      * Always be sure to make these requests in the same order you use
