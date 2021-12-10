@@ -113,7 +113,6 @@ export const mutations = {
       ({ options, index, uniqueId, ...rest }) => rest
     )
 
-    // Filter only the items with options and ensure that they have a proper index property
     const withOptions = items
       .map((item, currentIndex) => ({ ...item, index: item.index ?? currentIndex }))
       .filter(({ options }) => !!options && options.length > 0)
