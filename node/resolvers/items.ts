@@ -112,9 +112,10 @@ export const mutations = {
     const cleanItems = items.map(
       ({ options, index, uniqueId, ...rest }) => rest
     )
-    const withOptions = items.filter(
-      ({ options }) => !!options && options.length > 0
-    )
+
+    const withOptions = items
+      .map((item, currentIndex) => ({ ...item, index: item.index ?? currentIndex }))
+      .filter(({ options }) => !!options && options.length > 0)
 
     /**
      * Always be sure to make these requests in the same order you use
