@@ -192,7 +192,7 @@ declare global {
       }
       type: string
       validity: {
-        end: string
+        end?: string
       }
     }
   }
