@@ -191,7 +191,9 @@ declare global {
         periodicity: 'YEAR' | 'MONTH' | 'WEEK' | 'DAY'
       }
       type: string
-      validity: {}
+      validity: {
+        end: string
+      }
     }
   }
 
