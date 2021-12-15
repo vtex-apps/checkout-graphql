@@ -4,6 +4,10 @@ const SUBSCRIPTION_PREFIX = `vtex.subscription`
 const SUBSCRIPTION_KEY_PREFIX = `${SUBSCRIPTION_PREFIX}.key`
 
 const SUBSCRIPTION_KEY_FREQUENCY = `${SUBSCRIPTION_KEY_PREFIX}.frequency`
+const SUBSCRIPTION_KEY_VALIDITY = `${SUBSCRIPTION_KEY_PREFIX}.validity`
+
+const SUBSCRIPTION_KEY_VALIDITY_END = `${SUBSCRIPTION_KEY_VALIDITY}.end`
+
 
 export function parseFrequency(frequency: string) {
   const match = frequency.trim().match(FREQUENCY_PATTERN)
@@ -20,6 +24,12 @@ export function parseFrequency(frequency: string) {
     interval: +count,
     periodicity: type.toUpperCase(),
   } as SubscriptionDataEntry['plan']['frequency']
+}
+
+export function parseValidity(validityEnd: string) {
+  return {
+    end: validityEnd,
+  }
 }
 
 export function generateSubscriptionDataEntry(
@@ -50,10 +60,16 @@ export function generateSubscriptionDataEntry(
       return null
     }
 
+    const validityEnd = subscriptionFrequencyOption.inputValues[SUBSCRIPTION_KEY_VALIDITY_END]
+
+    const planValidity = {
+      end: validityEnd
+    }
+    
     const subscriptionPlan = {
       frequency: planFrequency,
       type: planType,
-      validity: {},
+      validity: planValidity,
     }
 
     return {
