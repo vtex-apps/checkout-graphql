@@ -238,7 +238,7 @@ export const queries = {
       headers = obj.headers
     }
 
-    const orderForm = await syncWithStoreLocale(
+    newOrderForm = await syncWithStoreLocale(
       newOrderForm,
       vtex.segment!.cultureInfo,
       clients.checkout
@@ -258,7 +258,7 @@ export const queries = {
       forwardCheckoutCookies(headers, ctx)
     }
 
-    return orderForm
+    return newOrderForm
   },
 }
 
