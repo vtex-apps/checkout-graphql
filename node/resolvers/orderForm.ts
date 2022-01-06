@@ -156,6 +156,42 @@ export const root = {
   },
 }
 
+export async function syncWithStoreLocale(
+  orderForm: CheckoutOrderForm,
+  cultureInfo: string,
+  checkout: Context['clients']['checkout']
+) {
+  const clientPreferencesData = orderForm.clientPreferencesData || {
+    locale: cultureInfo,
+  }
+
+  const shouldUpdateClientPreferencesData =
+    cultureInfo &&
+    clientPreferencesData.locale &&
+    cultureInfo !== clientPreferencesData.locale
+
+  if (shouldUpdateClientPreferencesData) {
+    const newClientPreferencesData = {
+      ...clientPreferencesData,
+    }
+
+    newClientPreferencesData.locale = cultureInfo
+
+    try {
+      return await checkout.updateOrderFormClientPreferencesData(
+        orderForm.orderFormId,
+        newClientPreferencesData
+      )
+    } catch (e) {
+      console.error(e)
+
+      return orderForm
+    }
+  }
+
+  return orderForm
+}
+
 export async function forwardCheckoutCookies(
   rawHeaders: Record<string, any>,
   ctx: Context
@@ -200,6 +236,12 @@ export const queries = {
       headers = obj.headers
     }
 
+    const orderForm = await syncWithStoreLocale(
+      newOrderForm,
+      vtex.segment!.cultureInfo,
+      clients.checkout
+    )
+
     /**
      * In case the enableOrderFormOptimization setting is enabled in the store,
      * this will be the only `orderForm` query performed in the client. So no
@@ -214,7 +256,7 @@ export const queries = {
       forwardCheckoutCookies(headers, ctx)
     }
 
-    return newOrderForm
+    return orderForm
   },
 }
 
