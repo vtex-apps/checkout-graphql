@@ -156,6 +156,8 @@ export const root = {
   },
 }
 
+// Ported from store-graphql
+// https://github.com/vtex-apps/store-graphql/blob/master/node/resolvers/checkout/index.ts#L185
 export async function syncWithStoreLocale(
   orderForm: CheckoutOrderForm,
   cultureInfo: string,
