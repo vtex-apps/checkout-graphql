@@ -156,6 +156,44 @@ export const root = {
   },
 }
 
+// Ported from store-graphql
+// https://github.com/vtex-apps/store-graphql/blob/master/node/resolvers/checkout/index.ts#L185
+export async function syncWithStoreLocale(
+  orderForm: CheckoutOrderForm,
+  cultureInfo: string,
+  checkout: Context['clients']['checkout']
+) {
+  const clientPreferencesData = orderForm.clientPreferencesData || {
+    locale: cultureInfo,
+  }
+
+  const shouldUpdateClientPreferencesData =
+    cultureInfo &&
+    clientPreferencesData.locale &&
+    cultureInfo !== clientPreferencesData.locale
+
+  if (shouldUpdateClientPreferencesData) {
+    const newClientPreferencesData = {
+      ...clientPreferencesData,
+    }
+
+    newClientPreferencesData.locale = cultureInfo
+
+    try {
+      return await checkout.updateOrderFormClientPreferencesData(
+        orderForm.orderFormId,
+        newClientPreferencesData
+      )
+    } catch (e) {
+      console.error(e)
+
+      return orderForm
+    }
+  }
+
+  return orderForm
+}
+
 export async function forwardCheckoutCookies(
   rawHeaders: Record<string, any>,
   ctx: Context
@@ -199,6 +237,12 @@ export const queries = {
       newOrderForm = obj.data
       headers = obj.headers
     }
+
+    newOrderForm = await syncWithStoreLocale(
+      newOrderForm,
+      vtex.segment!.cultureInfo,
+      clients.checkout
+    )
 
     /**
      * In case the enableOrderFormOptimization setting is enabled in the store,
