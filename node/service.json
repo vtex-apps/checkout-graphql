@@ -3,7 +3,7 @@
   "memory": 258,
   "ttl": 43200,
   "timeout": 30,
-  "minReplicas": 8,
+  "minReplicas": 2,
   "maxReplicas": 120,
   "workers": 4,
   "cpu": 30
