@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `customData` field on OrderForm.graphql and `customData` types
+
 ## [0.64.3] - 2022-01-10
 ### Changed
 - Reduced min replicas
