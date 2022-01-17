@@ -16,6 +16,19 @@ type OrderForm {
   allowManualPrice: Boolean
   openTextField: OpenTextField
   storePreferencesData: StorePreferencesData
+  customData: CustomData
+}
+
+type CustomData {
+  customApps: [CustomApp!]!
+}
+
+scalar CustomFieldsObject
+
+type CustomApp {
+  id: ID!
+  major: Int!
+  fields: CustomFieldsObject!
 }
 
 type StorePreferencesData {
