@@ -181,7 +181,7 @@ type PriceTag {
   name: String
   ratesAndBenefitsIdentifier: RatesAndBenefitsIdentifier
   rawValue: Float
-  value: Int
+  value: Float
 }
 
 type RatesAndBenefitsIdentifier {
