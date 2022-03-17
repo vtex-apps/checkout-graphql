@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `modalType` props in graphql schema
+
 ## [0.65.1] - 2022-01-19
 ### Changed
 - Update type for `priceTags.value` from `Int` to `Float`.
