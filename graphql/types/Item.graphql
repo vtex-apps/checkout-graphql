@@ -19,6 +19,7 @@ type Item {
   listPrice: Float
   manualPrice: Float
   measurementUnit: String
+  modalType: String
   name: String @translatableV2
   offerings: [Offering!]!
   options: [AssemblyOptionType]
