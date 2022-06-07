@@ -13,6 +13,7 @@ type DeliveryOption {
   price: Int!
   estimate: String!
   isSelected: Boolean!
+  sla: SLA
 }
 
 type PickupOption {
@@ -84,4 +85,43 @@ enum AddressType {
   giftRegistry
   pickup
   search
+}
+
+type deliveryChannels {
+  id: String
+}
+
+type SLA {
+  deliveryChannel: String
+  deliveryIds: [DeliveryIds]
+  deliveryWindow: String!
+  id: String
+  listPrice: Float
+  lockTTL: String!
+  name: String
+  pickupDistance: Int
+  pickupPointId: String!
+  pickupStoreInfo: PickupStoreInfo
+  polygonName: String
+  price: Float
+  shippingEstimate: String
+  shippingEstimateDate: String!
+  tax: Float
+  transitTime: String
+}
+
+type DeliveryIds {
+  courierId: String
+  courierName: String
+  dockId: String
+  quantity: Int
+  warehouseId: String
+}
+
+type PickupStoreInfo {
+  isPickupStore: Boolean 
+  friendlyName: String! 
+  address: String! 
+  additionalInfo: String! 
+  dockId: String!
 }
