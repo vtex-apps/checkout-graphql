@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- `withAuthMetrics` directive now logs 1 from 100 unauthorized requests
+- `withAuthMetrics` directive now logs 1% of unauthorized requests
 
 ## [0.65.2] - 2022-03-22
 
