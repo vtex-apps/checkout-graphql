@@ -1,4 +1,4 @@
-import { prop, propOr, compose, forEach } from 'ramda'
+import { prop, propOr, compose } from 'ramda'
 import { QueryOrderFormArgs } from 'vtex.checkout-graphql'
 
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
