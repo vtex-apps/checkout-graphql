@@ -1,5 +1,5 @@
 import { JanusClient } from '@vtex/api'
-import parseCookie from 'cookie'
+import parseCookie from 'set-cookie-parser'
 
 interface VtexIdCookies {
   account: string | null
@@ -70,10 +70,11 @@ export class Session extends JanusClient {
 
 function extractSessionCookie(headers: Record<string, string>) {
   for (const setCookie of headers['set-cookie'] ?? []) {
-    const parsedCookie = parseCookie.parse(setCookie)
-    const sessionCookie = parsedCookie[SESSION_COOKIE]
-    if (sessionCookie != null) {
-      return sessionCookie
+    const parsedSetCookies = parseCookie.parse(setCookie)
+    for (const parsed of parsedSetCookies) {
+      if (parsed.name === SESSION_COOKIE) {
+        return parsed.value
+      }
     }
   }
 

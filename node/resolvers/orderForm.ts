@@ -1,4 +1,4 @@
-import { prop, propOr, compose, forEach } from 'ramda'
+import { prop, propOr, compose } from 'ramda'
 import { QueryOrderFormArgs } from 'vtex.checkout-graphql'
 
 import { CHECKOUT_COOKIE, parseCookie } from '../utils'
@@ -204,10 +204,13 @@ export async function forwardCheckoutCookies(
   const forwardedSetCookies = responseSetCookies.filter(isWhitelistedSetCookie)
   const parseAndClean = compose(parseCookie, replaceDomain(host))
   const cleanCookies = forwardedSetCookies.map(parseAndClean)
-  forEach(
-    ({ name, value, options }) => ctx.cookies.set(name, value, options),
-    cleanCookies
-  )
+  cleanCookies.forEach(({ name, value, options }) => {
+    if (options.secure && !ctx.cookies.secure) {
+      ctx.cookies.secure = true
+    }
+
+    ctx.cookies.set(name, value, options)
+  })
 }
 
 export const queries = {

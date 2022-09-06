@@ -1,6 +1,7 @@
 import { AuthenticationError, ForbiddenError, UserInputError } from '@vtex/api'
 import { AxiosError } from 'axios'
-import { parse } from 'cookie'
+import { parse } from 'set-cookie-parser'
+import { SetOption } from 'cookies'
 
 export function generateRandomName() {
   return (1 + Math.random()).toString(36).substring(2)
@@ -33,16 +34,21 @@ export function statusToError(e: any) {
   throw e
 }
 
-export const parseCookie = (cookie: string) => {
-  const parsed = parse(cookie)
-  const cookieName = Object.keys(parsed)[0] as string
-  const cookieValue = parsed[cookieName]
+export const parseCookie = (cookie: string): ParsedCookie => {
+  const [parsed] = parse(cookie)
 
-  const extraOptions = {
+  const cookieName = parsed.name
+  const cookieValue = parsed.value
+
+  const extraOptions: SetOption = {
     path: parsed.path,
     domain: parsed.domain,
-    expires: parsed.expires ? new Date(parsed.expires) : undefined,
+    expires: parsed.expires,
+    httpOnly: parsed.httpOnly,
+    secure: parsed.secure,
+    sameSite: parsed.sameSite as "strict" | "lax" | undefined,
   }
+
   return {
     name: cookieName,
     value: cookieValue,
@@ -60,4 +66,10 @@ export function checkoutCookieFormat(orderFormId: string) {
 export function getOrderFormIdFromCookie(cookies: Context['cookies']) {
   const cookie = cookies.get(CHECKOUT_COOKIE)
   return cookie?.split('=')[1]
+}
+
+interface ParsedCookie {
+  name: string
+  value: string
+  options: SetOption
 }
