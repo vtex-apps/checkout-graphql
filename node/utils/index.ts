@@ -43,7 +43,7 @@ export const parseCookie = (cookie: string): ParsedCookie => {
   const extraOptions: SetOption = {
     path: parsed.path,
     domain: parsed.domain,
-    expires: parsed.expires ? new Date(parsed.expires) : undefined,
+    expires: parsed.expires,
     httpOnly: parsed.httpOnly,
     secure: parsed.secure,
     sameSite: parsed.sameSite as "strict" | "lax" | undefined,
