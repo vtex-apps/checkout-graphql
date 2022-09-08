@@ -16,10 +16,12 @@ const getProductInfo = async (
 
     return response
   } catch (err) {
-    logger.warn({
-      message: 'Error when communicating with vtex.search-graphql',
-      error: err,
-    })
+    if (Math.floor(Math.random() * 100) === 0) {
+      logger.warn({
+        message: 'Error when communicating with vtex.search-graphql',
+        error: err,
+      })
+    }
     return null
   }
 }
