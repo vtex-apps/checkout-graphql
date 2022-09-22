@@ -44,7 +44,7 @@ export const parseCookie = (cookie: string): ParsedCookie => {
     path: parsed.path,
     domain: parsed.domain,
     expires: parsed.expires,
-    httpOnly: parsed.httpOnly,
+    httpOnly: true,
     secure: parsed.secure,
     sameSite: parsed.sameSite as "strict" | "lax" | undefined,
   }
