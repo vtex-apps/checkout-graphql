@@ -21,6 +21,7 @@ declare global {
   interface CustomIOContext extends IOContext {
     segment?: SegmentData
     orderFormId?: string
+    ownerId?: string
   }
 
   interface OrderFormMarketingData {

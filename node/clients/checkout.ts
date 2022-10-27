@@ -9,7 +9,7 @@ import { UserProfileInput } from 'vtex.checkout-graphql'
 import { OWNERSHIP_COOKIE } from '../constants'
 import { forwardCheckoutCookies } from '../resolvers/orderForm'
 
-import { checkoutCookieFormat, statusToError } from '../utils'
+import { checkoutCookieFormat, ownershipCookieFormat, statusToError } from '../utils'
 
 export interface SimulationData {
   country: string
@@ -401,10 +401,11 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId } = (this.context as unknown) as CustomIOContext
+    const { orderFormId, ownerId } = (this.context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
+    const ownershipCookie = ownerId ? ownershipCookieFormat(ownerId) : ''
     return {
-      Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
+      Cookie: `${checkoutCookie}${ownershipCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 
@@ -486,6 +487,6 @@ export class Checkout extends JanusClient {
 
 export class CheckoutNoCookies extends Checkout {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super({ ...ctx, orderFormId: null } as any, { ...options, headers: {} })
+    super({ ...ctx, orderFormId: null, ownerId: null } as any, { ...options, headers: {} })
   }
 }
