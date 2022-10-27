@@ -6,6 +6,8 @@ import {
   RequestConfig,
 } from '@vtex/api'
 import { UserProfileInput } from 'vtex.checkout-graphql'
+import { OWNERSHIP_COOKIE } from '../constants'
+import { forwardCheckoutCookies } from '../resolvers/orderForm'
 
 import { checkoutCookieFormat, statusToError } from '../utils'
 
@@ -116,15 +118,19 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormPayment' }
     )
 
-  public updateOrderFormProfile = (
+  public updateOrderFormProfile = async (
     orderFormId: string,
-    fields: UserProfileInput
-  ) =>
-    this.post<CheckoutOrderForm>(
+    fields: UserProfileInput,
+    ctx: Context,
+  ) => {
+    const { data, headers } = await this.postRaw<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientProfileData'),
       fields,
       { metric: 'checkout-updateOrderFormProfile' }
     )
+    forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE]);
+    return data;
+  }
 
   public updateOrderFormShipping = (orderFormId: string, shipping: any) =>
     this.post<CheckoutOrderForm>(

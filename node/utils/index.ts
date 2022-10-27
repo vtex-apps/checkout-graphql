@@ -2,6 +2,7 @@ import { AuthenticationError, ForbiddenError, UserInputError } from '@vtex/api'
 import { AxiosError } from 'axios'
 import { parse } from 'set-cookie-parser'
 import { SetOption } from 'cookies'
+import { CHECKOUT_COOKIE } from '../constants'
 
 export function generateRandomName() {
   return (1 + Math.random()).toString(36).substring(2)
@@ -55,9 +56,6 @@ export const parseCookie = (cookie: string): ParsedCookie => {
     options: extraOptions,
   }
 }
-
-/** Checkout cookie methods */
-export const CHECKOUT_COOKIE = 'checkout.vtex.com'
 
 export function checkoutCookieFormat(orderFormId: string) {
   return `${CHECKOUT_COOKIE}=__ofid=${orderFormId};`
