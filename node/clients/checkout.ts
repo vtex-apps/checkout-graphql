@@ -128,8 +128,8 @@ export class Checkout extends JanusClient {
       fields,
       { metric: 'checkout-updateOrderFormProfile' }
     )
-    forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE]);
-    return data;
+    forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
+    return data
   }
 
   public updateOrderFormShipping = (orderFormId: string, shipping: any) =>

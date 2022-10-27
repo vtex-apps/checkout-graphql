@@ -204,7 +204,7 @@ export async function forwardCheckoutCookies(
   const responseSetCookies: string[] = rawHeaders?.['set-cookie'] || []
 
   const host = ctx.get('x-forwarded-host')
-  const forwardedSetCookies = filterAllowedCookies(responseSetCookies, allowList);
+  const forwardedSetCookies = filterAllowedCookies(responseSetCookies, allowList)
   const parseAndClean = compose(parseCookie, replaceDomain(host))
   const cleanCookies = forwardedSetCookies.map(parseAndClean)
   cleanCookies.forEach(({ name, value, options }) => {
