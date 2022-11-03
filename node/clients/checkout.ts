@@ -6,8 +6,10 @@ import {
   RequestConfig,
 } from '@vtex/api'
 import { UserProfileInput } from 'vtex.checkout-graphql'
+import { OWNERSHIP_COOKIE } from '../constants'
+import { forwardCheckoutCookies } from '../resolvers/orderForm'
 
-import { checkoutCookieFormat, statusToError } from '../utils'
+import { checkoutCookieFormat, ownershipCookieFormat, statusToError } from '../utils'
 
 export interface SimulationData {
   country: string
@@ -116,15 +118,19 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormPayment' }
     )
 
-  public updateOrderFormProfile = (
+  public updateOrderFormProfile = async (
     orderFormId: string,
-    fields: UserProfileInput
-  ) =>
-    this.post<CheckoutOrderForm>(
+    fields: UserProfileInput,
+    ctx: Context,
+  ) => {
+    const { data, headers } = await this.postRaw<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientProfileData'),
       fields,
       { metric: 'checkout-updateOrderFormProfile' }
     )
+    forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
+    return data
+  }
 
   public updateOrderFormShipping = (orderFormId: string, shipping: any) =>
     this.post<CheckoutOrderForm>(
@@ -395,10 +401,11 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId } = (this.context as unknown) as CustomIOContext
+    const { orderFormId, ownerId } = (this.context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
+    const ownershipCookie = ownerId ? ownershipCookieFormat(ownerId) : ''
     return {
-      Cookie: `${checkoutCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
+      Cookie: `${checkoutCookie}${ownershipCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 
@@ -480,6 +487,6 @@ export class Checkout extends JanusClient {
 
 export class CheckoutNoCookies extends Checkout {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super({ ...ctx, orderFormId: null } as any, { ...options, headers: {} })
+    super({ ...ctx, orderFormId: null, ownerId: null } as any, { ...options, headers: {} })
   }
 }

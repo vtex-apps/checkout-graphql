@@ -1,7 +1,7 @@
 import { prop, propOr, compose } from 'ramda'
 import { QueryOrderFormArgs } from 'vtex.checkout-graphql'
 
-import { CHECKOUT_COOKIE, parseCookie } from '../utils'
+import { parseCookie } from '../utils'
 import { fillMessages } from './messages'
 import { getShippingInfo } from '../utils/shipping'
 import {
@@ -9,7 +9,7 @@ import {
   isProfileValid,
   isPaymentValid,
 } from '../utils/validation'
-import { VTEX_SESSION } from '../constants'
+import { ASPXAUTH_COOKIE, CHECKOUT_COOKIE, OWNERSHIP_COOKIE, VTEX_SESSION } from '../constants'
 import { OrderFormIdArgs } from '../utils/args'
 
 interface StoreSettings {
@@ -21,11 +21,13 @@ interface StoreSettings {
   enableCriticalCSS: boolean
 }
 
-const SetCookieWhitelist = [CHECKOUT_COOKIE, '.ASPXAUTH']
+const ALL_SET_COOKIES = [CHECKOUT_COOKIE, ASPXAUTH_COOKIE, OWNERSHIP_COOKIE]
 
-const isWhitelistedSetCookie = (cookie: string) => {
-  const [key] = cookie.split('=')
-  return SetCookieWhitelist.includes(key)
+const filterAllowedCookies = (setCookies: string[], allowList: string[]) => {
+  return setCookies.filter(setCookie => {
+    const [key] = setCookie.split('=')
+    return allowList.includes(key)
+  })
 }
 
 const replaceDomain = (host: string) => (cookie: string) =>
@@ -196,12 +198,13 @@ export async function syncWithStoreLocale(
 
 export async function forwardCheckoutCookies(
   rawHeaders: Record<string, any>,
-  ctx: Context
+  ctx: Context,
+  allowList: string[] = ALL_SET_COOKIES
 ) {
   const responseSetCookies: string[] = rawHeaders?.['set-cookie'] || []
 
   const host = ctx.get('x-forwarded-host')
-  const forwardedSetCookies = responseSetCookies.filter(isWhitelistedSetCookie)
+  const forwardedSetCookies = filterAllowedCookies(responseSetCookies, allowList)
   const parseAndClean = compose(parseCookie, replaceDomain(host))
   const cleanCookies = forwardedSetCookies.map(parseAndClean)
   cleanCookies.forEach(({ name, value, options }) => {
@@ -299,7 +302,8 @@ export const mutations = {
 
     const orderFormWithProfile = await checkout.updateOrderFormProfile(
       orderFormId!,
-      input
+      input,
+      ctx,
     )
 
     return orderFormWithProfile
