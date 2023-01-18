@@ -10,6 +10,10 @@ type Item {
   additionalInfo: ItemAdditionalInfo
   assemblyOptions: AssemblyOptionItem
   availability: String
+  """
+  Max available quantity.
+  """
+  availableQuantity: Float
   attachmentOfferings: [AttachmentOffering!]!
   attachments: [Attachment!]!
   bundleItems: [Item!]!

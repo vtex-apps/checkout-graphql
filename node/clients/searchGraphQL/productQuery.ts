@@ -1,3 +1,12 @@
+interface Offer {
+  AvailableQuantity: number
+}
+
+interface Seller {
+  sellerDefault: boolean
+  commertialOffer: Offer
+}
+
 export interface ProductResponse {
   productName: string
   productId: string
@@ -8,6 +17,7 @@ export interface ProductResponse {
       name: string
       values: string[]
     }>
+    sellers: Seller[]
   }>
 }
 
@@ -30,6 +40,12 @@ query Product($values: [ID!]!) {
       variations {
         name
         values
+      }
+      sellers {
+        sellerDefault
+        commertialOffer {
+          AvailableQuantity
+        }
       }
     }
   }

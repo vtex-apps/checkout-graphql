@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `availableQuantity` to type `Item` to return the maximum available quantity.
+
 ## [0.66.0] - 2022-11-03
 ### Added
 - Handle the new `CheckoutOrderFormOwnership` cookie.

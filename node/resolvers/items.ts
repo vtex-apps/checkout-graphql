@@ -79,6 +79,22 @@ export const root = {
 
       return getVariations(item.id, product?.items ?? [])
     },
+    availableQuantity: async (
+      item: OrderFormItem,
+      _: unknown,
+      ctx: Context
+    ) => {
+      const {
+        vtex: { logger },
+        clients: { searchGraphQL },
+      } = ctx
+
+      const product = await getProductInfo(item, searchGraphQL, logger)
+      const sku = product?.items.find(({ itemId }) => itemId === item.id)
+
+      return sku?.sellers?.find(({ sellerDefault }) => sellerDefault)
+        ?.commertialOffer?.AvailableQuantity
+    },
   },
 }
 

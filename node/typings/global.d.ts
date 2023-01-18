@@ -469,6 +469,7 @@ declare global {
       offeringTypeId: any | null
     }
     availability: string
+    availableQuantity?: number
     detailUrl: string
     id: string
     imageUrls?: {
