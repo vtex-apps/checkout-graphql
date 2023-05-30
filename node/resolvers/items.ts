@@ -116,7 +116,10 @@ export const mutations = {
     )
 
     const withOptions = items
-      .map((item, currentIndex) => ({ ...item, index: item.index ?? currentIndex }))
+      .map((item, currentIndex) => ({
+        ...item,
+        index: item.index ?? currentIndex,
+      }))
       .filter(({ options }) => !!options && options.length > 0)
 
     /**
@@ -214,6 +217,17 @@ export const mutations = {
 
     const cleanItems = orderItems.map(({ id, ...rest }) => rest)
 
+    // Validating subscriptions
+    let subscriptions
+    if (orderItems.length === 1 && orderItems[0].index !== undefined) {
+      const { items } = await checkout.orderForm(orderFormId!)
+      const itemToUpdate = items[orderItems[0].index]
+
+      subscriptions = itemToUpdate.attachments?.some(attachment =>
+        attachment.name?.includes('vtex.subscription')
+      )
+    }
+
     if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
       const orderForm = await checkout.orderForm(orderFormId!)
 
@@ -237,7 +251,7 @@ export const mutations = {
     const newOrderForm = await clients.checkout.updateItems(
       orderFormId!,
       cleanItems,
-      splitItem,
+      subscriptions ? false : splitItem,
       allowedOutdatedData
     )
 

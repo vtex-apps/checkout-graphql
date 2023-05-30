@@ -1,4 +1,5 @@
 import { ServiceContext, SegmentData, ParamsContext } from '@vtex/api'
+import { Attachment } from 'vtex.checkout-graphql'
 
 import { Clients } from '../clients'
 
@@ -149,6 +150,7 @@ declare global {
       sellingPrices: SellingPrice[]
       total: number
     }
+    attachments?: Attachment[]
   }
 
   interface SellingPrice {
