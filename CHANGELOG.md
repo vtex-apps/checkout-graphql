@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.66.1] - 2023-06-16
+
 ### Fixed
 
 - When adding multiple attachments, check if the parentIndex has changed after each attachment has been added
