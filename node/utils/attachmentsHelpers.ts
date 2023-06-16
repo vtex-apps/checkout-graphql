@@ -1,3 +1,8 @@
+/* eslint-disable no-shadow */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable no-loop-func */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable no-await-in-loop */
 import { partition, propEq, omit, eqProps } from 'ramda'
 
 type OptionItems = Array<Omit<AssemblyOptionInput, 'assemblyId'>>
@@ -10,7 +15,7 @@ interface OptionRequestUnit {
 interface AddOptionsLogicInput {
   checkout: Context['clients']['checkout']
   orderForm: CheckoutOrderForm
-  itemIndex: string | number
+  parentUniqueId?: string
   options?: AssemblyOptionInput[]
   oldItems: OrderFormItem[]
 }
@@ -61,17 +66,9 @@ export const addOptionsForItems = async (
       null
     )
 
-    const parentIndex =
-      parentItem &&
-      orderForm.items.findIndex(propEq('uniqueId', parentItem.uniqueId))
-
-    if (parentIndex == null || parentIndex < 0) {
-      continue
-    }
-
     await addOptionsLogic({
       checkout,
-      itemIndex: parentIndex,
+      parentUniqueId: parentItem?.uniqueId,
       options: item.options,
       orderForm,
       oldItems,
@@ -130,8 +127,16 @@ const addAssemblyBody = (option: OptionRequestUnit) => {
 }
 
 const addOptionsLogic = async (input: AddOptionsLogicInput) => {
-  const { checkout, orderForm, itemIndex, options, oldItems } = input
+  const { checkout, orderForm, parentUniqueId, options, oldItems } = input
   if (!options || options.length === 0) {
+    return
+  }
+
+  let parentIndex = orderForm.items.findIndex(
+    propEq('uniqueId', parentUniqueId)
+  )
+
+  if (parentIndex == null || parentIndex < 0) {
     return
   }
 
@@ -144,11 +149,14 @@ const addOptionsLogic = async (input: AddOptionsLogicInput) => {
   let recentOrderForm: any = orderForm
 
   for (const assemblyId of idsToRemove) {
+    parentIndex = recentOrderForm.items.findIndex(
+      propEq('uniqueId', parentUniqueId)
+    )
     const parsedOptions = joinedToRemove[assemblyId]
     const response = await checkout
       .removeAssemblyOptions(
         orderForm.orderFormId!,
-        itemIndex,
+        parentIndex,
         assemblyId,
         removeAssemblyBody(parsedOptions)
       )
@@ -157,11 +165,14 @@ const addOptionsLogic = async (input: AddOptionsLogicInput) => {
   }
 
   for (const assemblyId of idsToAdd) {
+    parentIndex = recentOrderForm.items.findIndex(
+      propEq('uniqueId', parentUniqueId)
+    )
     const parsedOptions = joinedToAdd[assemblyId]
     recentOrderForm = await checkout
       .addAssemblyOptions(
         orderForm.orderFormId!,
-        itemIndex,
+        parentIndex,
         assemblyId,
         addAssemblyBody(parsedOptions)
       )
@@ -201,17 +212,10 @@ const addOptionsRecursive = async (
       item.id!.toString(),
       assemblyId
     )
-    const parentIndex =
-      parentItem &&
-      orderForm.items.findIndex(propEq('uniqueId', parentItem.uniqueId))
-
-    if (parentIndex == null || parentIndex < 0) {
-      continue
-    }
 
     await addOptionsLogic({
       checkout,
-      itemIndex: parentIndex,
+      parentUniqueId: parentItem?.uniqueId,
       options: item.options,
       orderForm,
       oldItems,

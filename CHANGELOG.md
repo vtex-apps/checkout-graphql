@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- When adding multiple attachments, check if the parentIndex has changed after each attachment has been added
+
 ## [0.66.0] - 2022-11-03
+
 ### Added
+
 - Handle the new `CheckoutOrderFormOwnership` cookie.
 
 ## [0.65.6] - 2022-09-22
@@ -20,229 +26,328 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.65.5] - 2022-09-08
 
 ## [0.65.4] - 2022-09-06
+
 ### Fixed
+
 - Respect Checkout set-cookie directives
 
 ## [0.65.3] - 2022-08-16
+
 ### Changed
+
 - `withAuthMetrics` directive now logs 1% of unauthorized requests
 
 ## [0.65.2] - 2022-03-22
 
 ### Added
+
 - `modalType` props in graphql schema
 
 ## [0.65.1] - 2022-01-19
+
 ### Changed
+
 - Update type for `priceTags.value` from `Int` to `Float`.
 
 ## [0.65.0] - 2022-01-17
 
 ### Added
+
 - `customData` field on OrderForm.graphql and `customData` types
 
 ## [0.64.3] - 2022-01-10
+
 ### Changed
+
 - Reduced min replicas
+
 ## [0.64.2] - 2022-01-07
+
 ### Changed
+
 - Port locale syncing from store-graphql for `orderForm`
 
 ## [0.64.1] - 2021-12-10
 
 ### Fixed
+
 - Ensure `itemIndex` property on `checkout-updateSubscriptionDataField` request
 
 ## [0.64.0] - 2021-11-23
 
 ## [0.63.1] - 2021-11-23
+
 ### Changed
+
 - Increased min replicas
 
 ### Added
+
 - Add an auth directive in graphql with logs.
 
 ## [0.63.0] - 2021-10-07
 
 ## [0.62.0] - 2021-09-28
+
 ### Added
+
 - Add `priceDefinition` structure on Item.graphql and `priceDefinition` types
 
 ## [0.61.3] - 2021-09-01
+
 ### Fixed
+
 - Possible race condition in cookie setting.
 
 ## [0.61.2] - 2021-09-01
+
 ### Fixed
+
 - Discard broken order forms
 
 ## [0.61.1] - 2021-08-27
 
 ## [0.61.0] - 2021-06-22
+
 ### Changed
+
 - Addresses with type `search` are not being filtered from the `selectedAddresses` anymore.
 
 ## [0.60.2] - 2021-06-10
+
 ### Fixed
+
 - Version for package of private workspace in node/package.json.
 
 ## [0.60.1] - 2021-06-09
+
 ### Fixed
+
 - Type for `transitTime` in pickup point not allowing `null` values.
 
 ## [0.60.0] - 2021-04-14
+
 ### Added
+
 - Parameter `refreshOutdatedData` in `orderForm` query
 
 ## [0.59.1] - 2021-04-13
 
 ### Fixed
+
 - Preventing `frequency` from `subscriptions` with whitespaces on the edges with `trim()`
 
 ## [0.59.0] - 2021-04-12
 
 ### Added
+
 - Field `isGift` to `Item` type.
 
 ## [0.58.0] - 2021-04-06
+
 ### Changed
+
 - `updateItems` mutation using the same endopoint as `addToCart` mutation
 - `allowOutdatedData` became `allowedOutdatedData` so as not to be confused for a boolean
 
 ## [0.57.2] - 2021-04-05
+
 ### Fixed
+
 - `subscriptionData` property in the `orderForm` would never be updated.
 
 ## [0.57.1] - 2021-03-24
+
 ### Fixed
+
 - Remove item index in `addToCart` mutation.
 
 ## [0.57.0] - 2021-03-23 [YANKED]
+
 ### Added
+
 - Parameter `allowOutdatedData` to `addToCart` mutation.
 
 ## [0.56.2] - 2021-02-24
+
 ### Changed
+
 - Reuse Product and SKU name from `search-graphql` query to translate product names in
   multi-binding stores.
 
 ## [0.56.1] - 2021-02-04
+
 ### Fixed
+
 - Validation of disposable address in shipping.
 
 ## [0.56.0] - 2021-01-29
+
 ### Changed
+
 - Updated some orderForm fields to be translatable.
 
 ## [0.55.2] - 2021-01-19
+
 ### Fixed
+
 - OrderForm with admin login on `myvtex.com` domain.
 
 ## [0.55.1] - 2020-12-23
+
 ### Changed
+
 - Pickup option's store distance can be `null` now.
 
 ## [0.55.0] - 2020-12-23
+
 ### Added
+
 - Parameter `salesChannel` to `addToCart` mutation.
 
 ## [0.54.0] - 2020-12-22
+
 ### Added
+
 - `storePreferencesData` to `orderForm` query
 
 ## [0.53.1] - 2020-12-22
+
 ### Changed
+
 - Field `marketingTags` is optional in marketing data input.
 
 ## [0.53.0] - 2020-12-22
+
 ### Added
+
 - Mutation `updateOrderFormMarketingData`.
 
 ## [0.52.1] - 2020-12-14
+
 ### Changed
+
 - Increase maxReplicas to 120.
 
 ## [0.52.0] - 2020-12-14
+
 ### Added
+
 - Adds `service.json` with `minReplicas=2`. This way we ensure we always have at least two replicas in our cluster
 
 ## [0.51.0] - 2020-12-02
+
 ### Added
+
 - `updateOrderFromOpenTextField` mutation.
 
 ## [0.50.0] - 2020-12-02
+
 ### Added
+
 - `parentItemIndex` on type `Item`.
 
 ## [0.49.1] - 2020-12-02
+
 ### Changed
+
 - Pickup point `additionalInfo` is not required anymore.
 
 ## [0.49.0] - 2020-12-01
+
 ### Added
+
 - Pickup point info to `OrderForm` type.
 
 ## [0.48.0] - 2020-11-24
+
 ### Added
+
 - Mutation `clearOrderFormMessages` to clear the messages in the order form.
 
 ## [0.47.0] - 2020-11-13
+
 ### Changed
+
 - Adds `no-store, no-cache` to `orderForm` and `checkoutProfile` resolvers
 
 ## [0.46.0] - 2020-10-27
+
 ### Added
+
 - `priceTags` on type `Item`.
 
 ## [0.45.0] - 2020-10-14
+
 ### Added
+
 - `updateItemsOrdination` mutation.
 
 ## [0.44.1] - 2020-10-06
+
 ### Fixed
+
 - Error when calculating the shipping info for an user that didn't have
   `shippingData` filled in their order form.
 
 ## [0.44.0] - 2020-10-06
+
 ### Added
+
 - Optional argument `itemId` on `selectPickupOption` mutation, it can select the
   pickup option for an specific itemId
 - New `selectPickupOption` mutation
 - `pickupOptions` property to `Shipping` type
 
 ## [0.43.0] - 2020-10-05
+
 ### Addes
+
 - `shippingSLA` query performing simulation.
 
 ## [0.42.0] - 2020-09-30
+
 ### Added
+
 - Optional argument `orderFormId` to all queries and mutation that alters
   information in the cart.
 
 ## [0.41.1] - 2020-09-29
+
 ### Fixed
+
 - GraphQL validation errors on `Item.seller` when included inside `bundleItems`.
 
 ## [0.41.0] - 2020-09-28
+
 ### Added
+
 - `manualPrice` property to `Item` type.
 
 ## [0.40.0] - 2020-09-24
+
 ### Added
+
 - `setManualPrice` mutation.
 - `adminUserAuthToken` to the checkout client.
 
 ## [0.39.1] - 2020-09-21
+
 ### Fixed
+
 - Error when trying to read `addressId` of a inexistent delivery address.
 - GraphQL validation errors on `Item.productId` when returning `bundleItems`.
 
 ## [0.39.0] - 2020-09-15
+
 ### Added
+
 - `splitItem` parameter on `updateItems` mutation.
 
 ## [0.38.0] - 2020-09-11
+
 ### Added
+
 - Mutations:
   - `addItemOffering`
   - `removeItemOffering`
@@ -255,112 +360,163 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `offerings`
 
 ## [0.37.0] - 2020-09-02
+
 ### Added
+
 - Property `seller` to `Item` type.
 
 ## [0.36.6] - 2020-09-02
+
 ### Fixed
+
 - Error when marketing data in `addToCart` mutation was `null`.
 
 ## [0.36.5] - 2020-07-15
+
 ### Fixed
+
 - Address information not being saved when using an unrecognized postal code.
 
 ## [0.36.4] - 2020-07-09
 
 ## [0.36.3] - 2020-07-08
+
 ### Fixed
+
 - Call to session API when `vtex_session` cookie isn't present.
 
 ## [0.36.2] - 2020-07-08
+
 ### Fixed
+
 - Error when communicating with `vtex.search-graphql` breaking all queries related to the order form.
 
 ## [0.36.1] - 2020-07-08
+
 ### Fixed
+
 - Error when validating shipping data when country data config app isn't installed in the account.
 
 ## [0.36.0] - 2020-07-07
+
 ### Added
+
 - Field `isValid` to the `OrderForm` attachments (namely `clientProfileData`, `shipping` and `paymentData`).
 
 ## [0.35.0] - 2020-06-25
+
 ### Added
+
 - Property `loggedIn` to `OrderForm` type.
 - Property `isDisposable` to `Address` and `AddressInput` types.
 
 ## [0.34.3] - 2020-06-04
+
 ### Fixed
+
 - Type for `availableAccounts` in `profile` query.
 
 ## [0.34.2] - 2020-05-19
+
 ### Added
+
 - Log for failed marketing data updates in `addToCart`.
 
 ## [0.34.1] - 2020-05-18
+
 ### Fixed
+
 - Assembly options with inputValues were being split when an item was added to the `orderForm`.
 
 ## [0.34.0] - 2020-05-07
+
 ### Added
+
 - Field `unitMultiplier` to `Item` type.
 
 ## [0.33.3] - 2020-05-07
+
 ### Changed
+
 - Type of `paymentSystem` from `Int` to `String`.
 
 ## [0.33.2] - 2020-04-28
+
 ### Changed
+
 - Update to node builder 6.x.
 - Call graphql gateway instead of search-graphql directly.
 
 ## [0.33.1] - 2020-04-27
+
 ### Fixed
+
 - Error `Cannot return null for non-nullable field Installment.hasInterestRate`.
 
 ## [0.33.0] - 2020-04-24
+
 ### Added
+
 - Field `availableAccounts` to `paymentData`
 
 ## [0.32.1] - 2020-04-20
+
 ### Fixed
+
 - Error `Cannot return null for non-nullable field Item.listPrice` when the item
   didn't have a price registered.
 
 ## [0.32.0] - 2020-04-16
+
 ### Added
+
 - Mutation `updateSelectedAddress`.
 
 ## [0.31.2] - 2020-04-13
+
 ### Fixed
+
 - Error on products with value bigger than a standard int (32-bit).
 
 ## [0.31.1] - 2020-04-09
+
 ### Fixed
+
 - Error `Cannot read property 'impersonate' of undefined`.
 
 ## [0.31.0] - 2020-04-02
+
 ### Added
+
 - Mutation `updateOrderFormPayment` to update the payment data in the order form.
 - Field `installments` to `installmentOptions`.
 
 ## [0.30.0] - 2020-04-01
+
 ### Changed
+
 - Refactored internal structure of shipping resolvers.
 
 ### Removed
+
 - Unused `Shipping` client in favor of `Checkout` client.
 
 ## [0.29.2] - 2020-04-01
+
 ### Fixed
+
 - `checkout` client always using the `adminUserAuthToken` (when available) to perform requests.
 
 ## [0.29.1] - 2020-03-26
+
 ### Fixed
+
 - `orderForm` query did not forward set-cookies from Checkout API, causing `checkout.vtex.com` cookie to never be set.
 
 ## [0.29.0] - 2020-03-25
+
 ### Added
+
 - `refId` field to `Item` type.
 
 ## [0.28.0] - 2020-03-25
