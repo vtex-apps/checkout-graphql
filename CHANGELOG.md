@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.66.3] - 2023-08-04
+
 ### Fixed
 
 - Avoid unnecessary calls to checkout clear messages
