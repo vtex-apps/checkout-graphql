@@ -9,7 +9,12 @@ import {
   isProfileValid,
   isPaymentValid,
 } from '../utils/validation'
-import { ASPXAUTH_COOKIE, CHECKOUT_COOKIE, OWNERSHIP_COOKIE, VTEX_SESSION } from '../constants'
+import {
+  ASPXAUTH_COOKIE,
+  CHECKOUT_COOKIE,
+  OWNERSHIP_COOKIE,
+  VTEX_SESSION,
+} from '../constants'
 import { OrderFormIdArgs } from '../utils/args'
 
 interface StoreSettings {
@@ -101,7 +106,7 @@ export const root = {
 
       const newMessages = fillMessages(orderForm.messages)
 
-      if (orderForm.messages) {
+      if (orderForm.messages && orderForm.messages.length > 0) {
         checkout.clearMessages(orderForm.orderFormId)
       }
 
@@ -204,7 +209,10 @@ export async function forwardCheckoutCookies(
   const responseSetCookies: string[] = rawHeaders?.['set-cookie'] || []
 
   const host = ctx.get('x-forwarded-host')
-  const forwardedSetCookies = filterAllowedCookies(responseSetCookies, allowList)
+  const forwardedSetCookies = filterAllowedCookies(
+    responseSetCookies,
+    allowList
+  )
   const parseAndClean = compose(parseCookie, replaceDomain(host))
   const cleanCookies = forwardedSetCookies.map(parseAndClean)
   cleanCookies.forEach(({ name, value, options }) => {
@@ -222,10 +230,7 @@ export const queries = {
     args: QueryOrderFormArgs,
     ctx: Context
   ): Promise<CheckoutOrderForm> => {
-    const {
-      clients,
-      vtex,
-    } = ctx
+    const { clients, vtex } = ctx
     const { orderFormId = vtex.orderFormId, refreshOutdatedData } = args
 
     let { data: newOrderForm, headers } = await clients.checkout.orderFormRaw(
@@ -303,7 +308,7 @@ export const mutations = {
     const orderFormWithProfile = await checkout.updateOrderFormProfile(
       orderFormId!,
       input,
-      ctx,
+      ctx
     )
 
     return orderFormWithProfile
