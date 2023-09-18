@@ -79,6 +79,20 @@ export const root = {
 
       return getVariations(item.id, product?.items ?? [])
     },
+    productSpecificationGroups: async (
+      item: OrderFormItem,
+      _: unknown,
+      ctx: Context
+    ) => {
+      const {
+        vtex: { logger },
+        clients: { searchGraphQL },
+      } = ctx
+
+      const product = await getProductInfo(item, searchGraphQL, logger)
+
+      return product?.specificationGroups ?? []
+    },
   },
 }
 

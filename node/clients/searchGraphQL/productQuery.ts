@@ -9,6 +9,15 @@ export interface ProductResponse {
       values: string[]
     }>
   }>
+  specificationGroups: Array<{
+    name: string
+    originalName: string
+    specifications: Array<{
+      name: string
+      originalName: string
+      values: string[]
+    }>
+  }>
 }
 
 export interface ProductsByIdentifierResponse {
@@ -29,6 +38,15 @@ query Product($values: [ID!]!) {
       name
       variations {
         name
+        values
+      }
+    }
+    specificationGroups {
+      name
+      originalName
+      specifications {
+        name
+        originalName
         values
       }
     }

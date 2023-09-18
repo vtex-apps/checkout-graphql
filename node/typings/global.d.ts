@@ -140,6 +140,7 @@ declare global {
       offeringTypeId: any | null
     }
     productCategories: Record<string, string>
+    productSpecificationGroups: ProductSpecificationGroup[]
     productRefId: string
     seller: string
     sellerChain: string[]
@@ -162,6 +163,18 @@ declare global {
   interface SKUSpecification {
     fieldName: string
     fieldValues: string[]
+  }
+
+  interface ProductSpecification {
+    name: string
+    originalName: string
+    values: string[]
+  }
+
+  interface ProductSpecificationGroup {
+    name: string
+    originalName: string
+    specifications: ProductSpecification[]
   }
 
   interface CompositionItem {
@@ -486,6 +499,7 @@ declare global {
     productId: string
     productCategories: Record<string, string>
     productCategoryIds: string
+    productSpecificationGroups: ProductSpecificationGroup[]
     productRefId: string
     quantity: number
     sellingPrice: number
