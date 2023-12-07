@@ -117,7 +117,7 @@ export const root = {
       _: unknown,
       ctx: Context
     ) => {
-      if (!orderForm.clientProfileData) {
+      if (!orderForm.clientProfileData || !orderForm.loggedIn) {
         return null
       }
 
@@ -242,8 +242,14 @@ export const queries = {
       'vrn--vtexsphinx--aws-us-east-1'
     )
 
+    const isLoggedIn = newOrderForm.loggedIn
+
+    if (orderFormId && newOrderForm?.clientProfileData && !isLoggedIn) 
+      await clients.checkout.changeToAnonymousUser(orderFormId)
+
     if (hasBrokenCookie) {
-      vtex.logger.info({ message: 'Broken order form', orderFormId })
+      vtex.logger.info({ message: 'Broken order form', orderFormId })    
+
       const obj = await clients.checkoutNoCookies.orderFormRaw(undefined, true)
       newOrderForm = obj.data
       headers = obj.headers

@@ -27,7 +27,7 @@ export class SearchGraphQL extends GraphQLServer {
         ProductsByIdentifierResponse,
         ProductArgs
       >(productQuery, { values: keys }, extensions, { metric: 'get-product' })
-
+      
       if (errors && errors.length > 0) {
         const [error] = errors
 

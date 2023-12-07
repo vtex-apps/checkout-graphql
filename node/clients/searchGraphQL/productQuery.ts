@@ -21,7 +21,7 @@ export interface ProductArgs {
 
 export const query = `
 query Product($values: [ID!]!) {
-  productsByIdentifier(field: id, values: $values) {
+  product(identifier: {field: id, values: $values}) {
     productName
     productId
     items {

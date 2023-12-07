@@ -9,6 +9,8 @@ import { UserProfileInput } from 'vtex.checkout-graphql'
 import { OWNERSHIP_COOKIE } from '../constants'
 import { forwardCheckoutCookies } from '../resolvers/orderForm'
 
+import { AxiosError } from 'axios'
+
 import { checkoutCookieFormat, ownershipCookieFormat, statusToError } from '../utils'
 
 export interface SimulationData {
@@ -309,6 +311,18 @@ export class Checkout extends JanusClient {
       }
     )
 
+    public changeToAnonymousUser = (orderFormId: string) => {
+      return this.get(this.routes.changeToAnonymousUser(orderFormId), {
+        metric: 'checkout-change-to-anonymous',
+      }).catch((err) => {
+        // This endpoint is expected to return a redirect to
+        // the user, so we can ignore the error if it is a 3xx
+        if (!err.response || /^3..$/.test((err as AxiosError).code ?? '')) {
+          throw err
+        }
+      })
+    }
+
   public insertCoupon = (orderFormId: string, coupon: string) =>
     this.post<CheckoutOrderForm>(this.routes.insertCoupon(orderFormId), {
       text: coupon,
@@ -481,6 +495,8 @@ export class Checkout extends JanusClient {
       getPaymentSession: () => `${base}/payment-session`,
       updateItemsOrdination: (orderFormId: string) =>
         `${base}/orderForm/${orderFormId}/itemsOrdination`,
+      changeToAnonymousUser: (orderFormId: string) =>
+        `/checkout/changeToAnonymousUser/${orderFormId}`,
     }
   }
 }
