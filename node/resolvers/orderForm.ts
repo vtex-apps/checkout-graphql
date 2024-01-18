@@ -117,7 +117,7 @@ export const root = {
       _: unknown,
       ctx: Context
     ) => {
-      if (!orderForm.clientProfileData || !orderForm.loggedIn) {
+      if (!orderForm.clientProfileData) {
         return null
       }
 
