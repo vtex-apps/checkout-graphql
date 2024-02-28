@@ -49,6 +49,16 @@ export const root = {
 
       return product?.productName ?? item.name
     },
+    detailUrl: async (item: OrderFormItem, _: unknown, ctx: Context) => {
+      const {
+        vtex: { logger },
+        clients: { searchGraphQL },
+      } = ctx
+
+      const product = await getProductInfo(item, searchGraphQL, logger)
+
+      return product?.linkText ?? []
+    },
     skuName: async (item: OrderFormItem, _: unknown, ctx: Context) => {
       const {
         vtex: { logger },

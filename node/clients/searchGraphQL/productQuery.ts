@@ -1,6 +1,7 @@
 export interface ProductResponse {
   productName: string
   productId: string
+  linkText: String
   items: Array<{
     itemId: string
     name: string
@@ -33,6 +34,7 @@ query Product($values: [ID!]!) {
   productsByIdentifier(field: id, values: $values) {
     productName
     productId
+    linkText
     items {
       itemId
       name

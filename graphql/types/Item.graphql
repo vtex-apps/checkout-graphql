@@ -15,6 +15,7 @@ type Item {
   bundleItems: [Item!]!
   detailUrl: String
   id: ID!
+  linkText: String
   imageUrls: ImageUrls
   listPrice: Float
   manualPrice: Float
