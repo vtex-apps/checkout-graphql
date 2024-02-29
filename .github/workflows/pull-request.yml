@@ -1,0 +1,53 @@
+name: PR actions
+'on':
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  danger-ci:
+    name: Danger CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+      - name: Danger CI
+        uses: vtex/danger@master
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+  linter:
+    name: Linter
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+        env:
+          RUNNER_TEMP: /tmp
+      - name: yarn install
+        run: yarn install --frozen-lockfile
+      - name: Fetch target branch
+        # https://github.com/actions/checkout/issues/93#issuecomment-576491709
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${TARGET_BRANCH}:refs/remotes/origin/${TARGET_BRANCH}
+      - name: Lint pull-request diffs
+        run: yarn eslint $(git diff --name-only origin/${TARGET_BRANCH} -- .) --ext .js,.jsx,.ts,.tsx
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+        env:
+          RUNNER_TEMP: /tmp
+      - name: update submodules
+        run: git submodule update --init --recursive
+      - uses: vtex/action-io-app-test@master
