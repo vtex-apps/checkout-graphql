@@ -2,6 +2,7 @@ type OrderForm {
   id: ID!
   items: [Item!]!
   canEditData: Boolean!
+  customData: CustomData
   loggedIn: Boolean!
   userProfileId: String
   userType: UserType
@@ -44,6 +45,17 @@ type CurrencyFormatInfo {
   currencyDecimalSeparator: String
   currencyGroupSeparator: String
   startsWithCurrencySymbol: Boolean
+}
+
+type CustomData {
+  CustomApp: [CustomApp]
+}
+
+scalar CustomData
+type CustomApp {
+  fields: CustomData
+  id: String
+  major: Int
 }
 
 type OpenTextField {
