@@ -6,6 +6,7 @@ export function getFormattedDeliveryOptions(
 ) {
   return deliveryOptions.map(sla => {
     let price = 0
+    let tax = 0
 
     const isSelected =
       logisticsInfo?.some(li => li.selectedSla === sla.id) ?? false
@@ -15,6 +16,7 @@ export function getFormattedDeliveryOptions(
 
       if (currentSla) {
         price += currentSla.price
+        tax += currentSla.tax
       }
     })
 
@@ -23,6 +25,7 @@ export function getFormattedDeliveryOptions(
       id: sla.id,
       isSelected,
       price,
+      tax,
       deliveryChannel: sla.deliveryChannel,
       sla,
       ...(sla.deliveryChannel === PICKUP_IN_POINT

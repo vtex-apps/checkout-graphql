@@ -11,6 +11,7 @@ type DeliveryOption {
   id: String!
   deliveryChannel: String!
   price: Int!
+  tax: Int
   estimate: String!
   isSelected: Boolean!
 }
