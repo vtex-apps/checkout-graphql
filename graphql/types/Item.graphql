@@ -44,6 +44,7 @@ type Item {
   sellingPriceWithAssemblies: Float
   skuName: String @translatableV2
   skuSpecifications: [SKUSpecification!]!
+  tax: Float
   uniqueId: String!
   unitMultiplier: Float
   priceTags: [PriceTag!]!
