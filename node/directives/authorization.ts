@@ -37,6 +37,21 @@ function checkForAuthorization(ctx: any, info: GraphQLResolveInfo) {
       queryReturnType: info?.returnType.toString(),
     })
   }
+
+  const vtexRCSessionIdv7 =
+    ctx.cookies.get('VtexRCSessionIdv7') ?? ctx.get('VtexRCSessionIdv7')
+
+  if (!vtexRCSessionIdv7) {
+    logger.warn({
+      message: 'No RCSessionIdv7 cookie found',
+      userAgent,
+      forwardedFor,
+      forwardedHost,
+      forwardedPath,
+      origin,
+      vtexCaller,
+    })
+  }
 }
 
 export class AuthorizationMetrics extends SchemaDirectiveVisitor {
