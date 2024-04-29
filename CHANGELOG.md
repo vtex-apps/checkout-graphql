@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.67.1] - 2024-04-29
+
 ### Changed
 - Send log to OpenSearch if no `RCSessionIdv7` cookie is found.
 
