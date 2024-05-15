@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Validation with simulation for assemblies to avoid error at the fulfillment communication.
+
 ## [0.67.1] - 2024-04-29
 
 ### Changed

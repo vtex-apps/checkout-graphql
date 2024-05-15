@@ -245,6 +245,10 @@ export const mutations = {
     if (cleanItems.some((item: OrderFormItemInput) => !item.index)) {
       const orderForm = await checkout.orderForm(orderFormId!)
 
+      const hasAssemblyOptions = orderForm.itemMetadata.items.some(
+        item => item.assemblyOptions && item.assemblyOptions.length > 0
+      )
+
       const idToIndex = orderForm.items.reduce(
         (acc: Record<string, number>, item: OrderFormItem, index: number) => {
           if (acc[item.uniqueId] === undefined) {
@@ -259,7 +263,66 @@ export const mutations = {
         if (!item.index && item.uniqueId) {
           item.index = idToIndex[item.uniqueId]
         }
+
+        if (!item.uniqueId && item.index !== undefined && item.index !== null) {
+          const uniqueId =
+            item.index !== undefined && item.index !== null
+              ? orderForm.items[item.index].uniqueId
+              : item.uniqueId
+          item.uniqueId = uniqueId
+        }
       })
+
+      // Add validation to check if the item with assembly has the quantity sent
+      if (hasAssemblyOptions) {
+        const matchedItems = cleanItems
+          .map(cleanItem => {
+            const matchedItem = orderForm.items.find(
+              item => item.uniqueId === cleanItem.uniqueId
+            )
+
+            if (matchedItem) {
+              return {
+                id: matchedItem.id,
+                quantity:
+                  cleanItem.quantity !== undefined ? cleanItem.quantity : null,
+                seller: matchedItem.seller,
+              }
+            }
+            return null
+          })
+          .filter(item => item !== null) as Array<{
+          id: string
+          quantity: number
+          seller: string
+        }>
+
+        const orderFormSimulation = await checkout.simulation({
+          country: orderForm.shippingData?.address?.country ?? '',
+          items: matchedItems,
+          postalCode: orderForm.shippingData?.address?.postalCode ?? '',
+          geoCoordinates: orderForm.shippingData?.address?.geoCoordinates,
+        })
+
+        matchedItems.forEach(matchedItem => {
+          const cleanItem = cleanItems.find(
+            item =>
+              item.index !== undefined &&
+              orderForm.items[item.index].id === matchedItem.id
+          )
+          if (cleanItem) {
+            const orderFormSimulationItem =
+              orderFormSimulation.items[cleanItem.index!]
+            if (
+              orderFormSimulationItem &&
+              orderFormSimulationItem.quantity < matchedItem.quantity
+            ) {
+              // Update the quantity in case the quantity is not available
+              cleanItem.quantity = orderFormSimulationItem.quantity
+            }
+          }
+        })
+      }
     }
 
     const newOrderForm = await clients.checkout.updateItems(

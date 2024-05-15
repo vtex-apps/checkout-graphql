@@ -6,10 +6,14 @@ import {
   RequestConfig,
 } from '@vtex/api'
 import { UserProfileInput } from 'vtex.checkout-graphql'
+
 import { OWNERSHIP_COOKIE } from '../constants'
 import { forwardCheckoutCookies } from '../resolvers/orderForm'
-
-import { checkoutCookieFormat, ownershipCookieFormat, statusToError } from '../utils'
+import {
+  checkoutCookieFormat,
+  ownershipCookieFormat,
+  statusToError,
+} from '../utils'
 
 export interface SimulationData {
   country: string
@@ -18,6 +22,7 @@ export interface SimulationData {
   isCheckedIn?: boolean
   priceTables?: string[]
   marketingData?: Record<string, string>
+  geoCoordinates?: number[]
 }
 
 export class Checkout extends JanusClient {
@@ -121,7 +126,7 @@ export class Checkout extends JanusClient {
   public updateOrderFormProfile = async (
     orderFormId: string,
     fields: UserProfileInput,
-    ctx: Context,
+    ctx: Context
   ) => {
     const { data, headers } = await this.postRaw<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientProfileData'),
@@ -301,7 +306,7 @@ export class Checkout extends JanusClient {
     this.get(this.routes.orders, { metric: 'checkout-orders' })
 
   public simulation = (simulation: SimulationData) =>
-    this.post(
+    this.post<CheckoutOrderForm>(
       this.routes.simulation(this.getChannelQueryString()),
       simulation,
       {
@@ -401,7 +406,8 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId, ownerId } = (this.context as unknown) as CustomIOContext
+    const { orderFormId, ownerId } = (this
+      .context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     const ownershipCookie = ownerId ? ownershipCookieFormat(ownerId) : ''
     return {
@@ -487,6 +493,9 @@ export class Checkout extends JanusClient {
 
 export class CheckoutNoCookies extends Checkout {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super({ ...ctx, orderFormId: null, ownerId: null } as any, { ...options, headers: {} })
+    super({ ...ctx, orderFormId: null, ownerId: null } as any, {
+      ...options,
+      headers: {},
+    })
   }
 }
