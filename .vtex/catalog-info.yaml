@@ -14,7 +14,7 @@ metadata:
     - typescript
 spec:
   type: backend-api
-  lifecycle: maintenance
+  lifecycle: experimental
   owner: te-0001
   system: checkout
   dependsOn:
