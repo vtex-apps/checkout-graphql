@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Refactoring the logic of adding the subscriptionData field to the orderForm
+
 ## [0.67.1] - 2024-04-29
 
 ### Changed

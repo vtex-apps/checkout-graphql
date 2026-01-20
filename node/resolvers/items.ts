@@ -1,5 +1,4 @@
 import { Logger } from '@vtex/api'
-
 import { SearchGraphQL } from '../clients/searchGraphQL'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
@@ -13,7 +12,6 @@ const getProductInfo = async (
 ) => {
   try {
     const response = await searchGraphQL.product(item.productId)
-
     return response
   } catch (err) {
     if (Math.floor(Math.random() * 100) === 0) {
@@ -46,7 +44,6 @@ export const root = {
       } = ctx
 
       const product = await getProductInfo(item, searchGraphQL, logger)
-
       return product?.productName ?? item.name
     },
     skuName: async (item: OrderFormItem, _: unknown, ctx: Context) => {
@@ -124,7 +121,8 @@ export const mutations = {
     const shouldUpdateMarketingData =
       Object.keys(marketingData ?? {}).length > 0
 
-    const { items: previousItems } = await checkout.orderForm(orderFormId!)
+    const { items: previousItems } = await checkout.orderForm(orderFormId!);
+
     const cleanItems = items.map(
       ({ options, index, uniqueId, ...rest }) => rest
     )
@@ -166,49 +164,57 @@ export const mutations = {
 
     if (withOptions && withOptions.length > 0) {
       await addOptionsForItems(
-        withOptions,
+        withOptions, 
         checkout,
         {
           ...newOrderForm,
           orderFormId: orderFormId!,
         },
         previousItems
-      )
-
-      const subscriptionOptionsOnly = withOptions
-        .map(itemWithOptions => ({
-          itemIndex: (itemWithOptions.index as number) + previousItems.length,
-          options: itemWithOptions.options as AssemblyOptionInput[],
-        }))
-        .filter(item =>
-          item.options.some(option =>
-            option.assemblyId.includes('vtex.subscription')
-          )
-        )
-
-      const newSubscriptionDataEntries = generateSubscriptionDataEntry(
-        subscriptionOptionsOnly
-      )
-
-      if (newSubscriptionDataEntries.length > 0) {
-        const updatedSubscriptionData = {
-          subscriptions: newOrderForm.subscriptionData
-            ? newOrderForm.subscriptionData.subscriptions.concat(
-                newSubscriptionDataEntries
-              )
-            : newSubscriptionDataEntries,
-        }
-
-        await checkout.updateSubscriptionDataField(
-          orderFormId!,
-          updatedSubscriptionData
-        )
-      }
-
-      return checkout.orderForm(orderFormId!)
+      );
     }
 
-    return newOrderForm
+    // LÓGICA PARA `subscriptionData`
+    // Filtramos novamente para encontrar apenas as opções de assinatura
+    const subscriptionOptionsFromInput = withOptions.filter(item =>
+      item.options?.some(opt => opt.assemblyId.includes('vtex.subscription'))
+    );
+
+    if (subscriptionOptionsFromInput.length > 0) {
+        const orderFormAfterOptions = await checkout.orderForm(orderFormId!);
+
+        const previousItemIds = new Set(previousItems.map(item => item.id));
+        const newlyAddedItems = orderFormAfterOptions.items.filter(item => !previousItemIds.has(item.id));
+
+        const subscriptionDataPayload = newlyAddedItems
+            .map(newItem => {
+                const originalItemWithOptions = withOptions.find(opt => String(opt.id) === newItem.id);
+                if (!originalItemWithOptions?.options) return null;
+
+                const realItemIndex = orderFormAfterOptions.items.findIndex(item => item.uniqueId === newItem.uniqueId);
+
+                return {
+                    itemIndex: realItemIndex,
+                    options: originalItemWithOptions.options.filter(opt => opt.assemblyId.includes('vtex.subscription')),
+                };
+            })
+            .filter((item): item is { itemIndex: number; options: AssemblyOptionInput[] } => item !== null && item.options.length > 0);
+
+        const newSubscriptionDataEntries = generateSubscriptionDataEntry(subscriptionDataPayload);
+
+        if (newSubscriptionDataEntries.length > 0) {
+            const updatedSubscriptionData = {
+                subscriptions: orderFormAfterOptions.subscriptionData
+                    ? orderFormAfterOptions.subscriptionData.subscriptions.concat(newSubscriptionDataEntries)
+                    : newSubscriptionDataEntries,
+            };
+
+            await checkout.updateSubscriptionDataField(orderFormId!, updatedSubscriptionData);
+        }
+    }
+
+    // Retorna o estado final e mais atualizado do orderForm
+    return checkout.orderForm(orderFormId!, true)
   },
 
   updateItems: async (
