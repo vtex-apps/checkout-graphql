@@ -23,6 +23,8 @@ declare global {
     segment?: SegmentData
     orderFormId?: string
     ownerId?: string
+    vtexRCSessionIdv7?: string
+    vtexRCMacIdv7?: string
   }
 
   interface OrderFormMarketingData {
