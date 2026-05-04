@@ -401,11 +401,13 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId, ownerId } = (this.context as unknown) as CustomIOContext
+    const { orderFormId, ownerId, vtexRCSessionIdv7, vtexRCMacIdv7 } = (this.context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     const ownershipCookie = ownerId ? ownershipCookieFormat(ownerId) : ''
+    const rcSessionCookie = vtexRCSessionIdv7 ? `VtexRCSessionIdv7=${vtexRCSessionIdv7};` : ''
+    const rcMacCookie = vtexRCMacIdv7 ? `VtexRCMacIdv7=${vtexRCMacIdv7};` : ''
     return {
-      Cookie: `${checkoutCookie}${ownershipCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
+      Cookie: `${checkoutCookie}${ownershipCookie}${rcSessionCookie}${rcMacCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 
@@ -487,6 +489,9 @@ export class Checkout extends JanusClient {
 
 export class CheckoutNoCookies extends Checkout {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super({ ...ctx, orderFormId: null, ownerId: null } as any, { ...options, headers: {} })
+    super(
+      { ...ctx, orderFormId: null, ownerId: null, vtexRCSessionIdv7: null, vtexRCMacIdv7: null } as any,
+      { ...options, headers: {} }
+    )
   }
 }

@@ -17,3 +17,5 @@ export const DELIVERY = 'delivery'
 export const PICKUP_IN_POINT = 'pickup-in-point'
 
 export const VTEX_SESSION = 'vtex_session'
+export const VTEX_RC_SESSION_COOKIE = 'VtexRCSessionIdv7'
+export const VTEX_RC_MAC_COOKIE = 'VtexRCMacIdv7'
