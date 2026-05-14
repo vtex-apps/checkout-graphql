@@ -11,6 +11,8 @@ metadata:
     backstage.io/techdocs-ref: dir:../
     vtex.com/application-id: YV7BE9YO
     vtex.com/platform-flow-id: Shopper#4
+    vtex.com/sdd-check-skip: 'true'
+    vtex.com/sdd-check-skip-reason: It's a public app
   tags:
     - typescript
 spec:
