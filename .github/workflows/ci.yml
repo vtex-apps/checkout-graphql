@@ -41,7 +41,30 @@ jobs:
       - name: Install root dependencies (lint tooling)
         run: yarn install --frozen-lockfile
 
-      - name: Run lint
+      # On PRs we lint only files touched by the PR to keep feedback fast.
+      # On pushes to master we run the full lint as a safety net.
+      - name: Determine changed JS/TS files
+        id: changed
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE_SHA='${{ github.event.pull_request.base.sha }}'
+          FILES=$(git diff --name-only --diff-filter=ACMR "$BASE_SHA"...HEAD -- \
+            '*.ts' '*.tsx' '*.js' '*.jsx' ':!*.snap.ts' | tr '\n' ' ')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          if [ -n "$FILES" ]; then
+            echo "::group::Changed JS/TS files"
+            echo "$FILES" | tr ' ' '\n'
+            echo "::endgroup::"
+          else
+            echo "No JS/TS files changed in this PR — lint will be skipped."
+          fi
+
+      - name: Run lint (changed files only)
+        if: github.event_name == 'pull_request' && steps.changed.outputs.files != ''
+        run: yarn eslint ${{ steps.changed.outputs.files }}
+
+      - name: Run lint (full project)
+        if: github.event_name != 'pull_request'
         run: yarn lint
 
       - name: Install node service dependencies
