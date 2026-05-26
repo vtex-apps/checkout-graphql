@@ -4,7 +4,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "test": "vtex-test-tools test"
+    "test": "vtex-test-tools test",
+    "test:coverage": "vtex-test-tools test --coverage --coverageReporters=lcov --coverageReporters=text-summary"
   },
   "dependencies": {
     "atob": "^2.1.2",

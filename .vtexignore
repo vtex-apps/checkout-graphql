@@ -1,1 +1,4 @@
 node/**/*.test.ts
+node/coverage
+node/__tests__
+node/__fixtures__
