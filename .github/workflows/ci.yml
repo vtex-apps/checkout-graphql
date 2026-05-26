@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Install, Lint & Test Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Shallow clones should be disabled for a better SonarQube analysis
+          # (needed to compute "new code" / blame information).
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 12.x
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+            node/yarn.lock
+
+      - name: Install root dependencies (lint tooling)
+        run: yarn install --frozen-lockfile
+
+      - name: Run lint
+        run: yarn lint
+
+      - name: Install node service dependencies
+        working-directory: node
+        run: yarn install --frozen-lockfile
+
+      - name: Run tests with coverage
+        working-directory: node
+        run: yarn test:coverage --passWithNoTests
+        env:
+          CI: true
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: node/coverage
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Optional: blocks the pipeline if the Quality Gate fails.
+      # Requires that the previous Scan step has produced `.scannerwork/report-task.txt`.
+      - name: SonarQube Quality Gate check
+        if: github.event_name == 'pull_request'
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
