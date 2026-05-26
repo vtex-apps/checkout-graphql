@@ -11,6 +11,11 @@ on:
       - synchronize
       - ready_for_review
 
+# Principle of least privilege: the GITHUB_TOKEN only needs to clone the repo.
+# Anything else (SonarQube, npm registry, etc.) uses its own secrets/tokens.
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Install, Lint & Test Coverage
