@@ -61,10 +61,10 @@ const ctxWithSession = (
 const orderFormFor = (
   overrides: Partial<CheckoutOrderForm> = {}
 ): CheckoutOrderForm =>
-  ({
+  (({
     ...EMPTY_ORDER_FORM,
     ...overrides,
-  } as unknown) as CheckoutOrderForm
+  } as unknown) as CheckoutOrderForm)
 
 describe('OrderForm root resolvers', () => {
   describe('id', () => {
@@ -82,9 +82,9 @@ describe('OrderForm root resolvers', () => {
 
     it('returns the marketingData object when present', () => {
       const md = { coupon: 'WELCOME10' }
-      expect(root.OrderForm.marketingData({ marketingData: md } as any)).toEqual(
-        md
-      )
+      expect(
+        root.OrderForm.marketingData({ marketingData: md } as any)
+      ).toEqual(md)
     })
 
     it('returns an empty object when storePreferencesData is missing', () => {
@@ -368,7 +368,9 @@ describe('ClientPreferencesData.optInNewsletter', () => {
   })
 
   it('returns undefined when the underlying field is missing', () => {
-    expect(root.ClientPreferencesData.optInNewsletter({} as any)).toBeUndefined()
+    expect(
+      root.ClientPreferencesData.optInNewsletter({} as any)
+    ).toBeUndefined()
   })
 })
 
@@ -382,9 +384,12 @@ describe('MarketingData field resolvers', () => {
     ['utmMedium', 'email'],
     ['utmiCampaign', 'iCampaign'],
     ['utmiPart', 'iPart'],
-  ] as const)('returns the underlying %s value when present', (field, value) => {
-    expect((md as any)[field]({ [field]: value })).toBe(value)
-  })
+  ] as const)(
+    'returns the underlying %s value when present',
+    (field, value) => {
+      expect((md as any)[field]({ [field]: value })).toBe(value)
+    }
+  )
 
   it.each([
     'coupon',
@@ -406,4 +411,3 @@ describe('MarketingData field resolvers', () => {
     expect(md.utmiPage({ utmiPage: 'page-1' } as any)).toBe('')
   })
 })
-

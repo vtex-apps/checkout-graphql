@@ -16,11 +16,7 @@
 jest.mock('@vtex/api')
 
 import { mutations } from '../resolvers/orderForm'
-import {
-  ContextMock,
-  makeContext,
-  toContext,
-} from '../__fixtures__/context'
+import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
 
 const setupCtx = (overrides = {}): ContextMock => makeContext(overrides)

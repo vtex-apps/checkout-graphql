@@ -34,11 +34,7 @@ jest.mock('../utils/attachmentsHelpers', () => ({
 
 import { mutations } from '../resolvers/items'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
-import {
-  ContextMock,
-  makeContext,
-  toContext,
-} from '../__fixtures__/context'
+import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
 
 const setupCtx = (overrides = {}): ContextMock => makeContext(overrides)
@@ -257,15 +253,18 @@ describe('mutations.addToCart — items with options', () => {
     )
 
     expect(addOptionsForItems).toHaveBeenCalledTimes(1)
-    const [withOptionsArg, checkoutArg, formArg, oldItemsArg] = (addOptionsForItems as jest.Mock).mock.calls[0]
+    const [
+      withOptionsArg,
+      checkoutArg,
+      formArg,
+      oldItemsArg,
+    ] = (addOptionsForItems as jest.Mock).mock.calls[0]
     expect(withOptionsArg).toHaveLength(1)
     expect(withOptionsArg[0]).toEqual(
       expect.objectContaining({ id: 'parent-1', index: 0 })
     )
     expect(checkoutArg).toBe(ctx.clients.checkout)
-    expect(formArg).toEqual(
-      expect.objectContaining({ orderFormId: 'of-1' })
-    )
+    expect(formArg).toEqual(expect.objectContaining({ orderFormId: 'of-1' }))
     expect(oldItemsArg).toEqual([])
 
     expect(ctx.clients.checkout.orderForm).toHaveBeenCalledTimes(2)
@@ -441,10 +440,7 @@ describe('mutations.updateItems', () => {
     const ctx = setupCtx(overrides)
     ctx.clients.checkout.orderForm.mockResolvedValue(
       orderFormWith({
-        items: [
-          { attachments: [] } as any,
-          { attachments: [] } as any,
-        ],
+        items: [{ attachments: [] } as any, { attachments: [] } as any],
       })
     )
     return ctx
@@ -459,9 +455,7 @@ describe('mutations.updateItems', () => {
       null,
       {
         orderFormId: 'of-1',
-        orderItems: [
-          { id: 'sku-x', quantity: 3, index: 1 } as any,
-        ],
+        orderItems: [{ id: 'sku-x', quantity: 3, index: 1 } as any],
         splitItem: true,
       },
       toContext(ctx)
@@ -500,17 +494,15 @@ describe('mutations.updateItems', () => {
       toContext(ctx)
     )
 
-    const [, , splitItem] = (ctx.clients.checkout.updateItems as jest.Mock).mock
-      .calls[0]
+    const [, , splitItem] = (ctx.clients.checkout
+      .updateItems as jest.Mock).mock.calls[0]
     expect(splitItem).toBe(false)
   })
 
   it('preserves splitItem for a single item that is not a subscription', async () => {
     const ctx = setupCtx()
     const orderForm = orderFormWith({
-      items: [
-        { attachments: [{ name: 'addon-glaze' }] } as any,
-      ],
+      items: [{ attachments: [{ name: 'addon-glaze' }] } as any],
     })
     ctx.clients.checkout.orderForm.mockResolvedValue(orderForm)
     ctx.clients.checkout.updateItems.mockResolvedValue(orderFormWith())
@@ -525,8 +517,8 @@ describe('mutations.updateItems', () => {
       toContext(ctx)
     )
 
-    const [, , splitItem] = (ctx.clients.checkout.updateItems as jest.Mock).mock
-      .calls[0]
+    const [, , splitItem] = (ctx.clients.checkout
+      .updateItems as jest.Mock).mock.calls[0]
     expect(splitItem).toBe(true)
   })
 
@@ -554,8 +546,8 @@ describe('mutations.updateItems', () => {
       toContext(ctx)
     )
 
-    const [, items] = (ctx.clients.checkout.updateItems as jest.Mock).mock
-      .calls[0]
+    const [, items] = (ctx.clients.checkout
+      .updateItems as jest.Mock).mock.calls[0]
     expect(items[0].index).toBe(1)
   })
 
@@ -592,8 +584,8 @@ describe('mutations.updateItems', () => {
       toContext(ctx)
     )
 
-    const [orderFormId] = (ctx.clients.checkout.updateItems as jest.Mock).mock
-      .calls[0]
+    const [orderFormId] = (ctx.clients.checkout
+      .updateItems as jest.Mock).mock.calls[0]
     expect(orderFormId).toBe('ctx-of')
   })
 })
@@ -675,13 +667,12 @@ describe('mutations.addBundleItemAttachment', () => {
       toContext(ctx)
     )
 
-    expect(ctx.clients.checkout.addBundleItemAttachment).toHaveBeenCalledWith(
-      'of-1',
-      1,
-      'bundle-1',
-      'gift-message',
-      { from: 'Ada', to: 'Bob' }
-    )
+    expect(
+      ctx.clients.checkout.addBundleItemAttachment
+    ).toHaveBeenCalledWith('of-1', 1, 'bundle-1', 'gift-message', {
+      from: 'Ada',
+      to: 'Bob',
+    })
     expect(result).toBe(updated)
   })
 })
@@ -708,13 +699,11 @@ describe('mutations.removeBundleItemAttachment', () => {
       toContext(ctx)
     )
 
-    expect(ctx.clients.checkout.removeBundleItemAttachment).toHaveBeenCalledWith(
-      'of-1',
-      1,
-      'bundle-1',
-      'gift-message',
-      { from: 'Ada' }
-    )
+    expect(
+      ctx.clients.checkout.removeBundleItemAttachment
+    ).toHaveBeenCalledWith('of-1', 1, 'bundle-1', 'gift-message', {
+      from: 'Ada',
+    })
     expect(result).toBe(updated)
   })
 })

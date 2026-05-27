@@ -138,9 +138,7 @@ describe('utils/shipping — selectShippingOption', () => {
     const pickupAddress = makeAddress({ addressType: AddressType.PICKUP })
     const shippingData = makeShippingData({
       selectedAddresses: [pickupAddress],
-      logisticsInfo: [
-        makeLogisticsInfo({ slas: [makeSLA({ id: 'sla-1' })] }),
-      ],
+      logisticsInfo: [makeLogisticsInfo({ slas: [makeSLA({ id: 'sla-1' })] })],
     })
 
     expect(
@@ -168,9 +166,9 @@ describe('utils/shipping — selectShippingOption', () => {
       deliveryChannel: PICKUP_IN_POINT,
     })
 
-    expect(result?.logisticsInfo.map(li => li.selectedDeliveryChannel)).toEqual(
-      [PICKUP_IN_POINT, PICKUP_IN_POINT]
-    )
+    expect(
+      result?.logisticsInfo.map(li => li.selectedDeliveryChannel)
+    ).toEqual([PICKUP_IN_POINT, PICKUP_IN_POINT])
   })
 
   it('marks the SLA in every logisticsInfo that contains it when no itemId is passed', () => {
@@ -289,9 +287,7 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
     return ({
       ...EMPTY_ORDER_FORM,
       value: 1200,
-      totalizers: [
-        { id: 'Shipping', name: 'Shipping', value: totalizerValue },
-      ],
+      totalizers: [{ id: 'Shipping', name: 'Shipping', value: totalizerValue }],
       shippingData: makeShippingData({
         availableAddresses: [baseDeliveryAddress],
         selectedAddresses: [baseDeliveryAddress],
@@ -315,7 +311,9 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
       orderForm,
     })
 
-    expect(clientsMock.checkout.updateOrderFormShipping).toHaveBeenCalledTimes(1)
+    expect(clientsMock.checkout.updateOrderFormShipping).toHaveBeenCalledTimes(
+      1
+    )
     expect(clientsMock.checkout.updateOrderFormShipping).toHaveBeenCalledWith(
       orderForm.orderFormId,
       expect.objectContaining({

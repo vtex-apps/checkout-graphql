@@ -20,11 +20,7 @@ import {
   syncWithStoreLocale,
 } from '../resolvers/orderForm'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
-import {
-  ContextMock,
-  makeContext,
-  toContext,
-} from '../__fixtures__/context'
+import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
 
 const baseOrderForm = (overrides: Partial<CheckoutOrderForm> = {}) =>
   (({
@@ -252,11 +248,9 @@ describe('syncWithStoreLocale', () => {
       clientPreferencesData: { locale: 'pt-BR', optinNewsLetter: null },
     })
 
-    const result = await syncWithStoreLocale(
-      orderForm,
-      'pt-BR',
-      ({ updateOrderFormClientPreferencesData: updateMock } as unknown) as Context['clients']['checkout']
-    )
+    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
+      updateOrderFormClientPreferencesData: updateMock,
+    } as unknown) as Context['clients']['checkout'])
 
     expect(result).toBe(orderForm)
     expect(updateMock).not.toHaveBeenCalled()
@@ -266,11 +260,9 @@ describe('syncWithStoreLocale', () => {
     const updateMock = jest.fn()
     const orderForm = baseOrderForm({ clientPreferencesData: null as any })
 
-    const result = await syncWithStoreLocale(
-      orderForm,
-      'pt-BR',
-      ({ updateOrderFormClientPreferencesData: updateMock } as unknown) as Context['clients']['checkout']
-    )
+    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
+      updateOrderFormClientPreferencesData: updateMock,
+    } as unknown) as Context['clients']['checkout'])
 
     expect(result).toBe(orderForm)
     expect(updateMock).not.toHaveBeenCalled()
@@ -282,11 +274,9 @@ describe('syncWithStoreLocale', () => {
       clientPreferencesData: { locale: '', optinNewsLetter: null } as any,
     })
 
-    const result = await syncWithStoreLocale(
-      orderForm,
-      'pt-BR',
-      ({ updateOrderFormClientPreferencesData: updateMock } as unknown) as Context['clients']['checkout']
-    )
+    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
+      updateOrderFormClientPreferencesData: updateMock,
+    } as unknown) as Context['clients']['checkout'])
 
     expect(result).toBe(orderForm)
     expect(updateMock).not.toHaveBeenCalled()
@@ -300,11 +290,9 @@ describe('syncWithStoreLocale', () => {
       clientPreferencesData: { locale: 'en', optinNewsLetter: null },
     })
 
-    const result = await syncWithStoreLocale(
-      orderForm,
-      'pt-BR',
-      ({ updateOrderFormClientPreferencesData: updateMock } as unknown) as Context['clients']['checkout']
-    )
+    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
+      updateOrderFormClientPreferencesData: updateMock,
+    } as unknown) as Context['clients']['checkout'])
 
     expect(updateMock).toHaveBeenCalledWith('original', {
       locale: 'pt-BR',
@@ -327,11 +315,9 @@ describe('syncWithStoreLocale', () => {
       .mockImplementation(() => undefined)
 
     try {
-      const result = await syncWithStoreLocale(
-        orderForm,
-        'pt-BR',
-        ({ updateOrderFormClientPreferencesData: updateMock } as unknown) as Context['clients']['checkout']
-      )
+      const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
+        updateOrderFormClientPreferencesData: updateMock,
+      } as unknown) as Context['clients']['checkout'])
 
       expect(result).toBe(orderForm)
       expect(consoleSpy).toHaveBeenCalled()
@@ -396,9 +382,7 @@ describe('forwardCheckoutCookies', () => {
   it('marks ctx.cookies.secure=true on first secure cookie', async () => {
     const ctx = buildCtx()
     const headers = {
-      'set-cookie': [
-        '.ASPXAUTH=hash; secure; httpOnly; domain=oldhost.com',
-      ],
+      'set-cookie': ['.ASPXAUTH=hash; secure; httpOnly; domain=oldhost.com'],
     }
 
     expect(ctx.cookies.secure).toBe(false)
