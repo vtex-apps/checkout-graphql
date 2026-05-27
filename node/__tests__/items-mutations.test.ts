@@ -667,12 +667,16 @@ describe('mutations.addBundleItemAttachment', () => {
       toContext(ctx)
     )
 
-    expect(
-      ctx.clients.checkout.addBundleItemAttachment
-    ).toHaveBeenCalledWith('of-1', 1, 'bundle-1', 'gift-message', {
-      from: 'Ada',
-      to: 'Bob',
-    })
+    expect(ctx.clients.checkout.addBundleItemAttachment).toHaveBeenCalledWith(
+      'of-1',
+      1,
+      'bundle-1',
+      'gift-message',
+      {
+        from: 'Ada',
+        to: 'Bob',
+      }
+    )
     expect(result).toBe(updated)
   })
 })

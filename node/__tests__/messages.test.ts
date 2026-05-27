@@ -2,8 +2,8 @@ import { fillMessages } from '../resolvers/messages'
 
 const msg = (
   code: string,
-  text: string = `text-${code}`,
-  status: string = 'error'
+  text = `text-${code}`,
+  status = 'error'
 ): Message => ({ code, text, status })
 
 describe('resolvers/messages — fillMessages', () => {
