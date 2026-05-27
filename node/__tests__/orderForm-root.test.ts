@@ -1,8 +1,3 @@
-// `resolvers/orderForm.ts` ultimately imports `@vtex/api`, whose transitive
-// `@opentelemetry/...` dep cannot be resolved by Jest 24 + Node 12. We swap in
-// the lightweight manual mock from `node/__mocks__/@vtex/api.ts`.
-jest.mock('@vtex/api')
-
 import { resolvers } from '../resolvers'
 import { root } from '../resolvers/orderForm'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
@@ -17,6 +12,10 @@ import {
   toContext,
 } from '../__fixtures__/context'
 import { VTEX_SESSION } from '../constants'
+// `resolvers/orderForm.ts` ultimately imports `@vtex/api`, whose transitive
+// `@opentelemetry/...` dep cannot be resolved by Jest 24 + Node 12. We swap in
+// the lightweight manual mock from `node/__mocks__/@vtex/api.ts`.
+jest.mock('@vtex/api')
 
 const callCenterSession = {
   sessionData: {

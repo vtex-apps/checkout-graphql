@@ -1,3 +1,8 @@
+import { mutations } from '../resolvers/items'
+import { addOptionsForItems } from '../utils/attachmentsHelpers'
+import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
+import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
+
 /**
  * Black-box tests for the mutations exported from `resolvers/items.ts`.
  *
@@ -31,11 +36,6 @@ jest.mock('@vtex/api')
 jest.mock('../utils/attachmentsHelpers', () => ({
   addOptionsForItems: jest.fn().mockResolvedValue(undefined),
 }))
-
-import { mutations } from '../resolvers/items'
-import { addOptionsForItems } from '../utils/attachmentsHelpers'
-import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
-import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
 
 const setupCtx = (overrides = {}): ContextMock => makeContext(overrides)
 

@@ -1,3 +1,10 @@
+import {
+  forwardCheckoutCookies,
+  queries,
+  syncWithStoreLocale,
+} from '../resolvers/orderForm'
+import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
+import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
 /**
  * Black-box tests for `queries.orderForm` and the helpers it uses
  * (`syncWithStoreLocale`, `forwardCheckoutCookies`).
@@ -13,14 +20,6 @@
 // `@opentelemetry/...` dep cannot be resolved by Jest 24 + Node 12. We swap in
 // the lightweight manual mock from `node/__mocks__/@vtex/api.ts`.
 jest.mock('@vtex/api')
-
-import {
-  forwardCheckoutCookies,
-  queries,
-  syncWithStoreLocale,
-} from '../resolvers/orderForm'
-import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
-import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
 
 const baseOrderForm = (overrides: Partial<CheckoutOrderForm> = {}) =>
   (({
