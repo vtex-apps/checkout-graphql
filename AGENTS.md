@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Checkout GraphQL is a VTEX IO app that exposes a public GraphQL surface over the VTEX Checkout REST APIs (`portal.vtexcommercestable.com.br`, `portal.vtexcommercebeta.com.br`). It aggregates order-form, shipping, payment, items, coupon, profile, and SLA data into resolvers consumed by storefront and admin clients. The repository README marks this app as **experimental** — breaking changes may ship without notice.
+Checkout GraphQL is a VTEX IO app that exposes a public GraphQL surface over the VTEX Checkout REST APIs (`portal.vtexcommercestable.com.br`, `portal.vtexcommercebeta.com.br`). It aggregates order-form, shipping, payment, items, coupon, profile, and SLA data into resolvers consumed by storefront and admin clients.
 
 This is a VTEX IO app published as `vtex/checkout-graphql@0.67.2`. Builders declared in `manifest.json`: `graphql`, `node`. Tech stack: TypeScript 3.9.7 (node builder), `yarn`, `@vtex/api` 6.46.1, `graphql` 14, `vtex-test-tools` 3, ESLint with `eslint-config-vtex` + `eslint-config-vtex-react`, Prettier with `@vtex/prettier-config`.
 
@@ -103,3 +103,4 @@ Because this repository is public, the non-negotiable engineering principles for
 - NEVER call third-party HTTP from outside `node/clients/`.
 - NEVER bypass the husky `pre-commit` hook (`--no-verify`) in normal development — it runs `lint-staged` (eslint + prettier).
 - AVOID local `vtex publish` for non-beta releases; the canonical path is CI-driven publish + deploy.
+- NEVER execute `vtex deploy` at all cost.
