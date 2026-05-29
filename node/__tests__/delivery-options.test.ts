@@ -3,47 +3,7 @@ import {
   getFormattedDeliveryOptions,
   hasDeliveryOption,
 } from '../utils/delivery-options'
-
-const makeSLA = (overrides: Partial<SLA> = {}): SLA => ({
-  id: 'sla-1',
-  name: 'sla-1',
-  deliveryChannel: DELIVERY,
-  shippingEstimate: '1bd',
-  shippingEstimateDate: null,
-  price: 100,
-  listPrice: 0,
-  tax: 0,
-  pickupStoreInfo: {
-    additionalInfo: null,
-    address: null,
-    dockId: null,
-    friendlyName: null,
-    isPickupStore: false,
-  },
-  pickupPointId: null,
-  pickupDistance: 0,
-  polygonName: null,
-  lockTTL: null,
-  deliveryIds: [],
-  availableDeliveryWindows: [],
-  deliveryWindow: null,
-  transitTime: null,
-  ...overrides,
-})
-
-const makeLogisticsInfo = (
-  overrides: Partial<LogisticsInfo> = {}
-): LogisticsInfo => ({
-  addressId: 'addr-1',
-  deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
-  itemId: 'item-1',
-  itemIndex: 0,
-  shipsTo: ['BRA'],
-  slas: [],
-  selectedDeliveryChannel: null,
-  selectedSla: null,
-  ...overrides,
-})
+import { makeLogisticsInfo, makeSLA } from '../__fixtures__/logistics'
 
 describe('utils/delivery-options', () => {
   describe('getFormattedDeliveryOptions', () => {

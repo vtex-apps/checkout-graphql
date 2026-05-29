@@ -7,67 +7,11 @@ import {
   selectShippingOption,
 } from '../utils/shipping'
 import { makeClientsMock, toClients } from '../__fixtures__/clients'
-
-const makeAddress = (
-  overrides: Partial<CheckoutAddress> = {}
-): CheckoutAddress => ({
-  addressId: 'addr-1',
-  addressType: AddressType.RESIDENTIAL,
-  city: 'SP',
-  complement: '',
-  country: 'BRA',
-  geoCoordinates: [],
-  isDisposable: false,
-  neighborhood: '',
-  number: '',
-  postalCode: '00000000',
-  receiverName: '',
-  reference: null,
-  state: 'SP',
-  street: 'Rua A',
-  ...overrides,
-})
-
-const makeSLA = (overrides: Partial<SLA> = {}): SLA => ({
-  id: 'sla-1',
-  name: 'sla-1',
-  deliveryChannel: DELIVERY,
-  shippingEstimate: '1bd',
-  shippingEstimateDate: null,
-  price: 100,
-  listPrice: 0,
-  tax: 0,
-  pickupStoreInfo: {
-    additionalInfo: null,
-    address: null,
-    dockId: null,
-    friendlyName: null,
-    isPickupStore: false,
-  },
-  pickupPointId: null,
-  pickupDistance: 0,
-  polygonName: null,
-  lockTTL: null,
-  deliveryIds: [],
-  availableDeliveryWindows: [],
-  deliveryWindow: null,
-  transitTime: null,
-  ...overrides,
-})
-
-const makeLogisticsInfo = (
-  overrides: Partial<LogisticsInfo> = {}
-): LogisticsInfo => ({
-  addressId: 'addr-1',
-  deliveryChannels: [{ id: DELIVERY }, { id: PICKUP_IN_POINT }],
-  itemId: 'item-1',
-  itemIndex: 0,
-  shipsTo: ['BRA'],
-  slas: [],
-  selectedDeliveryChannel: null,
-  selectedSla: null,
-  ...overrides,
-})
+import {
+  makeAddress,
+  makeLogisticsInfo,
+  makeSLA,
+} from '../__fixtures__/logistics'
 
 const makeShippingData = (
   overrides: Partial<ShippingData> = {}
