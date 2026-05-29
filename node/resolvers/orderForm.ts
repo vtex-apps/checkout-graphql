@@ -11,6 +11,7 @@ import {
 } from '../utils/validation'
 import {
   ASPXAUTH_COOKIE,
+  BROKEN_COOKIE_EMAIL_PREFIX,
   CHECKOUT_COOKIE,
   OWNERSHIP_COOKIE,
   VTEX_SESSION,
@@ -239,7 +240,7 @@ export const queries = {
     )
 
     const hasBrokenCookie = newOrderForm?.clientProfileData?.email?.startsWith(
-      'vrn--vtexsphinx--aws-us-east-1'
+      BROKEN_COOKIE_EMAIL_PREFIX
     )
 
     if (hasBrokenCookie) {

@@ -5,6 +5,7 @@ import {
 } from '../resolvers/orderForm'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
 import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
+import { BROKEN_COOKIE_EMAIL_PREFIX } from '../constants'
 /**
  * Black-box tests for `queries.orderForm` and the helpers it uses
  * (`syncWithStoreLocale`, `forwardCheckoutCookies`).
@@ -116,7 +117,7 @@ describe('queries.orderForm — broken cookie recovery', () => {
     const broken = baseOrderForm({
       orderFormId: 'broken',
       clientProfileData: ({
-        email: 'vrn--vtexsphinx--aws-us-east-1-suspicious',
+        email: `${BROKEN_COOKIE_EMAIL_PREFIX}-suspicious`,
       } as unknown) as CheckoutOrderForm['clientProfileData'],
     })
     const recovered = baseOrderForm({ orderFormId: 'recovered' })
@@ -213,7 +214,7 @@ describe('queries.orderForm — enableOrderFormOptimization', () => {
     const ctx = setupOptimizedContext()
     const broken = baseOrderForm({
       clientProfileData: ({
-        email: 'vrn--vtexsphinx--aws-us-east-1-foo',
+        email: `${BROKEN_COOKIE_EMAIL_PREFIX}-foo`,
       } as unknown) as CheckoutOrderForm['clientProfileData'],
     })
     ctx.clients.checkout.orderFormRaw.mockResolvedValue({
