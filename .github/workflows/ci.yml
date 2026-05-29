@@ -57,7 +57,9 @@ jobs:
 
       - name: Run lint (changed files only)
         if: github.event_name == 'pull_request' && steps.changed.outputs.files != ''
-        run: yarn eslint ${{ steps.changed.outputs.files }}
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
+        run: yarn eslint $FILES
 
       - name: Run lint (full project)
         if: github.event_name != 'pull_request'
