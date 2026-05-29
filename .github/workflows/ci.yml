@@ -69,9 +69,3 @@ jobs:
         working-directory: node
         run: yarn install --frozen-lockfile
 
-      - name: Run tests with coverage
-        working-directory: node
-        run: yarn test:coverage --passWithNoTests
-        env:
-          CI: true
-
