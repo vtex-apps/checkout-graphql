@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   build:
-    name: Install, Lint & Test Coverage
+    name: Install, Lint & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -68,4 +68,8 @@ jobs:
       - name: Install node service dependencies
         working-directory: node
         run: yarn install --frozen-lockfile
+
+      - name: Run node service tests
+        working-directory: node
+        run: yarn test --ci
 
