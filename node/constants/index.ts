@@ -19,3 +19,8 @@ export const PICKUP_IN_POINT = 'pickup-in-point'
 export const VTEX_SESSION = 'vtex_session'
 export const VTEX_RC_SESSION_COOKIE = 'VtexRCSessionIdv7'
 export const VTEX_RC_MAC_COOKIE = 'VtexRCMacIdv7'
+
+// When checkout returns an orderForm whose clientProfileData.email starts with
+// this marker, the cookies are corrupted and the orderForm must be refetched
+// via checkoutNoCookies. See `queries.orderForm` in resolvers/orderForm.ts.
+export const BROKEN_COOKIE_EMAIL_PREFIX = 'vrn--vtexsphinx--aws-us-east-1'
