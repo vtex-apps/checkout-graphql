@@ -24,10 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          # Shallow clones should be disabled for a better SonarQube analysis
-          # (needed to compute "new code" / blame information).
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
