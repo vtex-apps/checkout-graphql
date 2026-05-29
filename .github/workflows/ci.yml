@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+# Principle of least privilege: the GITHUB_TOKEN only needs to clone the repo.
+# Anything else (SonarQube, npm registry, etc.) uses its own secrets/tokens.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Install, Lint & Test Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+            node/yarn.lock
+
+      - name: Install root dependencies (lint tooling)
+        run: yarn install --frozen-lockfile
+
+      # On PRs we lint only files touched by the PR to keep feedback fast.
+      # On pushes to master we run the full lint as a safety net.
+      - name: Determine changed JS/TS files
+        id: changed
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE_SHA='${{ github.event.pull_request.base.sha }}'
+          FILES=$(git diff --name-only --diff-filter=ACMR "$BASE_SHA"...HEAD -- \
+            '*.ts' '*.tsx' '*.js' '*.jsx' ':!*.snap.ts' | tr '\n' ' ')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          if [ -n "$FILES" ]; then
+            echo "::group::Changed JS/TS files"
+            echo "$FILES" | tr ' ' '\n'
+            echo "::endgroup::"
+          else
+            echo "No JS/TS files changed in this PR — lint will be skipped."
+          fi
+
+      - name: Run lint (changed files only)
+        if: github.event_name == 'pull_request' && steps.changed.outputs.files != ''
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
+        run: yarn eslint $FILES
+
+      - name: Run lint (full project)
+        if: github.event_name != 'pull_request'
+        run: yarn lint
+
+      - name: Install node service dependencies
+        working-directory: node
+        run: yarn install --frozen-lockfile
+
