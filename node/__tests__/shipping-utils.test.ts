@@ -215,11 +215,22 @@ describe('utils/shipping — selectAddress', () => {
 })
 
 describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
-  // When the selected delivery option's price disagrees with the existing
-  // Shipping totalizer, getShippingInfo issues a corrective updateOrderFormShipping
-  // and mutates the order form's totalizer + value in place. This is the only
-  // path with an externally visible side effect in this function and we lock
-  // it down explicitly.
+  /**
+   * Contract under test: when the selected delivery option's price disagrees
+   * with the existing `Shipping` totalizer, `getShippingInfo`:
+   *   1. issues a corrective `updateOrderFormShipping`, AND
+   *   2. **mutates the caller's `orderForm` in place** — both
+   *      `orderForm.totalizers[<Shipping>].value` and `orderForm.value` are
+   *      reassigned on the same object the caller passed in (see
+   *      `utils/shipping.ts` lines 162-164, the `shippingTotalizer.value = ...`
+   *      / `orderForm.value += ...` block).
+   *
+   * The in-place mutation is the only externally visible side effect of this
+   * function and the rest of the resolver chain relies on it; we lock it down
+   * explicitly here. If a future refactor makes `getShippingInfo` immutable,
+   * the assertions below must be reworked together with every caller that
+   * currently depends on the mutated `orderForm`.
+   */
   const baseDeliveryAddress = makeAddress({ geoCoordinates: [] })
 
   const buildOrderForm = (
@@ -250,6 +261,15 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
     const clientsMock = makeClientsMock()
     const orderForm = buildOrderForm(100, 50)
 
+    // Capture the originals so we can assert *in-place mutation* below rather
+    // than just value equality. The production contract is that the same
+    // objects passed in come out with rewritten fields; identity checks make
+    // that contract explicit and force any future immutable refactor to also
+    // update this test (and the callers it documents).
+    const orderFormRef = orderForm
+    const totalizersRef = orderForm.totalizers
+    const shippingTotalizerRef = orderForm.totalizers[0]
+
     await getShippingInfo({
       clients: toClients(clientsMock),
       orderForm,
@@ -265,8 +285,17 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
         selectedAddresses: [baseDeliveryAddress],
       })
     )
-    expect(orderForm.value).toBe(1250)
-    expect(orderForm.totalizers[0].value).toBe(100)
+
+    // Intentional mutation contract — see suite-level comment above.
+    // We assert object identity *and* the new field values; a refactor that
+    // returns a fresh orderForm/totalizer instead of mutating will fail the
+    // `toBe(...Ref)` checks first, signalling that the contract changed
+    // rather than the math.
+    expect(orderForm).toBe(orderFormRef)
+    expect(orderForm.totalizers).toBe(totalizersRef)
+    expect(orderForm.totalizers[0]).toBe(shippingTotalizerRef)
+    expect(shippingTotalizerRef.value).toBe(100)
+    expect(orderFormRef.value).toBe(1250)
   })
 
   it('does not call updateOrderFormShipping when the totalizer already matches', async () => {
