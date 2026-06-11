@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `addToCart` no longer collapses an add into the quantity of an existing
+  attachment-less line for the same SKU when the new item carries assembly
+  options (e.g. B2B `quoteData`). The resolver now sets the per-item
+  `forceNewEntry` flag (introduced by CHK-5575 in the checkout REST engine)
+  on items that carry `options`, instructing the engine to bypass both its
+  `AddItemsAsync` merge lookup and the pipeline `MergeItems` step so that
+  the clean addItem produces a distinct line and the follow-up
+  `addAssemblyOptions` attaches to it. Plain adds (no `options`) are
+  unchanged.
+
 ## [0.67.2] - 2026-05-04
 
 ### Changed

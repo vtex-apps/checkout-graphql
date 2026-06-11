@@ -125,9 +125,21 @@ export const mutations = {
       Object.keys(marketingData ?? {}).length > 0
 
     const { items: previousItems } = await checkout.orderForm(orderFormId!)
-    const cleanItems = items.map(
-      ({ options, index, uniqueId, ...rest }) => rest
-    )
+    /**
+     * Items that carry `options` (assembly options / attachments such as B2B
+     * `quoteData`) are added in two REST calls: a "clean" addItem here, then a
+     * follow-up addAssemblyOptions in `addOptionsForItems`. Without
+     * `forceNewEntry`, the checkout engine would merge the clean addItem into
+     * any pre-existing line with the same SKU + seller + no attachments,
+     * leaving phase 2 with no new line to attach the options to. The flag
+     * tells the engine to bypass both the AddItemsAsync merge lookup and the
+     * pipeline-level MergeItems step, guaranteeing a new line is created and
+     * the subsequent option attach lands on it. See CHK-5575.
+     */
+    const cleanItems = items.map(({ options, index, uniqueId, ...rest }) => {
+      const hasOptions = !!options && options.length > 0
+      return hasOptions ? { ...rest, forceNewEntry: true } : rest
+    })
 
     const withOptions = items
       .map((item, currentIndex) => ({
