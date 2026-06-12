@@ -47,7 +47,11 @@ export class Checkout extends JanusClient {
 
   public addItem = (
     orderFormId: string,
-    items: Array<Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'>>,
+    items: Array<
+      Omit<OrderFormItemInput, 'uniqueId' | 'index' | 'options'> & {
+        forceNewEntry?: boolean
+      }
+    >,
     salesChannel?: string,
     allowedOutdatedData?: string[]
   ) =>

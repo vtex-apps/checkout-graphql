@@ -429,6 +429,146 @@ describe('mutations.addToCart — items with options', () => {
   })
 })
 
+/**
+ * `forceNewEntry` (per-item flag on the addItem REST payload — CHK-5575) is
+ * how the resolver instructs the checkout engine to bypass its built-in cart
+ * merge logic (both `AddItemsAsync` and the pipeline `MergeItems` step) for a
+ * specific item. The resolver MUST set it for items that carry `options`
+ * (assembly options / attachments such as B2B `quoteData`), because those are
+ * added in two steps (clean addItem + addAssemblyOptions). Without the flag
+ * the clean addItem can merge into a pre-existing line with the same
+ * SKU + seller + no attachments, leaving phase 2 with no new line to attach
+ * the option to — the user-visible bug being a silent quantity bump instead
+ * of a new distinct line.
+ *
+ * The resolver MUST NOT set the flag for plain items (no options), because
+ * plain adds must preserve today's behavior of merging same-SKU lines.
+ */
+describe('mutations.addToCart — forceNewEntry on items with options', () => {
+  it('sends forceNewEntry: true on the cleanItems entry for an item that carries options', async () => {
+    const ctx = setupCtx()
+
+    ctx.clients.checkout.orderForm
+      .mockResolvedValueOnce(orderFormWith({ items: [] }))
+      .mockResolvedValueOnce(orderFormWith({ orderFormId: 'fresh' }))
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [
+      {
+        id: 'sku-with-options',
+        quantity: 1,
+        seller: '1',
+        options: [
+          {
+            assemblyId: 'quoteData',
+            id: 'q-1',
+            quantity: 1,
+            seller: '1',
+            inputValues: { quoteId: 'A' },
+          },
+        ],
+      },
+    ] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
+      .calls[0]
+    expect(cleanItems).toEqual([
+      { id: 'sku-with-options', quantity: 1, seller: '1', forceNewEntry: true },
+    ])
+  })
+
+  it('does not send forceNewEntry on the cleanItems entry for an item without options', async () => {
+    const ctx = setupCtx()
+
+    ctx.clients.checkout.orderForm.mockResolvedValue(orderFormWith({ items: [] }))
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [{ id: 'plain', quantity: 1, seller: '1' }] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
+      .calls[0]
+    expect(cleanItems).toEqual([{ id: 'plain', quantity: 1, seller: '1' }])
+    expect(cleanItems[0]).not.toHaveProperty('forceNewEntry')
+  })
+
+  it('sends forceNewEntry only on items that carry options when the batch is mixed', async () => {
+    const ctx = setupCtx()
+
+    ctx.clients.checkout.orderForm
+      .mockResolvedValueOnce(orderFormWith({ items: [] }))
+      .mockResolvedValueOnce(orderFormWith({ orderFormId: 'fresh' }))
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [
+      {
+        id: 'with-opts',
+        quantity: 1,
+        seller: '1',
+        options: [
+          {
+            assemblyId: 'addon',
+            id: 'a-1',
+            quantity: 1,
+            seller: '1',
+            inputValues: {},
+          },
+        ],
+      },
+      { id: 'plain', quantity: 3, seller: '1' },
+    ] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
+      .calls[0]
+    expect(cleanItems).toEqual([
+      { id: 'with-opts', quantity: 1, seller: '1', forceNewEntry: true },
+      { id: 'plain', quantity: 3, seller: '1' },
+    ])
+    expect(cleanItems[1]).not.toHaveProperty('forceNewEntry')
+  })
+
+  it('does not send forceNewEntry when the options array is present but empty', async () => {
+    const ctx = setupCtx()
+
+    ctx.clients.checkout.orderForm.mockResolvedValue(orderFormWith({ items: [] }))
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [
+      { id: 'no-real-opts', quantity: 1, seller: '1', options: [] },
+    ] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
+      .calls[0]
+    expect(cleanItems).toEqual([
+      { id: 'no-real-opts', quantity: 1, seller: '1' },
+    ])
+    expect(cleanItems[0]).not.toHaveProperty('forceNewEntry')
+  })
+})
+
 describe('mutations.updateItems', () => {
   // The resolver fetches the current orderForm whenever:
   //   (a) it inspects a single targeted item for subscription attachments, or
