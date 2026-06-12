@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.68.0] - 2026-06-12
+
 ### Fixed
 - `addToCart` no longer collapses an add into the quantity of an existing
   attachment-less line for the same SKU when the new item carries assembly
