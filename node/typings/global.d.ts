@@ -466,6 +466,7 @@ declare global {
     seller?: string
     uniqueId?: string
     options?: AssemblyOptionInput[]
+    priceToken?: string
   }
 
   interface AssemblyOptionInput {
