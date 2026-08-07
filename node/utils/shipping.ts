@@ -10,7 +10,6 @@ import {
   getFormattedDeliveryOptions,
   hasDeliveryOption,
 } from './delivery-options'
-import { Clients } from '../clients'
 import { DELIVERY, PICKUP_IN_POINT } from '../constants'
 import { formatBusinessHoursList } from './pickup'
 
@@ -91,10 +90,10 @@ export const selectAddress = ({
 }
 
 export const getShippingInfo = async ({
-  clients,
+  ctx,
   orderForm,
 }: {
-  clients: Clients
+  ctx: Context
   orderForm: Pick<
     CheckoutOrderForm,
     'shippingData' | 'totalizers' | 'orderFormId' | 'value'
@@ -154,9 +153,10 @@ export const getShippingInfo = async ({
       shippingData: orderForm.shippingData,
     })
 
-    await clients.checkout.updateOrderFormShipping(
+    await ctx.clients.checkout.updateOrderFormShipping(
       orderForm.orderFormId,
-      newShippingData
+      newShippingData,
+      ctx
     )
 
     const difference = selectedDeliveryOption.price - shippingTotalizer.value

@@ -108,6 +108,28 @@ describe('queries.orderForm — happy path', () => {
 
     expect(ctx.cookies.set).not.toHaveBeenCalled()
   })
+
+  it('forwards the ownership cookie even when enableOrderFormOptimization is false', async () => {
+    const ctx = setupQueryContext()
+    ctx.clients.checkout.orderFormRaw.mockResolvedValue({
+      data: baseOrderForm(),
+      headers: {
+        'set-cookie': [
+          'checkout.vtex.com=__ofid=order-1; domain=oldhost.com',
+          'CheckoutOrderFormOwnership=owner-1; domain=oldhost.com',
+        ],
+      },
+    })
+
+    await queries.orderForm(null, {}, toContext(ctx))
+
+    expect(ctx.cookies.set).toHaveBeenCalledTimes(1)
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      'CheckoutOrderFormOwnership',
+      'owner-1',
+      expect.any(Object)
+    )
+  })
 })
 
 describe('queries.orderForm — broken cookie recovery', () => {
@@ -430,6 +452,67 @@ describe('forwardCheckoutCookies', () => {
     )
 
     expect(ctx.cookies.set).not.toHaveBeenCalled()
+  })
+
+  /**
+   * Checkout issues an empty `CheckoutOrderFormOwnership` whenever a cart is
+   * created. Writing it through would revoke the ownership the shopper already
+   * holds and make Checkout mask their profile and shipping data from then on.
+   */
+  it('never overwrites the ownership cookie with an empty value', async () => {
+    const ctx = buildCtx()
+    const headers = {
+      'set-cookie': [
+        'CheckoutOrderFormOwnership=; domain=oldhost.com',
+        'checkout.vtex.com=__ofid=order-1; domain=oldhost.com',
+      ],
+    }
+
+    await forwardCheckoutCookies(headers, toContext(ctx))
+
+    expect(ctx.cookies.set).toHaveBeenCalledTimes(1)
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      'checkout.vtex.com',
+      '__ofid=order-1',
+      expect.any(Object)
+    )
+  })
+
+  it('keeps the ownership already in context when checkout returns an empty one', async () => {
+    const ctx = makeContext({
+      headers: { 'x-forwarded-host': 'newhost.com' },
+      vtex: { ownerId: 'owner-1' },
+    })
+
+    await forwardCheckoutCookies(
+      { 'set-cookie': ['CheckoutOrderFormOwnership=; domain=oldhost.com'] },
+      toContext(ctx)
+    )
+
+    expect(ctx.vtex.ownerId).toBe('owner-1')
+  })
+
+  /**
+   * `@withOwnerId` snapshots the cookie off the incoming request, so without
+   * this sync every later Checkout call of the same request would keep sending
+   * the stale (usually empty) ownership and get masked data back.
+   */
+  it('syncs a newly issued ownership into vtex.ownerId for the rest of the request', async () => {
+    const ctx = makeContext({
+      headers: { 'x-forwarded-host': 'newhost.com' },
+      vtex: { ownerId: undefined },
+    })
+
+    await forwardCheckoutCookies(
+      {
+        'set-cookie': [
+          'CheckoutOrderFormOwnership=owner-2; domain=oldhost.com',
+        ],
+      },
+      toContext(ctx)
+    )
+
+    expect(ctx.vtex.ownerId).toBe('owner-2')
   })
 
   it('respects a custom allow list', async () => {

@@ -42,10 +42,14 @@ export const mutations = {
       orderForm.shippingData && orderForm.shippingData.logisticsInfo
     const shippingData = getShippingData(address, logisticsInfo)
 
-    const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
-      ...shippingData,
-      clearAddressIfPostalCodeNotFound: false,
-    })
+    const newOrderForm = await checkout.updateOrderFormShipping(
+      orderFormId!,
+      {
+        ...shippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
+      ctx
+    )
 
     return newOrderForm
   },
@@ -66,10 +70,14 @@ export const mutations = {
       deliveryChannel: DELIVERY,
     })
 
-    const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
-      ...newShippingData,
-      clearAddressIfPostalCodeNotFound: false,
-    })
+    const newOrderForm = await checkout.updateOrderFormShipping(
+      orderFormId!,
+      {
+        ...newShippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
+      ctx
+    )
 
     return newOrderForm
   },
@@ -91,10 +99,14 @@ export const mutations = {
       deliveryChannel: PICKUP_IN_POINT,
     })
 
-    const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
-      ...newShippingData,
-      clearAddressIfPostalCodeNotFound: false,
-    })
+    const newOrderForm = await checkout.updateOrderFormShipping(
+      orderFormId!,
+      {
+        ...newShippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
+      ctx
+    )
 
     return newOrderForm
   },
@@ -117,10 +129,14 @@ export const mutations = {
       shippingData: orderForm.shippingData,
     })
 
-    const newOrderForm = await checkout.updateOrderFormShipping(orderFormId!, {
-      ...newShippingData,
-      clearAddressIfPostalCodeNotFound: false,
-    })
+    const newOrderForm = await checkout.updateOrderFormShipping(
+      orderFormId!,
+      {
+        ...newShippingData,
+        clearAddressIfPostalCodeNotFound: false,
+      },
+      ctx
+    )
 
     return newOrderForm
   },

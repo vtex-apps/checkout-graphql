@@ -6,7 +6,8 @@ import {
   selectAddress,
   selectShippingOption,
 } from '../utils/shipping'
-import { makeClientsMock, toClients } from '../__fixtures__/clients'
+import { makeClientsMock } from '../__fixtures__/clients'
+import { makeContext, toContext } from '../__fixtures__/context'
 import {
   makeAddress,
   makeLogisticsInfo,
@@ -270,10 +271,9 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
     const totalizersRef = orderForm.totalizers
     const shippingTotalizerRef = orderForm.totalizers[0]
 
-    await getShippingInfo({
-      clients: toClients(clientsMock),
-      orderForm,
-    })
+    const ctx = toContext(makeContext({ clients: clientsMock }))
+
+    await getShippingInfo({ ctx, orderForm })
 
     expect(clientsMock.checkout.updateOrderFormShipping).toHaveBeenCalledTimes(
       1
@@ -283,7 +283,8 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
       expect.objectContaining({
         logisticsInfo: expect.any(Array),
         selectedAddresses: [baseDeliveryAddress],
-      })
+      }),
+      ctx
     )
 
     // Intentional mutation contract — see suite-level comment above.
@@ -303,7 +304,7 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
     const orderForm = buildOrderForm(100, 100)
 
     await getShippingInfo({
-      clients: toClients(clientsMock),
+      ctx: toContext(makeContext({ clients: clientsMock })),
       orderForm,
     })
 
@@ -318,7 +319,7 @@ describe('utils/shipping — getShippingInfo totalizer auto-correction', () => {
     orderForm.totalizers = []
 
     await getShippingInfo({
-      clients: toClients(clientsMock),
+      ctx: toContext(makeContext({ clients: clientsMock })),
       orderForm,
     })
 

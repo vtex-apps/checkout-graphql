@@ -8,8 +8,13 @@ import {
 import { UserProfileInput } from 'vtex.checkout-graphql'
 import { OWNERSHIP_COOKIE } from '../constants'
 import { forwardCheckoutCookies } from '../resolvers/orderForm'
+import { keepOwnership } from './ownership'
 
-import { checkoutCookieFormat, ownershipCookieFormat, statusToError } from '../utils'
+import {
+  checkoutCookieFormat,
+  ownershipCookieFormat,
+  statusToError,
+} from '../utils'
 
 export interface SimulationData {
   country: string
@@ -30,6 +35,10 @@ export class Checkout extends JanusClient {
           ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
           : null),
       },
+      middlewares: [
+        ...(options?.middlewares ?? []),
+        keepOwnership((ctx as unknown) as CustomIOContext),
+      ],
     })
   }
 
@@ -125,23 +134,30 @@ export class Checkout extends JanusClient {
   public updateOrderFormProfile = async (
     orderFormId: string,
     fields: UserProfileInput,
-    ctx: Context,
+    ctx: Context
   ) => {
     const { data, headers } = await this.postRaw<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientProfileData'),
       fields,
       { metric: 'checkout-updateOrderFormProfile' }
     )
-    forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
+    await forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
     return data
   }
 
-  public updateOrderFormShipping = (orderFormId: string, shipping: any) =>
-    this.post<CheckoutOrderForm>(
+  public updateOrderFormShipping = async (
+    orderFormId: string,
+    shipping: any,
+    ctx: Context
+  ) => {
+    const { data, headers } = await this.postRaw<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'shippingData'),
       shipping,
       { metric: 'checkout-updateOrderFormShipping' }
     )
+    await forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
+    return data
+  }
 
   public updateOrderFormMarketingData = (
     orderFormId: string,
@@ -405,10 +421,13 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId, ownerId, vtexRCSessionIdv7, vtexRCMacIdv7 } = (this.context as unknown) as CustomIOContext
+    const { orderFormId, ownerId, vtexRCSessionIdv7, vtexRCMacIdv7 } = (this
+      .context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     const ownershipCookie = ownerId ? ownershipCookieFormat(ownerId) : ''
-    const rcSessionCookie = vtexRCSessionIdv7 ? `VtexRCSessionIdv7=${vtexRCSessionIdv7};` : ''
+    const rcSessionCookie = vtexRCSessionIdv7
+      ? `VtexRCSessionIdv7=${vtexRCSessionIdv7};`
+      : ''
     const rcMacCookie = vtexRCMacIdv7 ? `VtexRCMacIdv7=${vtexRCMacIdv7};` : ''
     return {
       Cookie: `${checkoutCookie}${ownershipCookie}${rcSessionCookie}${rcMacCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
@@ -494,7 +513,13 @@ export class Checkout extends JanusClient {
 export class CheckoutNoCookies extends Checkout {
   constructor(ctx: IOContext, options?: InstanceOptions) {
     super(
-      { ...ctx, orderFormId: null, ownerId: null, vtexRCSessionIdv7: null, vtexRCMacIdv7: null } as any,
+      {
+        ...ctx,
+        orderFormId: null,
+        ownerId: null,
+        vtexRCSessionIdv7: null,
+        vtexRCMacIdv7: null,
+      } as any,
       { ...options, headers: {} }
     )
   }

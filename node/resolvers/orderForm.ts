@@ -140,7 +140,7 @@ export const root = {
     ) => {
       const shippingInfo = await getShippingInfo({
         orderForm,
-        clients: ctx.clients,
+        ctx,
       })
 
       const isValid = await isShippingValid(orderForm, shippingInfo, ctx)
@@ -217,11 +217,24 @@ export async function forwardCheckoutCookies(
   const parseAndClean = compose(parseCookie, replaceDomain(host))
   const cleanCookies = forwardedSetCookies.map(parseAndClean)
   cleanCookies.forEach(({ name, value, options }) => {
+    // Checkout sends the ownership cookie empty whenever a cart is created.
+    // Forwarding it would erase the ownership the shopper already holds, and
+    // from then on Checkout would mask their profile and shipping data.
+    if (name === OWNERSHIP_COOKIE && !value) {
+      return
+    }
+
     if (options.secure && !ctx.cookies.secure) {
       ctx.cookies.secure = true
     }
 
     ctx.cookies.set(name, value, options)
+
+    if (name === OWNERSHIP_COOKIE) {
+      // The remaining Checkout calls of this request must use the ownership
+      // just issued, not the one @withOwnerId read from the incoming request.
+      ctx.vtex.ownerId = value
+    }
   })
 }
 
@@ -267,7 +280,14 @@ export const queries = {
     )
 
     if (storeSettings.enableOrderFormOptimization) {
-      forwardCheckoutCookies(headers, ctx)
+      await forwardCheckoutCookies(headers, ctx)
+    } else {
+      /**
+       * The reasoning above does not apply to the ownership cookie: no other
+       * app sets it, so dropping it here would leave the shopper without
+       * ownership and Checkout would mask their personal data.
+       */
+      await forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
     }
 
     return newOrderForm

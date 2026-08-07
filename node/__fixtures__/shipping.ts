@@ -1,6 +1,5 @@
 import { AddressType, DELIVERY, PICKUP_IN_POINT } from '../constants'
 import { EMPTY_ORDER_FORM } from './orderForm'
-import { Clients } from '../clients'
 
 const SLA = {
   deliveryIds: [],
@@ -313,8 +312,10 @@ export const ORDER_FORM_WITH_EMPTY_SHIPPING_DATA = {
   ...EMPTY_ORDER_FORM,
 }
 
-export const clients = ({
-  checkout: {
-    updateOrderFormShipping: jest.fn(),
+export const shippingContext = ({
+  clients: {
+    checkout: {
+      updateOrderFormShipping: jest.fn(),
+    },
   },
-} as unknown) as Clients
+} as unknown) as Context
