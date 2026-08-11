@@ -8,7 +8,7 @@ import {
   ORDER_FORM_WITH_SCHEDULED_DELIVERY,
   ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
   ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
-  clients,
+  shippingContext,
 } from '../__fixtures__/shipping'
 import { getShippingInfo } from '../utils/shipping'
 
@@ -25,7 +25,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_EMPTY_SHIPPING_DATA,
         })
       ).toEqual(expectedResult)
@@ -42,7 +42,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_EMPTY_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)
@@ -113,7 +113,10 @@ describe('Shipping Resolvers', () => {
       }
 
       expect(
-        await getShippingInfo({ clients, orderForm: ORDER_FORM_WITH_PICKUPS })
+        await getShippingInfo({
+          ctx: shippingContext,
+          orderForm: ORDER_FORM_WITH_PICKUPS,
+        })
       ).toEqual(expectedResult)
     })
 
@@ -160,7 +163,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_SCHEDULED_DELIVERY,
         })
       ).toEqual(expectedResult)
@@ -232,7 +235,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_SCHEDULED_DELIVERY_AND_PICKUPS,
         })
       ).toEqual(expectedResult)
@@ -281,7 +284,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_DIFFERENT_SLAS_BETWEEN_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)
@@ -338,7 +341,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_DUPLICATED_SLAS_WITH_DIFFERENT_DELIVERY_IDS,
         })
       ).toEqual(expectedResult)
@@ -410,7 +413,7 @@ describe('Shipping Resolvers', () => {
 
       expect(
         await getShippingInfo({
-          clients,
+          ctx: shippingContext,
           orderForm: ORDER_FORM_WITH_UNAVAILABLE_ITEM_LOGISTICS_INFO,
         })
       ).toEqual(expectedResult)

@@ -2016,10 +2016,10 @@
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.8.0.tgz#8b63ab7f1aa5321248aad5ac890a485656dcea4d"
   integrity sha512-te5lMAWii1uEJ4FwLjzdlbw3+n0FZNOvFXHxQDKeT0dilh7HOzdMzV2TrJVUzq8ep7J4Na8OUYPRLSQkJHAlrg==
 
-"@vtex/api@6.50.1":
-  version "6.50.1"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.50.1.tgz#a86578982a7aac7c7a8df2b9ec3df18bc43f01f2"
-  integrity sha512-4IlmYwCXKpkdpN2KN6NkPuRwnjet3ilSoET3PBOTTdZqE/mnuvIxRZRaQy+Yp7Gxu0XKAVdp/8SQJhsJaa6Unw==
+"@vtex/api@6.51.0":
+  version "6.51.0"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.51.0.tgz#97aeb306619ff49fd890595b90568883eaf77d83"
+  integrity sha512-vRWKB4G1FPPt67rwWx+xGLanuP5y+M9SVmbKu3PzlTrqgq/aW/mINSUGa/Nhm64UBqIQCkVic7/smZ7kKFq52w==
   dependencies:
     "@types/koa" "^2.11.0"
     "@types/koa-compose" "^3.2.3"
@@ -6462,7 +6462,7 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-stats-lite@vtex/node-stats-lite#dist:
+"stats-lite@github:vtex/node-stats-lite#dist":
   version "2.2.1"
   resolved "https://codeload.github.com/vtex/node-stats-lite/tar.gz/a0b5ee91861f31b6ec845146b4906faf5172c430"
   dependencies:

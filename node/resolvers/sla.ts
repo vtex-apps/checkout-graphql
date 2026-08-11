@@ -21,6 +21,6 @@ export const queries = {
       'shippingData' | 'totalizers' | 'orderFormId' | 'value'
     >
 
-    return getShippingInfo({ clients: ctx.clients, orderForm })
+    return getShippingInfo({ ctx, orderForm })
   },
 }

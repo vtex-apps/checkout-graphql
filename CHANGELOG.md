@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.69.0] - 2026-08-11
+
+### Fixed
+- The `CheckoutOrderFormOwnership` cookie is now preserved across every request
+  to the order form, so Checkout stops masking `clientProfileData` and
+  `shippingData` after a shopper has gained ownership. Three leaks were closed:
+  an empty ownership cookie returned by Checkout (which it emits whenever a
+  cart is created) is no longer forwarded over a valid one; a newly issued
+  ownership is written back into `vtex.ownerId` so the remaining Checkout calls
+  of the same request use it instead of the value `@withOwnerId` snapshotted
+  from the incoming request; and `updateOrderFormShipping` now forwards the
+  ownership cookie that the `shippingData` attachment rotates, which was
+  previously discarded. The ownership cookie is also forwarded by the
+  `orderForm` query regardless of `enableOrderFormOptimization`, since no other
+  app sets it.
+- Every Checkout route now reads the ownership cookie back from its response,
+  through a client middleware rather than per-method plumbing. Previously only
+  the three methods built on the `*Raw` verbs could see their response headers,
+  which left `patch` routes such as `addItem` and `updateItems` unable to
+  capture a rotation at all, since `HttpClient` exposes no `patchRaw`. The
+  middleware also warns when Checkout hands back an empty ownership while the
+  request already holds one.
+
 ## [0.68.0] - 2026-06-12
 
 ### Fixed
