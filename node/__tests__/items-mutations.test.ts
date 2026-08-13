@@ -476,8 +476,8 @@ describe('mutations.addToCart — forceNewEntry on items with options', () => {
       toContext(ctx)
     )
 
-    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
-      .calls[0]
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
     expect(cleanItems).toEqual([
       { id: 'sku-with-options', quantity: 1, seller: '1', forceNewEntry: true },
     ])
@@ -486,7 +486,9 @@ describe('mutations.addToCart — forceNewEntry on items with options', () => {
   it('does not send forceNewEntry on the cleanItems entry for an item without options', async () => {
     const ctx = setupCtx()
 
-    ctx.clients.checkout.orderForm.mockResolvedValue(orderFormWith({ items: [] }))
+    ctx.clients.checkout.orderForm.mockResolvedValue(
+      orderFormWith({ items: [] })
+    )
     ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
 
     const items = [{ id: 'plain', quantity: 1, seller: '1' }] as any
@@ -497,8 +499,8 @@ describe('mutations.addToCart — forceNewEntry on items with options', () => {
       toContext(ctx)
     )
 
-    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
-      .calls[0]
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
     expect(cleanItems).toEqual([{ id: 'plain', quantity: 1, seller: '1' }])
     expect(cleanItems[0]).not.toHaveProperty('forceNewEntry')
   })
@@ -535,8 +537,8 @@ describe('mutations.addToCart — forceNewEntry on items with options', () => {
       toContext(ctx)
     )
 
-    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
-      .calls[0]
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
     expect(cleanItems).toEqual([
       { id: 'with-opts', quantity: 1, seller: '1', forceNewEntry: true },
       { id: 'plain', quantity: 3, seller: '1' },
@@ -547,7 +549,9 @@ describe('mutations.addToCart — forceNewEntry on items with options', () => {
   it('does not send forceNewEntry when the options array is present but empty', async () => {
     const ctx = setupCtx()
 
-    ctx.clients.checkout.orderForm.mockResolvedValue(orderFormWith({ items: [] }))
+    ctx.clients.checkout.orderForm.mockResolvedValue(
+      orderFormWith({ items: [] })
+    )
     ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
 
     const items = [
@@ -560,12 +564,146 @@ describe('mutations.addToCart — forceNewEntry on items with options', () => {
       toContext(ctx)
     )
 
-    const [, cleanItems] = (ctx.clients.checkout.addItem as jest.Mock).mock
-      .calls[0]
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
     expect(cleanItems).toEqual([
       { id: 'no-real-opts', quantity: 1, seller: '1' },
     ])
     expect(cleanItems[0]).not.toHaveProperty('forceNewEntry')
+  })
+})
+
+/**
+ * `priceToken` (Pricing Fallback V2) is a search-signed price that the
+ * storefront carries into the cart so checkout can close the line while the
+ * Pricing system is unavailable. This app is a pure carrier: it never parses,
+ * signs, or verifies the token — it only has to reach the REST payload
+ * untouched. The forwarding is implicit (the token rides in the `...rest`
+ * spread), which is exactly why it needs a test: a future refactor that
+ * enumerates the fields it copies would silently drop it.
+ *
+ * The complementary guarantee is that an item without a token produces a
+ * payload with no `priceToken` key at all, so accounts that never send one
+ * keep hitting checkout with the pre-fallback payload.
+ */
+describe('mutations — priceToken pass-through', () => {
+  const PRICE_TOKEN = 'eyJhbGciOiJFUzI1NiJ9.signed-price.signature'
+
+  it('forwards priceToken on the cleanItems entry for a plain addToCart item', async () => {
+    const ctx = setupCtx()
+    ctx.clients.checkout.orderForm.mockResolvedValue(
+      orderFormWith({ items: [] })
+    )
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [
+      { id: 'sku-1', quantity: 1, seller: '1', priceToken: PRICE_TOKEN },
+    ] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
+    expect(cleanItems).toEqual([
+      { id: 'sku-1', quantity: 1, seller: '1', priceToken: PRICE_TOKEN },
+    ])
+  })
+
+  it('omits the priceToken key entirely when the item does not carry one', async () => {
+    const ctx = setupCtx()
+    ctx.clients.checkout.orderForm.mockResolvedValue(
+      orderFormWith({ items: [] })
+    )
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [{ id: 'sku-1', quantity: 1, seller: '1' }] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
+    expect(cleanItems[0]).not.toHaveProperty('priceToken')
+  })
+
+  it('keeps priceToken on the clean addItem of an item that also carries options', async () => {
+    const ctx = setupCtx()
+    ctx.clients.checkout.orderForm
+      .mockResolvedValueOnce(orderFormWith({ items: [] }))
+      .mockResolvedValueOnce(orderFormWith({ orderFormId: 'fresh' }))
+    ctx.clients.checkout.addItem.mockResolvedValue(orderFormWith())
+
+    const items = [
+      {
+        id: 'sku-with-options',
+        quantity: 1,
+        seller: '1',
+        priceToken: PRICE_TOKEN,
+        options: [
+          {
+            assemblyId: 'quoteData',
+            id: 'q-1',
+            quantity: 1,
+            seller: '1',
+            inputValues: { quoteId: 'A' },
+          },
+        ],
+      },
+    ] as any
+
+    await mutations.addToCart(
+      null,
+      { orderFormId: 'of-1', items },
+      toContext(ctx)
+    )
+
+    const [, cleanItems] = (ctx.clients.checkout
+      .addItem as jest.Mock).mock.calls[0]
+    expect(cleanItems).toEqual([
+      {
+        id: 'sku-with-options',
+        quantity: 1,
+        seller: '1',
+        priceToken: PRICE_TOKEN,
+        forceNewEntry: true,
+      },
+    ])
+  })
+
+  it('forwards priceToken through updateItems', async () => {
+    const ctx = setupCtx()
+    ctx.clients.checkout.orderForm.mockResolvedValue(
+      orderFormWith({ items: [{ attachments: [] } as any] })
+    )
+    ctx.clients.checkout.updateItems.mockResolvedValue(orderFormWith())
+
+    await mutations.updateItems(
+      null,
+      {
+        orderFormId: 'of-1',
+        orderItems: [
+          {
+            id: 'sku-1',
+            quantity: 2,
+            index: 0,
+            priceToken: PRICE_TOKEN,
+          } as any,
+        ],
+        splitItem: true,
+      },
+      toContext(ctx)
+    )
+
+    const [, items] = (ctx.clients.checkout
+      .updateItems as jest.Mock).mock.calls[0]
+    expect(items).toEqual([{ quantity: 2, index: 0, priceToken: PRICE_TOKEN }])
   })
 })
 
