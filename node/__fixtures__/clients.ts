@@ -47,6 +47,9 @@ export interface ClientsMock {
   searchGraphQL: {
     product: jest.Mock
   }
+  intsch: {
+    product: jest.Mock
+  }
   customSession: {
     getSession: jest.Mock
   }
@@ -94,6 +97,9 @@ export const makeClientsMock = (): ClientsMock => ({
     setManualPrice: jest.fn(),
   },
   searchGraphQL: {
+    product: jest.fn(),
+  },
+  intsch: {
     product: jest.fn(),
   },
   customSession: {

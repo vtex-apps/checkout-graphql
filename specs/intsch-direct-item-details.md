@@ -1,6 +1,6 @@
 # Direct Intelligent Search integration for cart item details
 
-> **Status**: Draft
+> **Status**: Done
 > **Created**: 2026-08-13
 
 ## 1. Business Context

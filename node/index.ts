@@ -15,6 +15,9 @@ metrics.trackCache('segment', segmentCache)
 const searchGraphQLCache = new LRUCache<string, any>({ max: 5000 })
 metrics.trackCache('searchGraphQL', searchGraphQLCache)
 
+const intschCache = new LRUCache<string, any>({ max: 5000 })
+metrics.trackCache('intsch', intschCache)
+
 export default new Service<Clients, RecorderState, CustomContext>({
   clients: {
     implementation: Clients,
@@ -28,6 +31,16 @@ export default new Service<Clients, RecorderState, CustomContext>({
       },
       searchGraphQL: {
         memoryCache: searchGraphQLCache,
+        timeout: THREE_SECONDS_MS,
+      },
+      /**
+       * One request per distinct product in the cart, so a retry would multiply
+       * an already fanned-out call. Concurrency is capped for the same reason.
+       */
+      intsch: {
+        concurrency: 10,
+        memoryCache: intschCache,
+        retries: 0,
         timeout: THREE_SECONDS_MS,
       },
       segment: {

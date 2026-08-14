@@ -24,7 +24,14 @@ export interface LoggerMock {
 
 export interface VtexMock {
   logger: LoggerMock
-  segment?: { cultureInfo: string; channel?: string }
+  segment?: {
+    cultureInfo?: string
+    channel?: string | number
+    [personalizationField: string]: unknown
+  }
+  /** Binding locale and its tenant fallback, as `@vtex/api` populates them. */
+  locale?: string
+  tenant?: { locale?: string }
   orderFormId?: string
   ownerId?: string
   vtexRCSessionIdv7?: string

@@ -25,7 +25,21 @@
 class StubBase {}
 
 export class IOClients extends StubBase {}
-export class JanusClient extends StubBase {}
+
+/**
+ * Records the arguments the subclass hands to `super(...)`, so tests can assert
+ * client configuration that is otherwise invisible — the Janus environment
+ * (`stable` vs `beta`) in particular.
+ */
+export class JanusClient extends StubBase {
+  public constructorArgs: unknown[]
+
+  public constructor(...args: unknown[]) {
+    super()
+    this.constructorArgs = args
+  }
+}
+
 export class AppClient extends StubBase {}
 export class GraphQLClient extends StubBase {}
 export class Logger {}

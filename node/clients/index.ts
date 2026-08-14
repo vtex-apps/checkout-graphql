@@ -1,6 +1,7 @@
 import { IOClients } from '@vtex/api'
 
 import { Checkout, CheckoutNoCookies } from './checkout'
+import { Intsch } from './intsch'
 import { SearchGraphQL } from './searchGraphQL'
 import { Session } from './session'
 import { CountryDataSettings } from './countryDataSettings'
@@ -17,6 +18,10 @@ export class Clients extends IOClients {
 
   public get searchGraphQL() {
     return this.getOrSet('searchGraphQL', SearchGraphQL)
+  }
+
+  public get intsch() {
+    return this.getOrSet('intsch', Intsch)
   }
 
   public get customSession() {

@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Cart item details (`Item.name`, `Item.skuName`, `Item.skuSpecifications` and
+  `Item.productSpecificationGroups`) can now be resolved straight from the
+  Intelligent Search API instead of through `vtex.search-graphql`, removing three
+  network hops from the cart render path. The request carries
+  `simulationBehavior=skip`, so the platform stops running the per-SKU price
+  simulation whose result checkout discarded — every monetary value on `Item`
+  comes from the order form. It also carries `show-invisible-items=true`, so an
+  item whose product was hidden after being added keeps rendering its catalog
+  text. The GraphQL schema is unchanged.
+- The new path is gated behind the `useIntschForItemDetails` app setting
+  (default `false`), with an `x-vtex-force-intsch-item-details` header for
+  testing, and `vtex.search-graphql` is kept as the fallback provider.
+- While the migration rolls out, `itemDetailsComparisonSampleRate` (default 1%)
+  resolves a sampled share of cart products through both providers, compares the
+  two normalized results and logs whether they agree, so the cutover can be
+  gated on measured equivalence. The comparison never changes what a shopper
+  receives.
+
 ## [0.69.0] - 2026-08-11
 
 ### Fixed
