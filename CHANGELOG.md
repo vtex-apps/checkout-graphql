@@ -20,11 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The new path is gated behind the `useIntschForItemDetails` app setting
   (default `false`), with an `x-vtex-force-intsch-item-details` header for
   testing, and `vtex.search-graphql` is kept as the fallback provider.
-- While the migration rolls out, `itemDetailsComparisonSampleRate` (default 1%)
-  resolves a sampled share of cart products through both providers, compares the
-  two normalized results and logs whether they agree, so the cutover can be
-  gated on measured equivalence. The comparison never changes what a shopper
-  receives.
+- While the migration rolls out, 1% of cart products are resolved through both
+  providers, their two normalized results compared and any difference logged, so
+  the cutover can be gated on measured equivalence rather than on inspection.
+  The comparison never changes what a shopper receives.
 
 ## [0.69.0] - 2026-08-11
 

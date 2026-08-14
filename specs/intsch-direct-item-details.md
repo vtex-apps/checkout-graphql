@@ -73,12 +73,12 @@ The chain is also doing work checkout throws away. `search-resolver`'s legacy `p
 
 - **Story**: As the engineer rolling this out, I want production traffic to tell me whether intsch and `search-graphql` produce the same item details, so that I flip the flag on evidence rather than on hope.
 - **Acceptance Criteria**:
-  - **Given** the comparison sample rate is `1`, **when** a product's details are resolved, **then** roughly 1% of distinct products are fetched from both providers and the remaining 99% from the selected provider only.
+  - **Given** the fixed 1% comparison sample rate, **when** a product's details are resolved, **then** roughly 1% of distinct products are fetched from both providers and the remaining 99% from the selected provider only.
   - **Given** a product is sampled for comparison, **when** the two results are compared, **then** the comparison runs on the normalized `ItemProductInfo` produced by each provider's mapper, never on the two raw upstream payloads.
   - **Given** the two normalized results differ, **when** the comparison completes, **then** an error-level log records the `productId`, `sc`, `locale`, and the first 10 differences with their paths.
   - **Given** the two normalized results match, **when** the comparison completes, **then** an info-level log records the match, so the agreement rate is derivable from indexed log levels.
   - **Given** a product is sampled, **when** either provider fails, **then** the shopper still receives the result from the provider that succeeded and no difference is reported.
-  - **Given** the sample rate is `0`, **when** products are resolved, **then** no shadow request is made at all.
+  - **Given** a product that falls outside the sample, **when** it is resolved, **then** no shadow request is made and no latency is added.
 
 ### Key Scenarios
 
@@ -95,10 +95,11 @@ The chain is also doing work checkout throws away. `search-resolver`'s legacy `p
 | Regionalized segment | Flag on; segment carries `regionId` plus price tables, campaigns, and UTM data | Same query | The outgoing request carries only `field`, `value`, `sc`, `locale`, `simulationBehavior`, and `show-invisible-items`; `regionId` and every other segment value are absent, and all four fields still resolve |
 | Product hidden after being added | Flag on; a cart item's product has `isVisible: false` | Same query | `show-invisible-items=true` suppresses the visibility 404, so `name`, `skuName`, and both specification fields resolve normally instead of falling back |
 | Large cart | Flag on; 40 items across 40 distinct products | Same query | Concurrency cap of 10 bounds in-flight requests; total time stays under the resolver budget; no retries amplify the fan-out |
-| Sampled for comparison | Flag off; sample rate 1; a product falls inside the sample | Same query | Both providers are called once for that product; the shopper is served the `searchGraphQL` result; the normalized results are compared and the outcome logged; other products in the same cart are unaffected |
-| Sampled, results differ | Sample rate 100; intsch returns a different SKU name | Same query | Error log with `productId` and the difference at path `items[name:{itemId}].name`; the shopper still receives the selected provider's value, unchanged |
-| Sampled, shadow provider fails | Sample rate 100; the non-selected provider times out | Same query | No difference is logged; the shopper receives the selected provider's result; the failure surfaces only as that client's own error metric |
-| Sampled four times over | Sample rate 100; one product, one cart item, all four fields queried | Same query | The comparison runs exactly once for that product, not once per field resolution |
+| Sampled for comparison | Flag off; a product falls inside the 1% sample | Same query | Both providers are called once for that product; the shopper is served the `searchGraphQL` result; the normalized results are compared and the outcome logged; other products in the same cart are unaffected |
+| Not sampled | Flag off; a product falls outside the sample | Same query | Only `searchGraphQL` is called; no comparison log; no added latency |
+| Sampled, results differ | Sampled; intsch returns a different SKU name | Same query | Error log with `productId` and the difference at path `items[name:{itemId}].name`; the shopper still receives the selected provider's value, unchanged |
+| Sampled, shadow provider fails | Sampled; the non-selected provider times out | Same query | No difference is logged; the shopper receives the selected provider's result; the failure surfaces only as that client's own error metric |
+| Sampled four times over | Sampled; one product, one cart item, all four fields queried | Same query | The comparison runs exactly once for that product, not once per field resolution |
 
 ### Functional Requirements
 
@@ -111,7 +112,7 @@ The chain is also doing work checkout throws away. `search-resolver`'s legacy `p
 7. Gate the whole path behind the `useIntschForItemDetails` app setting, defaulting to `false`, keeping `searchGraphQL` as the fallback implementation.
 8. Preserve the existing soft-failure contract: catch every error, log a sampled warning, and fall back to orderForm values.
 9. Skip the fetch entirely when `item.productId` is absent (bundle items).
-10. On a configurable percentage of distinct products (default 1%), resolve the product through *both* providers, compare the two normalized `ItemProductInfo` results, and log the outcome. Always serve the selected provider's result; the shadow result is only ever compared and discarded.
+10. On a fixed 1% of distinct products, resolve the product through *both* providers, compare the two normalized `ItemProductInfo` results, and log the outcome. Always serve the selected provider's result; the shadow result is only ever compared and discarded.
 11. Compare after mapping, never before. Each provider owns a mapper to `ItemProductInfo`, and only that common shape is compared, so the diff reports real behavioral divergence rather than the unavoidable differences between the two upstream payload formats.
 12. Compare arrays by identity rather than position (`items` by `itemId`, `specificationGroups` and `variations` by `name`), because neither upstream guarantees ordering and position-based diffs would be noise.
 
@@ -122,7 +123,7 @@ The chain is also doing work checkout throws away. `search-resolver`'s legacy `p
 - **Concurrency**: capped at `10` in-flight requests for the client, mirroring `search-resolver`.
 - **Caching**: an `LRUCache` of 5000 entries wired as `memoryCache`, tracked via `metrics.trackCache`. Both context values that change the response (`sc`, `locale`) travel in the query string so they are part of the HTTP cache key. Keeping the param set to two values also keeps the cache hit rate high, since the key does not fragment per region.
 - **Observability**: a dedicated metric name (`checkout-intsch-product`) so latency and error rate are attributable; the sampled warning must name the new upstream rather than `vtex.search-graphql`.
-- **Comparison cost**: at the default 1% sample rate, the shadow path adds roughly 1% to each provider's request volume. A sampled product resolves as slowly as the slower of the two providers, since both are awaited in parallel — acceptable at 1%, and the reason the rate is a setting rather than a constant. Non-sampled resolutions must make exactly one upstream call, with no added latency.
+- **Comparison cost**: at 1%, the shadow path adds roughly 1% to each provider's request volume. A sampled product resolves as slowly as the slower of the two providers, since both are awaited in parallel — acceptable precisely because the rate is low enough to need no operational lever. Non-sampled resolutions must make exactly one upstream call, with no added latency.
 - **Log volume**: one log line per sampled product, capped at the first 10 differences per line. Comparison logs carry `productId`, `sc`, and `locale` only — never the full payloads and no shopper data.
 - **Security**: no new credentials. The auth token is only forwarded when already present on the context, as `search-resolver` does.
 - **Compatibility**: the `graphql/` schema is unchanged. No breaking change, no major version.
@@ -156,8 +157,8 @@ Concretely:
 2. **`node/services/itemDetails.ts`** — per-request `DataLoader<string, IntschProduct>` keyed by `productId`, resolving each key with one client call. Created lazily on `ctx.state` so it is scoped to the request, not the process. This is also where the two providers are selected between and, on sampled products, compared.
 3. **`node/utils/intschMapping.ts`** — maps an intsch product to the four checkout shapes, including the variations reconstruction. Pure string and array manipulation; no i18n.
 4. **`node/utils/compareResults.ts`** — ported from `search-resolver`, unchanged in semantics: runs two async functions in parallel on a sampled percentage of calls, deep-diffs the results with configurable ignore patterns and identity-based array matching, logs the outcome, and returns the first function's result.
-5. **`node/services/settings.ts`** — reads `useIntschForItemDetails` and `itemDetailsComparisonSampleRate` from `apps.getAppSettings('vtex.checkout-graphql@0.x')`, with a `x-vtex-force-intsch-item-details` header escape hatch for testing, mirroring `search-resolver`'s `fetchAppSettings`.
-6. **`manifest.json`** — adds a `settingsSchema` for both settings and `outbound-access` policies for `/api/intelligent-search` on both `portal.vtexcommercestable.com.br` and `portal.vtexcommercebeta.com.br`.
+5. **`node/services/settings.ts`** — reads `useIntschForItemDetails` from `apps.getAppSettings('vtex.checkout-graphql@0.x')`, with a `x-vtex-force-intsch-item-details` header escape hatch for testing, mirroring `search-resolver`'s `fetchAppSettings`.
+6. **`manifest.json`** — adds a `settingsSchema` for that setting and `outbound-access` policies for `/api/intelligent-search` on both `portal.vtexcommercestable.com.br` and `portal.vtexcommercebeta.com.br`.
 
 ### Architecture Overview
 
@@ -213,7 +214,7 @@ Sampled products take both branches. The comparison sits above the two providers
 
 ```mermaid
 flowchart TB
-  G[getProductInfo] --> M{"random() * 100 < sampleRate"}
+  G[getProductInfo] --> M{"random() * 100 < 1"}
   M -->|"no, ~99%"| P["selected provider only"]
   M -->|"yes, ~1%"| B["both providers in parallel"]
   B --> N1["ItemProductInfo (selected)"]
@@ -253,10 +254,10 @@ flowchart TB
 | Cache poisoning across sales channel or locale | High — wrong text or wrong channel's data served | Low | Both discriminating values travel as query params so they are part of the HTTP cache key; no context is passed via headers except auth |
 | Omitting `regionId` changes which product or SKUs resolve on a regionalized account | Low — the four fields are catalog text, not regional availability | Low | Golden-output comparison on a regionalized account during Phase 6, where the sampled shadow comparison is the mechanism that would surface it; the fallback to orderForm text already covers a product that fails to resolve |
 | The mapper is written against the wrong response format, because `search-resolver`'s equivalent code targets the portal format | Medium — empty `skuSpecifications` and missing spec groups | Low | Decision 3 pins the format; the fixture must be captured without `productOriginVtex`, and the mapper is typed against `IntelligentSearchProduct` rather than copied from `sku.ts` |
-| Comparison noise drowns the signal — ordering, or SKUs present in one provider and not the other — and the diff logs get ignored | Medium — the rollout gate becomes meaningless | Medium | Identity-based array matching for `items`, `specificationGroups`, and `variations`; a reviewed `ignoredDifferences` list that starts empty and only grows with a written justification per entry; tune at 100% sample rate in a workspace before enabling in production |
+| Comparison noise drowns the signal — ordering, or SKUs present in one provider and not the other — and the diff logs get ignored | Medium — the rollout gate becomes meaningless | Medium | Identity-based array matching for `items`, `specificationGroups`, and `variations`; a reviewed `ignoredDifferences` list that starts empty and only grows with a written justification per entry; tune in a workspace with the rate constant temporarily raised, before enabling in production |
 | The comparison itself breaks the shopper's request — an exception in the diff, or the shadow provider's failure propagating | High — cart text lost, or worse, a failed field | Low | The comparator catches per-side failures and returns the surviving result, only throwing when both fail, and that throw lands in the existing soft-failure catch that falls back to orderForm values; the diff itself runs inside a try/catch that logs and moves on |
 | Sampling multiplies unexpectedly, because `getProductInfo` is called once per field per item (up to 4 × N) | Medium — 4×+ the intended shadow traffic and duplicated logs | Medium | The comparison lives at the per-request, per-`productId` memoization boundary, not in the resolvers; covered by an explicit test that four field resolutions on one product produce exactly one comparison |
-| Comparison traffic runs against production during a high-traffic window | Low — 1% of an already small volume | Low | Sample rate is an app setting, changeable to `0` without a deploy, and is the first thing to reach for if either upstream shows strain |
+| Comparison traffic runs against production during a high-traffic window | Low — 1% of an already small volume | Low | The rate is a constant, so shedding it needs a version rollback rather than a setting change. Accepted deliberately (Decision 7): 1% of cart renders is well inside both upstreams' headroom, and a rate no one is expected to tune is not worth an operational lever. If either upstream shows strain, rolling back the app version removes both the comparison and the flag at once |
 
 ### Key Decisions
 
@@ -306,8 +307,8 @@ flowchart TB
 
 - **Status**: Accepted
 - **Context**: A feature flag makes the change reversible, but it does not make it verifiable — flipping it and watching error rates would only catch failures, not wrong answers. The dangerous failure mode here is a silent one: text that resolves successfully but differs from what shoppers see today, in a locale, a sales channel, or an availability state that no fixture covers. `search-resolver` faced the identical problem migrating to intsch and solved it with `compareApiResults`: run both implementations in parallel on a sampled percentage of traffic, deep-diff the results, and log whether they agree. The utility carries two affordances it earned the hard way — identity-based array matching, and an `ignoredDifferences` list of path patterns — that only exist because a naive diff produced unusable noise.
-- **Decision**: Port `search-resolver`'s `node/utils/compareResults.ts` into this app and use it at the per-`productId` resolution boundary. Sample rate comes from an `itemDetailsComparisonSampleRate` app setting, `0`–`100`, defaulting to `1`. The first function is the provider selected by `useIntschForItemDetails` and its result is always the one served; the second is the other provider, whose result is compared and discarded. The comparison operates on the normalized `ItemProductInfo` that each provider's mapper produces — never on the two raw upstream payloads, which are different formats by construction and would diff on nearly every field. Arrays are matched by identity: `items` by `itemId`, `specificationGroups` and `variations` by `name`. `ignoredDifferences` starts empty; every entry added needs a written justification, because each one is a difference we are choosing not to see.
-- **Consequences**: The rollout gate becomes a number — the ratio of info-level to error-level comparison logs — rather than a judgment call, and the same mechanism keeps working after the flip, since the comparison is indifferent to which provider is authoritative and will catch a regression in the new path just as readily. The costs are real but bounded: 1% extra volume on both upstreams, sampled products resolving as slowly as the slower provider, and both providers having to stay working and tested for the duration. Placement matters more than it looks — `getProductInfo` is called once per field per item, so the comparison must sit at the per-request, per-`productId` memoization boundary or a single four-field item would trigger four comparisons and four shadow calls. Porting rather than sharing means this app carries a copy that can drift from `search-resolver`'s; acceptable, because both copies are deleted when their respective migrations finish, and the file is self-contained with no dependency beyond `@vtex/api`'s `Logger`.
+- **Decision**: Port `search-resolver`'s `node/utils/compareResults.ts` into this app and use it at the per-`productId` resolution boundary. The sample rate is a constant `1`, not a setting: 1% is enough to accumulate the agreement signal on production traffic and small enough that no one is expected to tune it, and a knob nobody turns is a knob that goes stale and has to be reasoned about at every read. The first function is the provider selected by `useIntschForItemDetails` and its result is always the one served; the second is the other provider, whose result is compared and discarded. The comparison operates on the normalized `ItemProductInfo` that each provider's mapper produces — never on the two raw upstream payloads, which are different formats by construction and would diff on nearly every field. Arrays are matched by identity: `items` by `itemId`, `specificationGroups` and `variations` by `name`. `ignoredDifferences` starts empty; every entry added needs a written justification, because each one is a difference we are choosing not to see.
+- **Consequences**: The rollout gate becomes a number — the ratio of info-level to error-level comparison logs — rather than a judgment call, and the same mechanism keeps working after the flip, since the comparison is indifferent to which provider is authoritative and will catch a regression in the new path just as readily. The costs are real but bounded: 1% extra volume on both upstreams, sampled products resolving as slowly as the slower provider, and both providers having to stay working and tested for the duration. Fixing the rate rather than exposing it means two things: the comparison starts on deploy, before the flag is ever turned on, which is exactly when its signal is worth the most; and shedding that 1% requires a version rollback rather than a setting change, which is the price of not carrying a knob. Raising it to observe noise while tuning `ignoredDifferences` is a one-line change in a workspace. Placement matters more than it looks — `getProductInfo` is called once per field per item, so the comparison must sit at the per-request, per-`productId` memoization boundary or a single four-field item would trigger four comparisons and four shadow calls. Porting rather than sharing means this app carries a copy that can drift from `search-resolver`'s; acceptable, because both copies are deleted when their respective migrations finish, and the file is self-contained with no dependency beyond `@vtex/api`'s `Logger`.
 
 #### Decision 8: Extract only sales channel and locale from the segment
 
@@ -348,11 +349,11 @@ The response contract is settled from `intelligent-search-api` source rather tha
 
 **Phase 4 — Shadow comparison**
 
-Port `node/utils/compareResults.ts` and its test file from `search-resolver`, trimming what this app does not use. Add `itemDetailsComparisonSampleRate` to the settings service and `settingsSchema`. Wire `compareApiResults` into the per-`productId` boundary in `itemDetails.ts` with the identity-matching config, and confirm on a workspace at 100% sample rate that a same-product resolution reports no differences before enabling anywhere else. Tune `ignoredDifferences` here, at 100%, where noise is cheap to observe — not in production.
+Port `node/utils/compareResults.ts` and its test file from `search-resolver`, trimming what this app does not use. Wire `compareApiResults` into the per-`productId` boundary in `itemDetails.ts` with the identity-matching config and the fixed 1% rate. Before enabling anywhere else, raise the rate constant in a workspace and confirm a same-product resolution reports no differences. Tune `ignoredDifferences` there, where noise is cheap to observe — not in production — then restore the constant.
 
 **Phase 5 — Tests**
 
-A new `node/__tests__/items-product-info.test.ts` plus an intsch fixture, covering: field mapping per resolver, dedupe (N items → M calls), 404 and timeout fallbacks, missing `productId`, the `locale` sent for a given segment, the exact outgoing param set from a segment rich in personalization data (asserting `show-invisible-items=true` is present), and flag on/off parity against the `searchGraphQL` mock. For the comparison path specifically: that both providers are mapped to `ItemProductInfo` before the diff; that reordered `items` and `specificationGroups` produce no difference while reordered specification `values` do; that a changed SKU name produces one difference at the expected path; that a shadow-provider failure is not reported as a difference and does not affect the served result; that four field resolutions on one product trigger exactly one comparison; and that a sample rate of `0` issues no shadow call.
+A new `node/__tests__/items-product-info.test.ts` plus an intsch fixture, covering: field mapping per resolver, dedupe (N items → M calls), 404 and timeout fallbacks, missing `productId`, the `locale` sent for a given segment, the exact outgoing param set from a segment rich in personalization data (asserting `show-invisible-items=true` is present), and flag on/off parity against the `searchGraphQL` mock. For the comparison path specifically: that both providers are mapped to `ItemProductInfo` before the diff; that reordered `items` and `specificationGroups` produce no difference while reordered specification `values` do; that a changed SKU name produces one difference at the expected path; that a shadow-provider failure is not reported as a difference and does not affect the served result; that four field resolutions on one product trigger exactly one comparison; and that a product outside the sample issues no shadow call.
 
 **Phase 6 — Rollout**
 
@@ -362,7 +363,7 @@ The gate at each step is the comparison signal, read from the ratio of `Results 
 
 **Phase 7 — Cleanup (follow-up, separate PR)**
 
-Remove `node/clients/searchGraphQL/`, `node/clients/graphqlServer.ts` if unused elsewhere, the `vtex.graphql-server` dependency and `resolve-graphql` policy, the `searchGraphQL` cache in `node/index.ts`, both settings, and — since it has nothing left to compare against — `node/utils/compareResults.ts` with its config and tests.
+Remove `node/clients/searchGraphQL/`, `node/clients/graphqlServer.ts` if unused elsewhere, the `vtex.graphql-server` dependency and `resolve-graphql` policy, the `searchGraphQL` cache in `node/index.ts`, the `useIntschForItemDetails` setting and its schema, and — since it has nothing left to compare against — `node/utils/compareResults.ts` with its sample rate, config, and tests.
 
 ---
 
@@ -427,8 +428,6 @@ App settings:
 ```ts
 interface CheckoutGraphQLSettings {
   useIntschForItemDetails: boolean // manifest default: false
-  /** Percentage of distinct products resolved through both providers, 0-100. */
-  itemDetailsComparisonSampleRate: number // manifest default: 1
 }
 ```
 
@@ -510,7 +509,7 @@ const [primary, shadow] = useIntsch
 return compareApiResults(
   () => primary(productId),
   () => shadow(productId),
-  settings.itemDetailsComparisonSampleRate,
+  COMPARISON_SAMPLE_RATE, // fixed at 1
   ctx.vtex.logger,
   {
     logPrefix: 'ItemDetails Comparison',
@@ -560,7 +559,7 @@ Behavior that this design depends on, all of it already true of the `search-reso
 function fetchAppSettings(ctx: Context): Promise<CheckoutGraphQLSettings>
 ```
 
-Reads `vtex.checkout-graphql@0.x`, honors `x-vtex-force-intsch-item-details: true`, and on error logs and returns the safe defaults `{ useIntschForItemDetails: false, itemDetailsComparisonSampleRate: 0 }` — sampling off rather than on, so an unreadable setting cannot add traffic. Read once per request and reused for every item.
+Reads `vtex.checkout-graphql@0.x`, honors `x-vtex-force-intsch-item-details: true`, and on error logs and returns the safe default `{ useIntschForItemDetails: false }`. Read once per request and reused for every item.
 
 **Resolver mapping** — the contract the four `Item` resolvers must satisfy, unchanged in signature and fallback:
 

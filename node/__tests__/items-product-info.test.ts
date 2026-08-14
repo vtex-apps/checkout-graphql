@@ -51,14 +51,28 @@ const ITEM = cartItem()
 
 interface Settings {
   useIntschForItemDetails?: boolean
-  itemDetailsComparisonSampleRate?: number
 }
 
 /**
- * Both providers primed with the same product, comparison off. Tests that care
- * about the comparison opt into a sample rate; everything else must not depend
- * on a sampled shadow request happening or not.
+ * The comparison sample rate is a fixed 1%, so `Math.random` is what decides
+ * whether a resolution is sampled. Every test pins it: outside the sample by
+ * default, so no case depends on a shadow request happening by chance.
  */
+let random: jest.SpyInstance<number, []>
+
+const OUTSIDE_SAMPLE = 0.5
+
+const INSIDE_SAMPLE = 0
+
+beforeEach(() => {
+  random = jest.spyOn(Math, 'random').mockReturnValue(OUTSIDE_SAMPLE)
+})
+
+afterEach(() => {
+  random.mockRestore()
+})
+
+/** Both providers primed with the same product. */
 const setup = (
   settings: Settings = {},
   overrides: ContextOverrides = {}
@@ -67,7 +81,6 @@ const setup = (
 
   ctx.clients.apps.getAppSettings.mockResolvedValue({
     useIntschForItemDetails: false,
-    itemDetailsComparisonSampleRate: 0,
     ...settings,
   })
 
@@ -500,87 +513,96 @@ describe('deduplication within a request', () => {
 })
 
 describe('failure handling', () => {
-  let random: jest.SpyInstance
-
-  beforeEach(() => {
-    // The failure warning is logged on ~1% of failures; force it on.
-    random = jest.spyOn(Math, 'random').mockReturnValue(0)
-  })
-
-  afterEach(() => {
-    random.mockRestore()
-  })
-
   const notFound = Object.assign(new Error('Request failed with status 404'), {
     response: { status: 404 },
   })
+
+  const timeout = new Error('timeout of 3000ms')
+
+  const ORDER_FORM_FALLBACK = ['Nome do orderForm', 'SKU do orderForm', [], []]
 
   it('falls back to the orderForm values when the product is not found', async () => {
     const ctx = withIntsch()
 
     ctx.clients.intsch.product.mockRejectedValue(notFound)
 
-    expect(await resolveAllFields(ITEM, ctx)).toEqual([
-      'Nome do orderForm',
-      'SKU do orderForm',
-      [],
-      [],
-    ])
+    expect(await resolveAllFields(ITEM, ctx)).toEqual(ORDER_FORM_FALLBACK)
+    expect(ctx.clients.searchGraphQL.product).not.toHaveBeenCalled()
   })
 
-  it('logs a product not found distinctly from a transport failure', async () => {
+  it('falls back when the provider times out', async () => {
     const ctx = withIntsch()
 
-    ctx.clients.intsch.product.mockRejectedValue(notFound)
+    ctx.clients.intsch.product.mockRejectedValue(timeout)
 
-    await root.Item.name(ITEM, {}, toContext(ctx))
-
-    expect(ctx.vtex.logger.warn).toHaveBeenCalledTimes(1)
-    expect(ctx.vtex.logger.warn.mock.calls[0][0]).toMatchObject({
-      message: 'Product not found while resolving item details',
-      provider: 'intsch',
-    })
-  })
-
-  it('falls back and names the upstream when intsch times out', async () => {
-    const ctx = withIntsch()
-
-    ctx.clients.intsch.product.mockRejectedValue(new Error('timeout of 3000ms'))
-
-    expect(await resolveAllFields(ITEM, ctx)).toEqual([
-      'Nome do orderForm',
-      'SKU do orderForm',
-      [],
-      [],
-    ])
-
-    expect(ctx.vtex.logger.warn.mock.calls[0][0]).toMatchObject({
-      message: 'Error when communicating with the item details provider',
-      provider: 'intsch',
-    })
-  })
-
-  it('names search-graphql as the upstream while the flag is off', async () => {
-    const ctx = setup()
-
-    ctx.clients.searchGraphQL.product.mockRejectedValue(new Error('boom'))
-
-    await root.Item.name(ITEM, {}, toContext(ctx))
-
-    expect(ctx.vtex.logger.warn.mock.calls[0][0]).toMatchObject({
-      provider: 'vtex.search-graphql',
-    })
+    expect(await resolveAllFields(ITEM, ctx)).toEqual(ORDER_FORM_FALLBACK)
   })
 
   it('samples the warning so a failing cart cannot flood the logs', async () => {
     const ctx = withIntsch()
 
-    ctx.clients.intsch.product.mockRejectedValue(new Error('boom'))
-    random.mockReturnValue(0.5)
+    ctx.clients.intsch.product.mockRejectedValue(timeout)
 
     await resolveAllFields(ITEM, ctx)
 
     expect(ctx.vtex.logger.warn).not.toHaveBeenCalled()
+  })
+
+  describe('the sampled warning', () => {
+    /**
+     * The warning is sampled at the same 1% as the comparison, so forcing it on
+     * also draws the resolution into the sample — where a healthy shadow
+     * provider would rescue the failure and there would be nothing to warn
+     * about. These cases therefore fail both providers, which is anyway the only
+     * state in which a shopper actually sees the fallback.
+     */
+    const failBothProviders = (ctx: ContextMock, error: Error) => {
+      ctx.clients.intsch.product.mockRejectedValue(error)
+      ctx.clients.searchGraphQL.product.mockRejectedValue(error)
+    }
+
+    beforeEach(() => {
+      random.mockReturnValue(INSIDE_SAMPLE)
+    })
+
+    it('reports a product missing from the index distinctly', async () => {
+      const ctx = withIntsch()
+
+      failBothProviders(ctx, notFound)
+
+      await root.Item.name(ITEM, {}, toContext(ctx))
+
+      expect(ctx.vtex.logger.warn).toHaveBeenCalledTimes(1)
+      expect(ctx.vtex.logger.warn.mock.calls[0][0]).toMatchObject({
+        message: 'Product not found while resolving item details',
+        provider: 'intsch',
+      })
+    })
+
+    it('reports a transport failure under a different message', async () => {
+      const ctx = withIntsch()
+
+      failBothProviders(ctx, timeout)
+
+      await root.Item.name(ITEM, {}, toContext(ctx))
+
+      expect(ctx.vtex.logger.warn.mock.calls[0][0]).toMatchObject({
+        message: 'Error when communicating with the item details provider',
+        provider: 'intsch',
+      })
+    })
+
+    it('names search-graphql as the upstream while the flag is off', async () => {
+      const ctx = setup()
+
+      failBothProviders(ctx, timeout)
+
+      await root.Item.name(ITEM, {}, toContext(ctx))
+
+      expect(ctx.vtex.logger.warn.mock.calls[0][0]).toMatchObject({
+        provider: 'vtex.search-graphql',
+      })
+    })
   })
 
   it('never requests a product for a bundle item without a productId', async () => {
@@ -600,10 +622,12 @@ describe('failure handling', () => {
 })
 
 describe('shadow comparison', () => {
-  const ALWAYS = 100
+  beforeEach(() => {
+    random.mockReturnValue(INSIDE_SAMPLE)
+  })
 
   it('resolves both providers and compares their mapped results', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     expect(await root.Item.name(ITEM, {}, toContext(ctx))).toBe(
       'Camiseta Básica'
@@ -620,7 +644,7 @@ describe('shadow comparison', () => {
   })
 
   it('compares after mapping, so the payload formats do not differ by themselves', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     await root.Item.name(ITEM, {}, toContext(ctx))
 
@@ -634,7 +658,7 @@ describe('shadow comparison', () => {
 
   it('logs the productId and segment values it compared under', async () => {
     const ctx = setup(
-      { itemDetailsComparisonSampleRate: ALWAYS },
+      {},
       { vtex: { segment: { channel: 2, cultureInfo: 'en-US' } } }
     )
 
@@ -649,7 +673,7 @@ describe('shadow comparison', () => {
   })
 
   it('compares once per product even when all four fields are selected', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     await resolveAllFields(ITEM, ctx)
 
@@ -658,8 +682,10 @@ describe('shadow comparison', () => {
     expect(ctx.vtex.logger.info).toHaveBeenCalledTimes(1)
   })
 
-  it('makes no shadow request when the sample rate is zero', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: 0 })
+  it('leaves the other 99% of products with a single provider', async () => {
+    const ctx = setup()
+
+    random.mockReturnValue(OUTSIDE_SAMPLE)
 
     await resolveAllFields(ITEM, ctx)
 
@@ -668,8 +694,23 @@ describe('shadow comparison', () => {
     expect(ctx.vtex.logger.info).not.toHaveBeenCalled()
   })
 
+  it('draws roughly one product in a hundred into the sample', async () => {
+    const ctx = setup()
+
+    // The rate is fixed at 1%: 0.5% is inside, 5% is not.
+    random.mockReturnValue(0.005)
+    await root.Item.name(cartItem({ productId: 'inside' }), {}, toContext(ctx))
+
+    expect(ctx.clients.intsch.product).toHaveBeenCalledTimes(1)
+
+    random.mockReturnValue(0.05)
+    await root.Item.name(cartItem({ productId: 'outside' }), {}, toContext(ctx))
+
+    expect(ctx.clients.intsch.product).toHaveBeenCalledTimes(1)
+  })
+
   it('reports a differing SKU name at the path of the SKU it belongs to', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     const [firstSku, ...otherSkus] = INTSCH_ITEMS
 
@@ -696,7 +737,7 @@ describe('shadow comparison', () => {
   })
 
   it('does not report a difference when only the ordering changed', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     ctx.clients.intsch.product.mockResolvedValue({
       ...INTSCH_PRODUCT,
@@ -711,7 +752,7 @@ describe('shadow comparison', () => {
   })
 
   it('does not report a difference when the specification list is reordered', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
     const [dimensions, ...otherGroups] = INTSCH_SPECIFICATION_GROUPS
 
     ctx.clients.intsch.product.mockResolvedValue({
@@ -731,7 +772,7 @@ describe('shadow comparison', () => {
   })
 
   it('does report a difference when specification values are reordered', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
     const [dimensions, ...otherGroups] = INTSCH_SPECIFICATION_GROUPS
     const [height, ...otherSpecs] = dimensions.specifications
 
@@ -769,7 +810,7 @@ describe('shadow comparison', () => {
   })
 
   it('serves the selected provider result, not the shadow one', async () => {
-    const ctx = withIntsch({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = withIntsch()
 
     ctx.clients.searchGraphQL.product.mockResolvedValue({
       ...SEARCH_GRAPHQL_PRODUCT,
@@ -784,7 +825,7 @@ describe('shadow comparison', () => {
   })
 
   it('reports nothing and serves the selected result when the shadow side fails', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     ctx.clients.intsch.product.mockRejectedValue(new Error('timeout of 3000ms'))
 
@@ -797,7 +838,7 @@ describe('shadow comparison', () => {
   })
 
   it('serves the shadow result when the selected provider is the one that fails', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     ctx.clients.searchGraphQL.product.mockRejectedValue(new Error('boom'))
 
@@ -807,7 +848,7 @@ describe('shadow comparison', () => {
   })
 
   it('falls back to the orderForm when both providers fail', async () => {
-    const ctx = setup({ itemDetailsComparisonSampleRate: ALWAYS })
+    const ctx = setup()
 
     ctx.clients.searchGraphQL.product.mockRejectedValue(new Error('boom'))
     ctx.clients.intsch.product.mockRejectedValue(new Error('boom'))

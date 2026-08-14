@@ -61,14 +61,6 @@
         "description": "When enabled, product name, SKU name and specifications are fetched straight from the Intelligent Search API instead of through vtex.search-graphql.",
         "type": "boolean",
         "default": false
-      },
-      "itemDetailsComparisonSampleRate": {
-        "title": "Item details comparison sample rate (%)",
-        "description": "Percentage of cart products resolved through both providers so their results can be compared and any difference logged. Used to validate the migration; set to 0 to disable.",
-        "type": "number",
-        "minimum": 0,
-        "maximum": 100,
-        "default": 1
       }
     }
   },

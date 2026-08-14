@@ -16,6 +16,15 @@ import { fetchAppSettings } from './settings'
 const LOG_PREFIX = 'ItemDetails Comparison'
 
 /**
+ * Percentage of distinct cart products resolved through both providers so their
+ * results can be compared. Fixed rather than configurable: 1% is enough to build
+ * the agreement signal the cutover is gated on, and small enough that it needs no
+ * operational lever. Raise it temporarily in a workspace when tuning
+ * `IGNORED_DIFFERENCES`, where the extra noise is cheap to observe.
+ */
+const COMPARISON_SAMPLE_RATE = 1
+
+/**
  * Neither provider promises an ordering for these lists, so matching their
  * elements by position would report differences that mean nothing. Elements
  * missing from either side are still reported.
@@ -91,10 +100,7 @@ const resolveWithProviders = async (
 ): Promise<ItemProductInfo> => {
   const { intschLoader } = getRequestState(ctx)
 
-  const {
-    useIntschForItemDetails,
-    itemDetailsComparisonSampleRate,
-  } = await fetchAppSettings(ctx)
+  const { useIntschForItemDetails } = await fetchAppSettings(ctx)
 
   const fromIntsch = async () =>
     fromIntschProduct(await intschLoader.load(productId))
@@ -109,7 +115,7 @@ const resolveWithProviders = async (
   return compareApiResults(
     selected,
     shadow,
-    itemDetailsComparisonSampleRate,
+    COMPARISON_SAMPLE_RATE,
     ctx.vtex.logger,
     {
       logPrefix: LOG_PREFIX,
