@@ -446,7 +446,7 @@ interface CapturedError {
 }
 
 const isCapturedError = (value: unknown): value is CapturedError =>
-  !!value && typeof value === 'object' && '__error' in value
+  typeof value === 'object' && value !== null && '__error' in value
 
 /**
  * Runs `selected` and, on a sampled percentage of calls, `shadow` in parallel,
