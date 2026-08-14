@@ -76,9 +76,10 @@ const dedupe = (values: string[]): string[] => {
  * specification carrying at least one value, plus a synthetic
  * `activeSubscriptions` entry for SKUs with subscription attachments.
  *
- * Note that empty-string values survive here. Specification groups drop them
- * (see `mapSpecificationGroups`); variations do not, and the asymmetry is
- * upstream's, not ours.
+ * Note that empty-string values survive here, and so do fields hidden from the
+ * product page. Specification groups drop both (see `mapSpecificationGroups`);
+ * variations drop neither, because upstream builds them from a SKU list it
+ * never filters. The asymmetry is upstream's, not ours.
  */
 const mapVariations = (
   sku: CatalogDataPlaneSku
@@ -144,6 +145,17 @@ const mapSpecificationGroups = (
     const specifications: ItemProductInfoSpecification[] = []
 
     for (const { field, values } of group.specifications ?? []) {
+      /**
+       * A field the merchant hid from the product page never reaches the cart
+       * today: `vtex.search-resolver` reads `IsOnProductDetails` from the
+       * catalog's `completeSpecifications` and drops the specification from its
+       * group and from `allSpecifications` alike. An absent flag means visible,
+       * which is how that filter reads a specification it finds no entry for.
+       */
+      if (field.isOnProductDetails === false) {
+        continue
+      }
+
       const present = (values ?? [])
         .map(({ value }) => value)
         .filter(isNotEmpty)

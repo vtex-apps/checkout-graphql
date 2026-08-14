@@ -341,6 +341,29 @@ describe('the four fields, resolved from a dataplane document', () => {
     ])
   })
 
+  it('hides a specification the merchant hid from the product page', async () => {
+    const ctx = withDataPlane()
+
+    const groups = await root.Item.productSpecificationGroups(
+      ITEM,
+      {},
+      toContext(ctx)
+    )
+
+    const names = groups.flatMap(
+      ({ specifications }: { specifications: Array<{ name: string }> }) =>
+        specifications.map(({ name }) => name)
+    )
+
+    expect(names).not.toContain('Produto pesado')
+    // Dropped from allSpecifications too, not just from its own group.
+    expect(names).not.toContain('AtributosProdutoERP')
+    // The group left with only hidden specifications goes with them.
+    expect(groups.map(({ name }: { name: string }) => name)).not.toContain(
+      'Integração ERP'
+    )
+  })
+
   it('leaves the inactive SKU specifications out of allSpecifications', async () => {
     const ctx = withDataPlane()
 
@@ -666,6 +689,21 @@ describe('shadow comparison', () => {
     expect(ctx.clients.searchGraphQL.product).toHaveBeenCalledTimes(1)
     expect(ctx.clients.catalogDataPlane.product).not.toHaveBeenCalled()
     expect(ctx.vtex.logger.info).not.toHaveBeenCalled()
+  })
+
+  it('compares every product outside production, where the traffic is one developer', async () => {
+    const ctx = setup({}, { vtex: { production: false } })
+
+    random.mockReturnValue(OUTSIDE_SAMPLE)
+
+    await root.Item.name(ITEM, {}, toContext(ctx))
+
+    expect(ctx.clients.catalogDataPlane.product).toHaveBeenCalledTimes(1)
+    expect(ctx.vtex.logger.info).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'ItemDetails Comparison: Results are equal',
+      })
+    )
   })
 
   it('draws a product in a hundred into the sample', async () => {

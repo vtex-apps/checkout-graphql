@@ -19,10 +19,17 @@ const LOG_PREFIX = 'ItemDetails Comparison'
  * Percentage of distinct cart products resolved through both providers so their
  * results can be compared. Fixed rather than configurable: 1% is enough to build
  * the agreement signal the cutover is gated on, and small enough that it needs no
- * operational lever. Raise it temporarily in a workspace when tuning
- * `IGNORED_DIFFERENCES`, where the extra noise is cheap to observe.
+ * operational lever.
  */
 const COMPARISON_SAMPLE_RATE = 1
+
+/**
+ * Outside production every product is compared instead. A linked workspace
+ * serves a handful of carts on purpose, so 1% of them is no signal at all, and
+ * the shadow request costs nothing where the traffic is one developer's. This
+ * is what makes a difference reproducible: open the cart, read the log.
+ */
+const WORKSPACE_COMPARISON_SAMPLE_RATE = 100
 
 /**
  * Neither provider promises an ordering for these lists, so matching their
@@ -118,7 +125,9 @@ const resolveWithProviders = async (
   return compareApiResults(
     selected,
     shadow,
-    COMPARISON_SAMPLE_RATE,
+    ctx.vtex.production
+      ? COMPARISON_SAMPLE_RATE
+      : WORKSPACE_COMPARISON_SAMPLE_RATE,
     ctx.vtex.logger,
     {
       logPrefix: LOG_PREFIX,

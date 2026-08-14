@@ -5,8 +5,9 @@
  * It deliberately carries every trait the mapper has to handle: SKU-level
  * specification groups made of `isSkuField` specs, a product-level group mixing
  * a valued and an empty specification, the same specification repeated across
- * SKUs (so merged values are deduplicated), an inactive SKU, and a subscription
- * attachment.
+ * SKUs (so merged values are deduplicated), an inactive SKU, a subscription
+ * attachment, a specification hidden from the product page inside an otherwise
+ * visible group, and a group made of nothing but hidden specifications.
  */
 
 import { CatalogDataPlaneProduct } from '../clients/catalogDataPlane'
@@ -26,6 +27,29 @@ export const DATA_PLANE_PRODUCT: CatalogDataPlaneProduct = {
           // No value survives, so neither the specification nor its name appears.
           field: { name: 'Origem', isSkuField: false },
           values: [{ value: '' }, { value: null }],
+        },
+        {
+          // Hidden from the product page, so the cart does not show it either.
+          field: {
+            name: 'Produto pesado',
+            isSkuField: false,
+            isOnProductDetails: false,
+          },
+          values: [{ value: 'Não' }],
+        },
+      ],
+    },
+    {
+      // Every specification is hidden, so the group itself disappears.
+      name: 'Integração ERP',
+      specifications: [
+        {
+          field: {
+            name: 'AtributosProdutoERP',
+            isSkuField: false,
+            isOnProductDetails: false,
+          },
+          values: [{ value: 'COMPOSICAO: ALGODAO' }],
         },
       ],
     },

@@ -124,9 +124,13 @@ and prices that get thrown away.
   path returns what the old one returns, so that enabling it is a decision backed
   by production data.
 - **Acceptance Criteria**:
-  - **Given** the fixed 1% comparison sample rate, **when** a product's details
-    are resolved, **then** roughly 1% of distinct products are fetched from both
-    providers and the remaining 99% from the selected provider only.
+  - **Given** the fixed 1% production comparison sample rate, **when** a
+    product's details are resolved, **then** roughly 1% of distinct products are
+    fetched from both providers and the remaining 99% from the selected provider
+    only.
+  - **Given** a workspace that is not production, **when** a product's details
+    are resolved, **then** every distinct product is fetched from both providers
+    and compared, so a difference can be reproduced by opening a cart.
   - **Given** a product is sampled, **when** the two results are compared,
     **then** the comparison runs on the normalized `ItemProductInfo` each
     provider's mapper produces, never on the two raw upstream payloads.
@@ -178,20 +182,22 @@ and prices that get thrown away.
      an `activeSubscriptions` variation when the SKU carries `vtex.subscription.*`
      attachments.
    - `specificationGroups` from the SKU-level groups first and then the
-     product-level groups, excluding specifications whose field is
+     product-level groups, dropping specifications whose field is
+     `isOnProductDetails: false`, excluding specifications whose field is
      `isSkuField`, dropping specifications with no non-empty value, and dropping
      groups left with nothing.
    - A synthetic `allSpecifications` group appended last, carrying every
-     specification — SKU fields included — with values merged and deduplicated
-     in the order the groups were visited.
+     specification that survived the visibility filter — SKU fields included —
+     with values merged and deduplicated in the order the groups were visited.
 5. Never throw: return `null` for an item without a `productId`, for a product
    that does not resolve, and on any upstream error, leaving each resolver to
    fall back to its order-form value.
 6. Select the provider from the `useCatalogDataPlaneForItemDetails` app setting,
    read once per request, defaulting to `vtex.search-graphql`.
-7. On a fixed 1% of distinct products, resolve through *both* providers, compare
-   the two normalized results and log the outcome. Always serve the selected
-   provider's result; the shadow result is only ever compared and discarded.
+7. On a fixed 1% of distinct products in production, and on every one of them
+   outside it, resolve through *both* providers, compare the two normalized
+   results and log the outcome. Always serve the selected provider's result; the
+   shadow result is only ever compared and discarded.
 8. Compare after mapping, never before, so the diff reports behavioral
    divergence rather than the unavoidable differences between two payload
    formats.
@@ -214,7 +220,9 @@ and prices that get thrown away.
   another.
 - **Comparison cost**: at 1%, the shadow path adds roughly 1% to each provider's
   volume, and a sampled product resolves as slowly as the slower provider.
-  Non-sampled resolutions make exactly one upstream call.
+  Non-sampled resolutions make exactly one upstream call. Outside production
+  every resolution pays the shadow request, which is affordable only because a
+  workspace's traffic is one developer's.
 - **Capacity**: the dataplane currently serves internal callers. Cart render
   traffic is new load on it and needs the catalog team's agreement before the
   flag is enabled beyond a test account.
@@ -518,7 +526,9 @@ sequenceDiagram
   reimplements mapping logic rather than inheriting it. `search-resolver` solved
   the same problem with `compareApiResults`.
 - **Decision**: Port `compareApiResults` and run it at the per-`productId`
-  resolution boundary at a fixed 1%. The selected provider's result is always
+  resolution boundary at a fixed 1% in production, and at 100% outside it, since
+  a linked workspace serves too few carts for 1% to say anything and the shadow
+  request costs nothing there. The selected provider's result is always
   the one served; the other is compared and discarded. Compare the normalized
   `ItemProductInfo`, never the raw payloads. Match `items` by `itemId`, and
   `specificationGroups` and `variations` by `name`; compare leaf `values`
@@ -528,9 +538,43 @@ sequenceDiagram
   same mechanism keeps working after the flip, since the comparator does not care
   which provider is authoritative. The rate is a constant rather than a setting,
   so the signal starts on deploy, before the flag is touched; shedding that 1%
-  needs a rollback rather than a setting change. Placement matters:
+  needs a rollback rather than a setting change. The workspace rate makes a
+  reported difference reproducible by hand — open the cart, read the log —
+  which is how the `IsOnProductDetails` divergence in Decision 10 was found.
+  Placement matters:
   `getProductInfo` is called once per field per item, so the comparison must sit
   at the memoization boundary or one four-field item triggers four comparisons.
+
+#### Decision 10: Hide specifications the merchant hid from the product page
+
+- **Status**: Accepted
+- **Context**: The first comparison runs surfaced a consistent divergence: the
+  dataplane side carried whole groups the `searchGraphQL` side did not
+  (`Limitador de quantidade`, `Preços por Unidade de Medida`, `Integração ERP`
+  on one account), plus their specifications inside `allSpecifications`. The
+  cause is a filter Decision 2 did not port, because it does not live where that
+  decision looked. Accounts with `shouldUseNewPDPEndpoint` off — which is most of
+  them — are served by `search.productsById`, so their products carry no
+  `origin` and `vtex.search-resolver` takes its *catalog* branch. That branch,
+  and only that branch, filters specifications on `IsOnProductDetails` from the
+  catalog's `completeSpecifications`, dropping them from their group and from
+  `allSpecifications` alike. `intelligent_search/specifications.rs`, the source
+  Decision 2 was read from, has no such filter.
+- **Decision**: Skip specifications whose field is `isOnProductDetails: false`,
+  which the dataplane document already carries. An absent flag means visible,
+  matching how the catalog branch reads a specification it finds no
+  `completeSpecifications` entry for. Variations are left alone: they come from
+  `skuSpecifications`, which upstream does not filter on this flag.
+- **Consequences**: The cart stops being the one surface that shows a merchant's
+  internal fields — ERP attribute blobs, quantity limiters, unit-of-measure
+  bookkeeping. It also means the two `searchGraphQL` branches disagree with each
+  other, and this mapping now follows the catalog one: on an account with
+  `shouldUseNewPDPEndpoint` on, the comparison will report these same
+  specifications as *missing* rather than extra, since that branch returns
+  `intelligent-search-api`'s unfiltered groups. That is the right trade — the
+  filtered behavior is what nearly every cart renders today, and it is the one a
+  merchant would expect — but it means the agreement rate has to be read per
+  account, not in aggregate.
 
 ### Implementation Plan
 
@@ -568,10 +612,10 @@ contract. Then reduce the four resolvers in `node/resolvers/items.ts` to reading
 **Phase 4 — Shadow comparison**
 
 Wire `compareApiResults` into the per-`productId` boundary with the
-identity-matching configuration and the fixed 1% rate. Before enabling anywhere,
-raise the rate constant in a workspace and confirm a same-product resolution
-reports no differences; tune `ignoredDifferences` there, then restore the
-constant.
+identity-matching configuration, the fixed 1% production rate and the 100%
+workspace rate. Before enabling anywhere, link a workspace and confirm a
+same-product resolution reports no differences; tune `ignoredDifferences`
+there, where every cart render produces a comparison.
 
 **Phase 5 — Tests**
 
@@ -702,15 +746,17 @@ fromSearchGraphQLProduct(product: ProductResponse): ItemProductInfo
   `vtex.subscription.*`, an `{ name: 'activeSubscriptions', values: [suffixes] }`
   entry appended last.
 - `specificationGroups`: visit SKU-level groups first, in SKU order, then
-  product-level groups. Within a group, keep specifications with at least one
-  non-empty value; a specification whose field is `isSkuField` is excluded from
-  the group but still contributes to `allSpecifications`. Groups with no
-  remaining specification are dropped. `name` and `originalName` are both the
+  product-level groups. Within a group, skip specifications whose field is
+  `isOnProductDetails: false` and keep those with at least one non-empty value;
+  a specification whose field is `isSkuField` is excluded from the group but
+  still contributes to `allSpecifications`. Groups with no remaining
+  specification are dropped. `name` and `originalName` are both the
   field's name — the dataplane already returned it translated, so there is no
   second, untranslated name to carry.
 - Finally, an `allSpecifications` group appended last, carrying one entry per
-  distinct specification name across every group visited (SKU fields included),
-  with values concatenated in visit order and deduplicated.
+  distinct specification name across every group visited that survived the
+  visibility filter (SKU fields included), with values concatenated in visit
+  order and deduplicated.
 
 **Service** — `node/services/itemDetails.ts`
 

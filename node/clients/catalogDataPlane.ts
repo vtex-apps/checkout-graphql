@@ -36,7 +36,11 @@ export interface CatalogSpecificationGroup {
 }
 
 export interface CatalogSpecification {
-  field: { name: string; isSkuField?: boolean }
+  field: {
+    name: string
+    isSkuField?: boolean
+    isOnProductDetails?: boolean
+  }
   values?: Array<{ value?: string | null }>
 }
 
