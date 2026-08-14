@@ -25,6 +25,8 @@ export interface LoggerMock {
 export interface VtexMock {
   logger: LoggerMock
   segment?: { cultureInfo: string; channel?: string }
+  locale?: string
+  tenant?: { locale: string }
   orderFormId?: string
   ownerId?: string
   vtexRCSessionIdv7?: string

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Cart item details (`name`, `skuName`, `skuSpecifications` and
+  `productSpecificationGroups`) can now be resolved straight from the catalog
+  dataplane instead of travelling through `vtex.search-graphql`,
+  `vtex.search-resolver` and the Intelligent Search API — four hops for text
+  that lives in one document, three of which also compute prices, offers and
+  storefront validation the cart discards. Behind the
+  `useCatalogDataPlaneForItemDetails` setting, off by default. A fixed 1% of
+  distinct cart products is resolved through both providers and the normalized
+  results compared, so the cutover can be gated on measured agreement rather
+  than assumption; the shopper is always served the selected provider's result.
+  Every failure still degrades to the order form values.
+
 ## [0.69.0] - 2026-08-11
 
 ### Fixed
