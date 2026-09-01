@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.70.0] - 2026-09-01
+
 ### Added
 - Cart item details (`name`, `skuName`, `skuSpecifications` and
   `productSpecificationGroups`) can now be resolved straight from the catalog
