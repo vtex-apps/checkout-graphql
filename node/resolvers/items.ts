@@ -1,61 +1,32 @@
-import { Logger } from '@vtex/api'
-
-import { SearchGraphQL } from '../clients/searchGraphQL'
+import { getProductInfo } from '../services/itemDetails'
+import { ItemProductInfoSku } from '../utils/itemProductInfo'
 import { fixImageUrl } from '../utils/image'
 import { addOptionsForItems } from '../utils/attachmentsHelpers'
 import { generateSubscriptionDataEntry } from '../utils/subscriptions'
 import { OrderFormIdArgs } from '../utils/args'
 
-const getProductInfo = async (
-  item: OrderFormItem,
-  searchGraphQL: SearchGraphQL,
-  logger: Logger
-) => {
-  try {
-    const response = await searchGraphQL.product(item.productId)
+const getVariations = (skuId: string, skuList: ItemProductInfoSku[]) => {
+  const matchedSku = skuList.find(sku => sku.itemId === skuId)
 
-    return response
-  } catch (err) {
-    if (Math.floor(Math.random() * 100) === 0) {
-      logger.warn({
-        message: 'Error when communicating with vtex.search-graphql',
-        error: err,
-      })
-    }
-    return null
-  }
-}
-
-const getVariations = (skuId: string, skuList: any[]) => {
-  const matchedSku = skuList.find((sku: any) => sku.itemId === skuId)
   if (!matchedSku) {
     return []
   }
-  return matchedSku.variations.map((variation: any) => ({
+
+  return matchedSku.variations.map(variation => ({
     fieldName: variation.name,
-    fieldValues: variation.values || [],
+    fieldValues: variation.values,
   }))
 }
 
 export const root = {
   Item: {
     name: async (item: OrderFormItem, _: unknown, ctx: Context) => {
-      const {
-        vtex: { logger },
-        clients: { searchGraphQL },
-      } = ctx
-
-      const product = await getProductInfo(item, searchGraphQL, logger)
+      const product = await getProductInfo(item, ctx)
 
       return product?.productName ?? item.name
     },
     skuName: async (item: OrderFormItem, _: unknown, ctx: Context) => {
-      const {
-        vtex: { logger },
-        clients: { searchGraphQL },
-      } = ctx
-
-      const product = await getProductInfo(item, searchGraphQL, logger)
+      const product = await getProductInfo(item, ctx)
 
       return (
         product?.items.find(({ itemId }) => itemId === item.id)?.name ??
@@ -70,12 +41,7 @@ export const root = {
       _: unknown,
       ctx: Context
     ) => {
-      const {
-        vtex: { logger },
-        clients: { searchGraphQL },
-      } = ctx
-
-      const product = await getProductInfo(item, searchGraphQL, logger)
+      const product = await getProductInfo(item, ctx)
 
       return getVariations(item.id, product?.items ?? [])
     },
@@ -84,12 +50,7 @@ export const root = {
       _: unknown,
       ctx: Context
     ) => {
-      const {
-        vtex: { logger },
-        clients: { searchGraphQL },
-      } = ctx
-
-      const product = await getProductInfo(item, searchGraphQL, logger)
+      const product = await getProductInfo(item, ctx)
 
       return product?.specificationGroups ?? []
     },

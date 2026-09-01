@@ -15,6 +15,13 @@ metrics.trackCache('segment', segmentCache)
 const searchGraphQLCache = new LRUCache<string, any>({ max: 5000 })
 metrics.trackCache('searchGraphQL', searchGraphQLCache)
 
+/**
+ * Product documents are shared by every shopper of an account in a given
+ * locale, since nothing shopper-specific goes into the request.
+ */
+const catalogDataPlaneCache = new LRUCache<string, any>({ max: 5000 })
+metrics.trackCache('catalogDataPlane', catalogDataPlaneCache)
+
 export default new Service<Clients, RecorderState, CustomContext>({
   clients: {
     implementation: Clients,
@@ -28,6 +35,13 @@ export default new Service<Clients, RecorderState, CustomContext>({
       },
       searchGraphQL: {
         memoryCache: searchGraphQLCache,
+        timeout: THREE_SECONDS_MS,
+      },
+      catalogDataPlane: {
+        // One request per distinct product already fans out; a retry multiplies it.
+        concurrency: 10,
+        memoryCache: catalogDataPlaneCache,
+        retries: 0,
         timeout: THREE_SECONDS_MS,
       },
       segment: {

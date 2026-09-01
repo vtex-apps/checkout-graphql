@@ -25,25 +25,40 @@
 class StubBase {}
 
 export class IOClients extends StubBase {}
-export class JanusClient extends StubBase {}
+
+/**
+ * Keeps the constructor arguments the real client hierarchy would store, so a
+ * test can instantiate a client, inject an `http` double and assert on the
+ * request it builds.
+ */
+export class JanusClient extends StubBase {
+  constructor(
+    public context?: unknown,
+    public options?: unknown,
+    public environment?: unknown
+  ) {
+    super()
+  }
+}
+
 export class AppClient extends StubBase {}
 export class GraphQLClient extends StubBase {}
 export class Logger {}
 
 export class AuthenticationError extends Error {
-  public constructor(_e?: unknown) {
+  constructor(_e?: unknown) {
     super('AuthenticationError')
   }
 }
 
 export class ForbiddenError extends Error {
-  public constructor(_e?: unknown) {
+  constructor(_e?: unknown) {
     super('ForbiddenError')
   }
 }
 
 export class UserInputError extends Error {
-  public constructor(_e?: unknown) {
+  constructor(_e?: unknown) {
     super('UserInputError')
   }
 }
@@ -51,12 +66,10 @@ export class UserInputError extends Error {
 // Used only by node/index.ts at module-scope (cache + service bootstrap). They
 // are not exercised in tests but keeping the symbols present avoids surprises
 // if a future test imports node/index.ts.
-export class Service {
-  public constructor(_opts?: unknown) {}
-}
+export class Service {}
 
 export class LRUCache<K = string, V = unknown> {
-  public constructor(public opts?: unknown) {}
+  constructor(public opts?: unknown) {}
   public get(_key: K): V | undefined {
     return undefined
   }

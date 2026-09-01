@@ -1,5 +1,6 @@
 import { IOClients } from '@vtex/api'
 
+import { CatalogDataPlane } from './catalogDataPlane'
 import { Checkout, CheckoutNoCookies } from './checkout'
 import { SearchGraphQL } from './searchGraphQL'
 import { Session } from './session'
@@ -17,6 +18,10 @@ export class Clients extends IOClients {
 
   public get searchGraphQL() {
     return this.getOrSet('searchGraphQL', SearchGraphQL)
+  }
+
+  public get catalogDataPlane() {
+    return this.getOrSet('catalogDataPlane', CatalogDataPlane)
   }
 
   public get customSession() {

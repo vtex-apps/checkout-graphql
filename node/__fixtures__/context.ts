@@ -25,11 +25,14 @@ export interface LoggerMock {
 export interface VtexMock {
   logger: LoggerMock
   segment?: { cultureInfo: string; channel?: string }
+  locale?: string
+  tenant?: { locale: string }
   orderFormId?: string
   ownerId?: string
   vtexRCSessionIdv7?: string
   vtexRCMacIdv7?: string
   platform?: string
+  production?: boolean
 }
 
 export interface ContextMock {
@@ -77,6 +80,12 @@ export const makeContext = (overrides: ContextOverrides = {}): ContextMock => {
       },
       segment: { cultureInfo: 'pt-BR' },
       platform: 'vtex',
+      /**
+       * Production by default, because the rates and sampling that code reads
+       * this for are the ones that reach shoppers. A test about workspace
+       * behavior says so explicitly.
+       */
+      production: true,
       ...overrides.vtex,
     },
     cookies: makeCookieJar(overrides.cookies),

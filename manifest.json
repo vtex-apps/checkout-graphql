@@ -15,7 +15,9 @@
   },
   "credentialType": "absolute",
   "mustUpdateAt": "2019-11-05",
-  "registries": ["smartcheckout"],
+  "registries": [
+    "smartcheckout"
+  ],
   "policies": [
     {
       "name": "vtex.messages:translate-messages"
@@ -35,8 +37,34 @@
       }
     },
     {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/catalog-dataplane/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercebeta.com.br",
+        "path": "/api/catalog-dataplane/*"
+      }
+    },
+    {
       "name": "vtex.graphql-server:resolve-graphql"
     }
   ],
+  "settingsSchema": {
+    "title": "Checkout GraphQL",
+    "type": "object",
+    "properties": {
+      "useCatalogDataPlaneForItemDetails": {
+        "title": "Resolve cart item details directly from the catalog",
+        "description": "When enabled, product name, SKU name and specifications are fetched straight from the catalog dataplane instead of through vtex.search-graphql.",
+        "type": "boolean",
+        "default": false
+      }
+    }
+  },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
