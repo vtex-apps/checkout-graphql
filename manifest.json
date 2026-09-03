@@ -62,7 +62,7 @@
         "title": "Resolve cart item details directly from the catalog",
         "description": "When enabled, product name, SKU name and specifications are fetched straight from the catalog dataplane instead of through vtex.search-graphql.",
         "type": "boolean",
-        "default": false
+        "default": true
       }
     }
   },
