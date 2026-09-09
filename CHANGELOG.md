@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.71.0] - 2026-09-09
+
 ### Changed
 
 - Changing feature flag default to use the CatalogDataplane to fetch the item details.
