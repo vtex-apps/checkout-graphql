@@ -2,7 +2,8 @@ import { AuthenticationError, ForbiddenError, UserInputError } from '@vtex/api'
 import { AxiosError } from 'axios'
 import { parse } from 'set-cookie-parser'
 import { SetOption } from 'cookies'
-import { CHECKOUT_COOKIE, OWNERSHIP_COOKIE } from '../constants'
+
+import { CHECKOUT_COOKIE, LOCALE_COOKIE, OWNERSHIP_COOKIE } from '../constants'
 
 export function generateRandomName() {
   return (1 + Math.random()).toString(36).substring(2)
@@ -47,7 +48,7 @@ export const parseCookie = (cookie: string): ParsedCookie => {
     expires: parsed.expires,
     httpOnly: true,
     secure: parsed.secure,
-    sameSite: parsed.sameSite as "strict" | "lax" | undefined,
+    sameSite: parsed.sameSite as 'strict' | 'lax' | undefined,
   }
 
   return {
@@ -65,6 +66,10 @@ export function ownershipCookieFormat(ownerId: string) {
   return `${OWNERSHIP_COOKIE}=${ownerId};`
 }
 
+export function localeCookieFormat(locale: string) {
+  return `${LOCALE_COOKIE}=${locale};`
+}
+
 export function getOrderFormIdFromCookie(cookies: Context['cookies']) {
   const cookie = cookies.get(CHECKOUT_COOKIE)
   return cookie?.split('=')[1]
@@ -72,6 +77,10 @@ export function getOrderFormIdFromCookie(cookies: Context['cookies']) {
 
 export function getOwnerIdFromCookie(cookies: Context['cookies']) {
   return cookies.get(OWNERSHIP_COOKIE)
+}
+
+export function getLocaleFromCookie(cookies: Context['cookies']) {
+  return cookies.get(LOCALE_COOKIE)
 }
 
 interface ParsedCookie {

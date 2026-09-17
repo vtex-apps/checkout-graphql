@@ -13,6 +13,7 @@ import {
   ASPXAUTH_COOKIE,
   BROKEN_COOKIE_EMAIL_PREFIX,
   CHECKOUT_COOKIE,
+  LOCALE_COOKIE,
   OWNERSHIP_COOKIE,
   VTEX_SESSION,
 } from '../constants'
@@ -27,7 +28,12 @@ interface StoreSettings {
   enableCriticalCSS: boolean
 }
 
-const ALL_SET_COOKIES = [CHECKOUT_COOKIE, ASPXAUTH_COOKIE, OWNERSHIP_COOKIE]
+const ALL_SET_COOKIES = [
+  CHECKOUT_COOKIE,
+  ASPXAUTH_COOKIE,
+  OWNERSHIP_COOKIE,
+  LOCALE_COOKIE,
+]
 
 const filterAllowedCookies = (setCookies: string[], allowList: string[]) => {
   return setCookies.filter(setCookie => {
@@ -169,7 +175,7 @@ export const root = {
 export async function syncWithStoreLocale(
   orderForm: CheckoutOrderForm,
   cultureInfo: string,
-  checkout: Context['clients']['checkout']
+  ctx: Context
 ) {
   const clientPreferencesData = orderForm.clientPreferencesData || {
     locale: cultureInfo,
@@ -188,9 +194,10 @@ export async function syncWithStoreLocale(
     newClientPreferencesData.locale = cultureInfo
 
     try {
-      return await checkout.updateOrderFormClientPreferencesData(
+      return await ctx.clients.checkout.updateOrderFormClientPreferencesData(
         orderForm.orderFormId,
-        newClientPreferencesData
+        newClientPreferencesData,
+        ctx
       )
     } catch (e) {
       console.error(e)
@@ -235,6 +242,12 @@ export async function forwardCheckoutCookies(
       // just issued, not the one @withOwnerId read from the incoming request.
       ctx.vtex.ownerId = value
     }
+
+    if (name === LOCALE_COOKIE) {
+      // Same reasoning: Checkout rotates the locale when clientPreferencesData
+      // changes, and the calls that follow must speak the new one.
+      ctx.vtex.checkoutLocale = value
+    }
   })
 }
 
@@ -266,7 +279,7 @@ export const queries = {
     newOrderForm = await syncWithStoreLocale(
       newOrderForm,
       vtex.segment!.cultureInfo,
-      clients.checkout
+      ctx
     )
 
     /**
@@ -283,11 +296,16 @@ export const queries = {
       await forwardCheckoutCookies(headers, ctx)
     } else {
       /**
-       * The reasoning above does not apply to the ownership cookie: no other
-       * app sets it, so dropping it here would leave the shopper without
-       * ownership and Checkout would mask their personal data.
+       * The reasoning above does not apply to the ownership and locale
+       * cookies: no other app sets them. Dropping the ownership would leave
+       * the shopper without it and Checkout would mask their personal data;
+       * dropping the locale would keep Checkout answering in the sales
+       * channel culture instead of the one the shopper chose.
        */
-      await forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
+      await forwardCheckoutCookies(headers, ctx, [
+        OWNERSHIP_COOKIE,
+        LOCALE_COOKIE,
+      ])
     }
 
     return newOrderForm
@@ -350,7 +368,8 @@ export const mutations = {
       {
         optinNewsLetter: input.optInNewsletter,
         locale: input.locale,
-      }
+      },
+      ctx
     )
 
     return updatedOrderForm

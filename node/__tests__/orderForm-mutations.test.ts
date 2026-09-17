@@ -11,7 +11,8 @@ import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
  *    client (the client uses it to set ownership cookies on the response).
  * 2. `updateClientPreferencesData` translates the GraphQL camelCase
  *    `optInNewsletter` field into the legacy `optinNewsLetter` shape that the
- *    checkout REST API expects.
+ *    checkout REST API expects, and forwards `ctx` so the client can write the
+ *    rotated `CheckoutLocale` cookie back to the browser.
  * 3. Every mutation accepts an explicit `orderFormId` arg but falls back to
  *    `ctx.vtex.orderFormId` when the caller omits it.
  */
@@ -84,10 +85,14 @@ describe('mutations.updateClientPreferencesData', () => {
 
     expect(
       ctx.clients.checkout.updateOrderFormClientPreferencesData
-    ).toHaveBeenCalledWith('of-1', {
-      optinNewsLetter: true,
-      locale: 'pt-BR',
-    })
+    ).toHaveBeenCalledWith(
+      'of-1',
+      {
+        optinNewsLetter: true,
+        locale: 'pt-BR',
+      },
+      toContext(ctx)
+    )
     expect(result).toBe(updated)
   })
 
@@ -107,7 +112,8 @@ describe('mutations.updateClientPreferencesData', () => {
       ctx.clients.checkout.updateOrderFormClientPreferencesData
     ).toHaveBeenCalledWith(
       'ctx-of',
-      expect.objectContaining({ optinNewsLetter: false, locale: 'en' })
+      expect.objectContaining({ optinNewsLetter: false, locale: 'en' }),
+      expect.any(Object)
     )
   })
 })

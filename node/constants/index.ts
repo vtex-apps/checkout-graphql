@@ -11,6 +11,7 @@ export enum AddressType {
 export const CHECKOUT_COOKIE = 'checkout.vtex.com'
 export const ASPXAUTH_COOKIE = '.ASPXAUTH'
 export const OWNERSHIP_COOKIE = 'CheckoutOrderFormOwnership'
+export const LOCALE_COOKIE = 'CheckoutLocale'
 
 // Delivery channels
 export const DELIVERY = 'delivery'
