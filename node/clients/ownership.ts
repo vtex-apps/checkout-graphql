@@ -1,15 +1,7 @@
 import { MiddlewareContext } from '@vtex/api'
-import { parse } from 'set-cookie-parser'
 
 import { OWNERSHIP_COOKIE } from '../constants'
-
-const readIssuedOwnership = (setCookies: string[]) => {
-  const issued = setCookies
-    .map(setCookie => parse(setCookie)[0])
-    .find(cookie => cookie?.name === OWNERSHIP_COOKIE)
-
-  return issued?.value
-}
+import { readIssuedCookie } from './setCookie'
 
 /**
  * Keeps `CheckoutOrderFormOwnership` alive across every Checkout route.
@@ -37,7 +29,7 @@ export const keepOwnership = (ioContext: CustomIOContext) => async (
     return
   }
 
-  const issuedOwnership = readIssuedOwnership(setCookies)
+  const issuedOwnership = readIssuedCookie(setCookies, OWNERSHIP_COOKIE)
 
   if (issuedOwnership) {
     ioContext.ownerId = issuedOwnership
