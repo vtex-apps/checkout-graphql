@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The `CheckoutLocale` cookie is now carried on every request to Checkout and
+written back to the browser from every response, the same way the ownership
+cookie is. Checkout reads it before loading the cart to pick the culture of
+its messages and totalizer names (vtex/vcs.checkout#7216), so without it
+every cart operation made through this app came back in the sales channel
+culture even when `clientPreferencesData.locale` said otherwise
+(KI 1168499). `updateOrderFormClientPreferencesData` now forwards the
+rotated cookie, since changing the locale is what makes Checkout issue a new
+one.
+
 ## [0.71.1] - 2026-09-21
 
 ### Added
