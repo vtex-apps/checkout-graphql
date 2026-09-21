@@ -276,12 +276,6 @@ export const queries = {
       headers = obj.headers
     }
 
-    newOrderForm = await syncWithStoreLocale(
-      newOrderForm,
-      vtex.segment!.cultureInfo,
-      ctx
-    )
-
     /**
      * In case the enableOrderFormOptimization setting is enabled in the store,
      * this will be the only `orderForm` query performed in the client. So no
@@ -292,6 +286,14 @@ export const queries = {
       'vtex.store@2.x'
     )
 
+    /**
+     * Forwarded before `syncWithStoreLocale` on purpose. These are the headers
+     * of the `orderFormRaw` above, so they carry the locale Checkout held
+     * *before* the sync, and the sync is what makes Checkout rotate it. Since
+     * `ctx.cookies.set` appends a `Set-Cookie` per call and the browser keeps
+     * the last one of a given name, replaying them afterwards would put the
+     * pre-rotation locale last and undo the sync.
+     */
     if (storeSettings.enableOrderFormOptimization) {
       await forwardCheckoutCookies(headers, ctx)
     } else {
@@ -307,6 +309,12 @@ export const queries = {
         LOCALE_COOKIE,
       ])
     }
+
+    newOrderForm = await syncWithStoreLocale(
+      newOrderForm,
+      vtex.segment!.cultureInfo,
+      ctx
+    )
 
     return newOrderForm
   },

@@ -5,7 +5,7 @@ import {
 } from '../resolvers/orderForm'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
 import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
-import { BROKEN_COOKIE_EMAIL_PREFIX } from '../constants'
+import { BROKEN_COOKIE_EMAIL_PREFIX, LOCALE_COOKIE } from '../constants'
 /**
  * Black-box tests for `queries.orderForm` and the helpers it uses
  * (`syncWithStoreLocale`, `forwardCheckoutCookies`).
@@ -163,6 +163,66 @@ describe('queries.orderForm — happy path', () => {
       expect.any(Object)
     )
   })
+
+  /**
+   * The `orderFormRaw` headers carry the locale Checkout held *before* the
+   * sync, and the sync is what makes Checkout rotate it. Both end up written
+   * to the same response, so the one that reaches the browser is whichever is
+   * written last — it must be the rotated one. The mock forwards for real
+   * here, the way the client does, because a bare `jest.fn()` never writes the
+   * first cookie and the ordering goes unchecked.
+   */
+  it.each([true, false])(
+    'writes the rotated locale after the pre-sync one (enableOrderFormOptimization: %s)',
+    async enableOrderFormOptimization => {
+      const ctx = setupQueryContext({
+        vtex: { segment: { cultureInfo: 'fr-CA' } },
+      })
+
+      ctx.clients.apps.getAppSettings.mockResolvedValue({
+        enableOrderFormOptimization,
+      })
+
+      ctx.clients.checkout.orderFormRaw.mockResolvedValue({
+        data: baseOrderForm({
+          clientPreferencesData: { locale: 'en-CA', optinNewsLetter: null },
+        }),
+        headers: {
+          'set-cookie': ['CheckoutLocale=en-CA; domain=oldhost.com'],
+        },
+      })
+
+      const synced = baseOrderForm({
+        clientPreferencesData: { locale: 'fr-CA', optinNewsLetter: null },
+      })
+
+      ctx.clients.checkout.updateOrderFormClientPreferencesData.mockImplementation(
+        async (_orderFormId: string, _data: unknown, innerCtx: Context) => {
+          await forwardCheckoutCookies(
+            { 'set-cookie': ['CheckoutLocale=fr-CA; domain=oldhost.com'] },
+            innerCtx,
+            [LOCALE_COOKIE]
+          )
+
+          return synced
+        }
+      )
+
+      const result = await queries.orderForm(null, {}, toContext(ctx))
+
+      const localeWrites = ctx.cookies.set.mock.calls.filter(
+        ([name]) => name === LOCALE_COOKIE
+      )
+
+      expect(localeWrites).toHaveLength(2)
+      expect(localeWrites[0][1]).toBe('en-CA')
+      expect(localeWrites[1][1]).toBe('fr-CA')
+
+      // The remaining Checkout calls of this request must speak the new one.
+      expect(ctx.vtex.checkoutLocale).toBe('fr-CA')
+      expect(result).toBe(synced)
+    }
+  )
 })
 
 describe('queries.orderForm — broken cookie recovery', () => {
