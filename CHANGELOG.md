@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Optional `priceToken` on `ItemInput` (Pricing Fallback V2), forwarded as-is to the checkout REST API on `addToCart` and `updateItems`, so storefronts can send the signed price returned by the search and the cart can be closed while the Pricing system is unavailable.
 
+## [0.71.0] - 2026-09-09
+
+### Changed
+
+- Changing feature flag default to use the CatalogDataplane to fetch the item details.
+
 ## [0.70.0] - 2026-09-01
 
 ### Added
