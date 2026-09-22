@@ -13,6 +13,7 @@ import {
   ASPXAUTH_COOKIE,
   BROKEN_COOKIE_EMAIL_PREFIX,
   CHECKOUT_COOKIE,
+  LOCALE_COOKIE,
   OWNERSHIP_COOKIE,
   VTEX_SESSION,
 } from '../constants'
@@ -27,7 +28,12 @@ interface StoreSettings {
   enableCriticalCSS: boolean
 }
 
-const ALL_SET_COOKIES = [CHECKOUT_COOKIE, ASPXAUTH_COOKIE, OWNERSHIP_COOKIE]
+const ALL_SET_COOKIES = [
+  CHECKOUT_COOKIE,
+  ASPXAUTH_COOKIE,
+  OWNERSHIP_COOKIE,
+  LOCALE_COOKIE,
+]
 
 const filterAllowedCookies = (setCookies: string[], allowList: string[]) => {
   return setCookies.filter(setCookie => {
@@ -169,7 +175,7 @@ export const root = {
 export async function syncWithStoreLocale(
   orderForm: CheckoutOrderForm,
   cultureInfo: string,
-  checkout: Context['clients']['checkout']
+  ctx: Context
 ) {
   const clientPreferencesData = orderForm.clientPreferencesData || {
     locale: cultureInfo,
@@ -188,9 +194,10 @@ export async function syncWithStoreLocale(
     newClientPreferencesData.locale = cultureInfo
 
     try {
-      return await checkout.updateOrderFormClientPreferencesData(
+      return await ctx.clients.checkout.updateOrderFormClientPreferencesData(
         orderForm.orderFormId,
-        newClientPreferencesData
+        newClientPreferencesData,
+        ctx
       )
     } catch (e) {
       console.error(e)
@@ -235,6 +242,12 @@ export async function forwardCheckoutCookies(
       // just issued, not the one @withOwnerId read from the incoming request.
       ctx.vtex.ownerId = value
     }
+
+    if (name === LOCALE_COOKIE) {
+      // Same reasoning: Checkout rotates the locale when clientPreferencesData
+      // changes, and the calls that follow must speak the new one.
+      ctx.vtex.checkoutLocale = value
+    }
   })
 }
 
@@ -263,12 +276,6 @@ export const queries = {
       headers = obj.headers
     }
 
-    newOrderForm = await syncWithStoreLocale(
-      newOrderForm,
-      vtex.segment!.cultureInfo,
-      clients.checkout
-    )
-
     /**
      * In case the enableOrderFormOptimization setting is enabled in the store,
      * this will be the only `orderForm` query performed in the client. So no
@@ -279,16 +286,35 @@ export const queries = {
       'vtex.store@2.x'
     )
 
+    /**
+     * Forwarded before `syncWithStoreLocale` on purpose. These are the headers
+     * of the `orderFormRaw` above, so they carry the locale Checkout held
+     * *before* the sync, and the sync is what makes Checkout rotate it. Since
+     * `ctx.cookies.set` appends a `Set-Cookie` per call and the browser keeps
+     * the last one of a given name, replaying them afterwards would put the
+     * pre-rotation locale last and undo the sync.
+     */
     if (storeSettings.enableOrderFormOptimization) {
       await forwardCheckoutCookies(headers, ctx)
     } else {
       /**
-       * The reasoning above does not apply to the ownership cookie: no other
-       * app sets it, so dropping it here would leave the shopper without
-       * ownership and Checkout would mask their personal data.
+       * The reasoning above does not apply to the ownership and locale
+       * cookies: no other app sets them. Dropping the ownership would leave
+       * the shopper without it and Checkout would mask their personal data;
+       * dropping the locale would keep Checkout answering in the sales
+       * channel culture instead of the one the shopper chose.
        */
-      await forwardCheckoutCookies(headers, ctx, [OWNERSHIP_COOKIE])
+      await forwardCheckoutCookies(headers, ctx, [
+        OWNERSHIP_COOKIE,
+        LOCALE_COOKIE,
+      ])
     }
+
+    newOrderForm = await syncWithStoreLocale(
+      newOrderForm,
+      vtex.segment!.cultureInfo,
+      ctx
+    )
 
     return newOrderForm
   },
@@ -350,7 +376,8 @@ export const mutations = {
       {
         optinNewsLetter: input.optInNewsletter,
         locale: input.locale,
-      }
+      },
+      ctx
     )
 
     return updatedOrderForm

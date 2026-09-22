@@ -29,6 +29,7 @@ export interface VtexMock {
   tenant?: { locale: string }
   orderFormId?: string
   ownerId?: string
+  checkoutLocale?: string
   vtexRCSessionIdv7?: string
   vtexRCMacIdv7?: string
   platform?: string

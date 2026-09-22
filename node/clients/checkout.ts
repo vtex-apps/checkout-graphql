@@ -6,12 +6,14 @@ import {
   RequestConfig,
 } from '@vtex/api'
 import { UserProfileInput } from 'vtex.checkout-graphql'
-import { OWNERSHIP_COOKIE } from '../constants'
-import { forwardCheckoutCookies } from '../resolvers/orderForm'
-import { keepOwnership } from './ownership'
 
+import { LOCALE_COOKIE, OWNERSHIP_COOKIE } from '../constants'
+import { forwardCheckoutCookies } from '../resolvers/orderForm'
+import { keepLocale } from './locale'
+import { keepOwnership } from './ownership'
 import {
   checkoutCookieFormat,
+  localeCookieFormat,
   ownershipCookieFormat,
   statusToError,
 } from '../utils'
@@ -38,6 +40,7 @@ export class Checkout extends JanusClient {
       middlewares: [
         ...(options?.middlewares ?? []),
         keepOwnership((ctx as unknown) as CustomIOContext),
+        keepLocale((ctx as unknown) as CustomIOContext),
       ],
     })
   }
@@ -169,9 +172,10 @@ export class Checkout extends JanusClient {
       { metric: 'checkout-updateOrderFormMarketingData' }
     )
 
-  public updateOrderFormClientPreferencesData = (
+  public updateOrderFormClientPreferencesData = async (
     orderFormId: string,
-    clientPreferencesData: CheckoutClientPreferencesData
+    clientPreferencesData: CheckoutClientPreferencesData,
+    ctx: Context
   ) => {
     // The API default value of `optinNewsLetter` is `null`, but it doesn't accept a POST with its value as `null`
     const filteredClientPreferencesData =
@@ -179,11 +183,15 @@ export class Checkout extends JanusClient {
         ? { locale: clientPreferencesData.locale }
         : clientPreferencesData
 
-    return this.post<CheckoutOrderForm>(
+    // Changing the locale is what makes Checkout rotate `CheckoutLocale`, so
+    // this is the route whose Set-Cookie must reach the browser.
+    const { data, headers } = await this.postRaw<CheckoutOrderForm>(
       this.routes.attachmentsData(orderFormId, 'clientPreferencesData'),
       filteredClientPreferencesData,
       { metric: 'checkout-updateOrderFormClientPreferencesData' }
     )
+    await forwardCheckoutCookies(headers, ctx, [LOCALE_COOKIE])
+    return data
   }
 
   public updateOrderFromOpenTextField = (
@@ -421,16 +429,24 @@ export class Checkout extends JanusClient {
   }
 
   private getCommonHeaders = () => {
-    const { orderFormId, ownerId, vtexRCSessionIdv7, vtexRCMacIdv7 } = (this
-      .context as unknown) as CustomIOContext
+    const {
+      orderFormId,
+      ownerId,
+      checkoutLocale,
+      vtexRCSessionIdv7,
+      vtexRCMacIdv7,
+    } = (this.context as unknown) as CustomIOContext
     const checkoutCookie = orderFormId ? checkoutCookieFormat(orderFormId) : ''
     const ownershipCookie = ownerId ? ownershipCookieFormat(ownerId) : ''
+    const localeCookie = checkoutLocale
+      ? localeCookieFormat(checkoutLocale)
+      : ''
     const rcSessionCookie = vtexRCSessionIdv7
       ? `VtexRCSessionIdv7=${vtexRCSessionIdv7};`
       : ''
     const rcMacCookie = vtexRCMacIdv7 ? `VtexRCMacIdv7=${vtexRCMacIdv7};` : ''
     return {
-      Cookie: `${checkoutCookie}${ownershipCookie}${rcSessionCookie}${rcMacCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
+      Cookie: `${checkoutCookie}${ownershipCookie}${localeCookie}${rcSessionCookie}${rcMacCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 
@@ -517,6 +533,7 @@ export class CheckoutNoCookies extends Checkout {
         ...ctx,
         orderFormId: null,
         ownerId: null,
+        checkoutLocale: null,
         vtexRCSessionIdv7: null,
         vtexRCMacIdv7: null,
       } as any,

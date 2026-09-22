@@ -5,7 +5,7 @@ import {
 } from '../resolvers/orderForm'
 import { EMPTY_ORDER_FORM } from '../__fixtures__/orderForm'
 import { ContextMock, makeContext, toContext } from '../__fixtures__/context'
-import { BROKEN_COOKIE_EMAIL_PREFIX } from '../constants'
+import { BROKEN_COOKIE_EMAIL_PREFIX, LOCALE_COOKIE } from '../constants'
 /**
  * Black-box tests for `queries.orderForm` and the helpers it uses
  * (`syncWithStoreLocale`, `forwardCheckoutCookies`).
@@ -40,6 +40,17 @@ const setupQueryContext = (overrides = {}): ContextMock => {
 
   return ctx
 }
+
+/**
+ * `syncWithStoreLocale` only reaches into `ctx.clients.checkout`, and hands
+ * the whole `ctx` on so the client can write the rotated locale cookie back.
+ */
+const localeSyncContext = (updateMock: jest.Mock): Context =>
+  (({
+    clients: {
+      checkout: { updateOrderFormClientPreferencesData: updateMock },
+    },
+  } as unknown) as Context)
 
 describe('queries.orderForm — happy path', () => {
   it('fetches the order form via checkout.orderFormRaw and returns it', async () => {
@@ -130,6 +141,88 @@ describe('queries.orderForm — happy path', () => {
       expect.any(Object)
     )
   })
+
+  it('forwards the locale cookie even when enableOrderFormOptimization is false', async () => {
+    const ctx = setupQueryContext()
+    ctx.clients.checkout.orderFormRaw.mockResolvedValue({
+      data: baseOrderForm(),
+      headers: {
+        'set-cookie': [
+          'checkout.vtex.com=__ofid=order-1; domain=oldhost.com',
+          'CheckoutLocale=fr-CA; domain=oldhost.com',
+        ],
+      },
+    })
+
+    await queries.orderForm(null, {}, toContext(ctx))
+
+    expect(ctx.cookies.set).toHaveBeenCalledTimes(1)
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      'CheckoutLocale',
+      'fr-CA',
+      expect.any(Object)
+    )
+  })
+
+  /**
+   * The `orderFormRaw` headers carry the locale Checkout held *before* the
+   * sync, and the sync is what makes Checkout rotate it. Both end up written
+   * to the same response, so the one that reaches the browser is whichever is
+   * written last — it must be the rotated one. The mock forwards for real
+   * here, the way the client does, because a bare `jest.fn()` never writes the
+   * first cookie and the ordering goes unchecked.
+   */
+  it.each([true, false])(
+    'writes the rotated locale after the pre-sync one (enableOrderFormOptimization: %s)',
+    async enableOrderFormOptimization => {
+      const ctx = setupQueryContext({
+        vtex: { segment: { cultureInfo: 'fr-CA' } },
+      })
+
+      ctx.clients.apps.getAppSettings.mockResolvedValue({
+        enableOrderFormOptimization,
+      })
+
+      ctx.clients.checkout.orderFormRaw.mockResolvedValue({
+        data: baseOrderForm({
+          clientPreferencesData: { locale: 'en-CA', optinNewsLetter: null },
+        }),
+        headers: {
+          'set-cookie': ['CheckoutLocale=en-CA; domain=oldhost.com'],
+        },
+      })
+
+      const synced = baseOrderForm({
+        clientPreferencesData: { locale: 'fr-CA', optinNewsLetter: null },
+      })
+
+      ctx.clients.checkout.updateOrderFormClientPreferencesData.mockImplementation(
+        async (_orderFormId: string, _data: unknown, innerCtx: Context) => {
+          await forwardCheckoutCookies(
+            { 'set-cookie': ['CheckoutLocale=fr-CA; domain=oldhost.com'] },
+            innerCtx,
+            [LOCALE_COOKIE]
+          )
+
+          return synced
+        }
+      )
+
+      const result = await queries.orderForm(null, {}, toContext(ctx))
+
+      const localeWrites = ctx.cookies.set.mock.calls.filter(
+        ([name]) => name === LOCALE_COOKIE
+      )
+
+      expect(localeWrites).toHaveLength(2)
+      expect(localeWrites[0][1]).toBe('en-CA')
+      expect(localeWrites[1][1]).toBe('fr-CA')
+
+      // The remaining Checkout calls of this request must speak the new one.
+      expect(ctx.vtex.checkoutLocale).toBe('fr-CA')
+      expect(result).toBe(synced)
+    }
+  )
 })
 
 describe('queries.orderForm — broken cookie recovery', () => {
@@ -270,9 +363,11 @@ describe('syncWithStoreLocale', () => {
       clientPreferencesData: { locale: 'pt-BR', optinNewsLetter: null },
     })
 
-    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
-      updateOrderFormClientPreferencesData: updateMock,
-    } as unknown) as Context['clients']['checkout'])
+    const result = await syncWithStoreLocale(
+      orderForm,
+      'pt-BR',
+      localeSyncContext(updateMock)
+    )
 
     expect(result).toBe(orderForm)
     expect(updateMock).not.toHaveBeenCalled()
@@ -282,9 +377,11 @@ describe('syncWithStoreLocale', () => {
     const updateMock = jest.fn()
     const orderForm = baseOrderForm({ clientPreferencesData: null as any })
 
-    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
-      updateOrderFormClientPreferencesData: updateMock,
-    } as unknown) as Context['clients']['checkout'])
+    const result = await syncWithStoreLocale(
+      orderForm,
+      'pt-BR',
+      localeSyncContext(updateMock)
+    )
 
     expect(result).toBe(orderForm)
     expect(updateMock).not.toHaveBeenCalled()
@@ -296,9 +393,11 @@ describe('syncWithStoreLocale', () => {
       clientPreferencesData: { locale: '', optinNewsLetter: null } as any,
     })
 
-    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
-      updateOrderFormClientPreferencesData: updateMock,
-    } as unknown) as Context['clients']['checkout'])
+    const result = await syncWithStoreLocale(
+      orderForm,
+      'pt-BR',
+      localeSyncContext(updateMock)
+    )
 
     expect(result).toBe(orderForm)
     expect(updateMock).not.toHaveBeenCalled()
@@ -311,15 +410,18 @@ describe('syncWithStoreLocale', () => {
       orderFormId: 'original',
       clientPreferencesData: { locale: 'en', optinNewsLetter: null },
     })
+    const ctx = localeSyncContext(updateMock)
 
-    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
-      updateOrderFormClientPreferencesData: updateMock,
-    } as unknown) as Context['clients']['checkout'])
+    const result = await syncWithStoreLocale(orderForm, 'pt-BR', ctx)
 
-    expect(updateMock).toHaveBeenCalledWith('original', {
-      locale: 'pt-BR',
-      optinNewsLetter: null,
-    })
+    expect(updateMock).toHaveBeenCalledWith(
+      'original',
+      {
+        locale: 'pt-BR',
+        optinNewsLetter: null,
+      },
+      ctx
+    )
     expect(result).toBe(updated)
   })
 
@@ -337,9 +439,11 @@ describe('syncWithStoreLocale', () => {
       .mockImplementation(() => undefined)
 
     try {
-      const result = await syncWithStoreLocale(orderForm, 'pt-BR', ({
-        updateOrderFormClientPreferencesData: updateMock,
-      } as unknown) as Context['clients']['checkout'])
+      const result = await syncWithStoreLocale(
+        orderForm,
+        'pt-BR',
+        localeSyncContext(updateMock)
+      )
 
       expect(result).toBe(orderForm)
       expect(consoleSpy).toHaveBeenCalled()
@@ -360,13 +464,14 @@ describe('forwardCheckoutCookies', () => {
         'checkout.vtex.com=__ofid=order-1; domain=oldhost.com; path=/',
         '.ASPXAUTH=hash; domain=oldhost.com; secure; httpOnly',
         'CheckoutOrderFormOwnership=owner-1; domain=oldhost.com',
+        'CheckoutLocale=fr-CA; domain=oldhost.com',
         'random_cookie=foo; domain=oldhost.com',
       ],
     }
 
     await forwardCheckoutCookies(headers, toContext(ctx))
 
-    expect(ctx.cookies.set).toHaveBeenCalledTimes(3)
+    expect(ctx.cookies.set).toHaveBeenCalledTimes(4)
     expect(ctx.cookies.set).toHaveBeenCalledWith(
       'checkout.vtex.com',
       '__ofid=order-1',
@@ -380,6 +485,11 @@ describe('forwardCheckoutCookies', () => {
     expect(ctx.cookies.set).toHaveBeenCalledWith(
       'CheckoutOrderFormOwnership',
       'owner-1',
+      expect.any(Object)
+    )
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      'CheckoutLocale',
+      'fr-CA',
       expect.any(Object)
     )
   })
@@ -513,6 +623,25 @@ describe('forwardCheckoutCookies', () => {
     )
 
     expect(ctx.vtex.ownerId).toBe('owner-2')
+  })
+
+  /**
+   * `@withOrderFormId` snapshots the locale cookie off the incoming request.
+   * Checkout rotates it when clientPreferencesData changes, so the calls that
+   * follow in the same request must pick the new value up.
+   */
+  it('syncs a newly issued locale into vtex.checkoutLocale for the rest of the request', async () => {
+    const ctx = makeContext({
+      headers: { 'x-forwarded-host': 'newhost.com' },
+      vtex: { checkoutLocale: 'en-CA' },
+    })
+
+    await forwardCheckoutCookies(
+      { 'set-cookie': ['CheckoutLocale=fr-CA; domain=oldhost.com'] },
+      toContext(ctx)
+    )
+
+    expect(ctx.vtex.checkoutLocale).toBe('fr-CA')
   })
 
   it('respects a custom allow list', async () => {

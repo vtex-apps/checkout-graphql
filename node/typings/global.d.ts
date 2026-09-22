@@ -23,6 +23,7 @@ declare global {
     segment?: SegmentData
     orderFormId?: string
     ownerId?: string
+    checkoutLocale?: string
     vtexRCSessionIdv7?: string
     vtexRCMacIdv7?: string
   }
