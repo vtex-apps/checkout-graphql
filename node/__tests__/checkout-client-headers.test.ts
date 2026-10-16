@@ -62,4 +62,41 @@ describe('the checkout client', () => {
 
     expect(cookieHeaderOf(patch)).not.toContain('CheckoutLocale')
   })
+
+  it('sends the shopper token as the account cookie, never as a header', async () => {
+    const { client, patch } = build({
+      account: 'piononob2b',
+      storeUserAuthToken: 'store-token',
+    })
+
+    await client.addItem('of-1', [])
+
+    const [[, , config]] = patch.mock.calls
+
+    expect(config.headers.Cookie).toContain(
+      'VtexIdclientAutCookie_piononob2b=store-token;'
+    )
+    expect(config.headers).not.toHaveProperty('VtexIdclientAutCookie')
+  })
+
+  it('leaves the constructor headers free of the shopper token', () => {
+    const client = new Checkout(({
+      account: 'piononob2b',
+      storeUserAuthToken: 'store-token',
+    } as unknown) as IOContext)
+
+    const { options } = (client as unknown) as {
+      options?: { headers?: Record<string, string> }
+    }
+
+    expect(options?.headers?.VtexIdclientAutCookie).toBeUndefined()
+  })
+
+  it('omits the account cookie when the request holds no shopper token', async () => {
+    const { client, patch } = build({ account: 'piononob2b' })
+
+    await client.addItem('of-1', [])
+
+    expect(cookieHeaderOf(patch)).not.toContain('VtexIdclientAutCookie_')
+  })
 })

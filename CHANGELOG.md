@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The shopper token (`ctx.storeUserAuthToken`, audience `webstore`) now reaches Checkout as the
+`VtexIdclientAutCookie_{account}` cookie instead of the `VtexIdclientAutCookie` header. Janus reads that
+header as an admin token and, since audience verification moved to `Enforce` on core-mesh, answers
+`401 "The informed credentials are invalid"` to any other audience, so `addToCart` returned 200 with a
+401 inside the payload and the cart was never written.
+
 ## [0.72.0] - 2026-09-22
 
 ### Added
