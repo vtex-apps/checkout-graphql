@@ -16,6 +16,7 @@ import {
   localeCookieFormat,
   ownershipCookieFormat,
   statusToError,
+  storeAuthCookieFormat,
 } from '../utils'
 
 export interface SimulationData {
@@ -31,12 +32,6 @@ export class Checkout extends JanusClient {
   constructor(ctx: IOContext, options?: InstanceOptions) {
     super(ctx, {
       ...options,
-      headers: {
-        ...options?.headers,
-        ...(ctx.storeUserAuthToken
-          ? { VtexIdclientAutCookie: ctx.storeUserAuthToken }
-          : null),
-      },
       middlewares: [
         ...(options?.middlewares ?? []),
         keepOwnership((ctx as unknown) as CustomIOContext),
@@ -430,6 +425,8 @@ export class Checkout extends JanusClient {
 
   private getCommonHeaders = () => {
     const {
+      account,
+      storeUserAuthToken,
       orderFormId,
       ownerId,
       checkoutLocale,
@@ -445,8 +442,14 @@ export class Checkout extends JanusClient {
       ? `VtexRCSessionIdv7=${vtexRCSessionIdv7};`
       : ''
     const rcMacCookie = vtexRCMacIdv7 ? `VtexRCMacIdv7=${vtexRCMacIdv7};` : ''
+    // The shopper token has the `webstore` audience, so it must travel as a
+    // cookie: Janus reads the `VtexIdclientAutCookie` header as an admin token
+    // and answers 401 to any other audience.
+    const storeAuthCookie = storeUserAuthToken
+      ? storeAuthCookieFormat(account, storeUserAuthToken)
+      : ''
     return {
-      Cookie: `${checkoutCookie}${ownershipCookie}${localeCookie}${rcSessionCookie}${rcMacCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
+      Cookie: `${storeAuthCookie}${checkoutCookie}${ownershipCookie}${localeCookie}${rcSessionCookie}${rcMacCookie}vtex_segment=${this.context.segmentToken};vtex_session=${this.context.sessionToken};`,
     }
   }
 

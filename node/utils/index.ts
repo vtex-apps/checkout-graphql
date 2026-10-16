@@ -70,6 +70,10 @@ export function localeCookieFormat(locale: string) {
   return `${LOCALE_COOKIE}=${locale};`
 }
 
+export function storeAuthCookieFormat(account: string, token: string) {
+  return `VtexIdclientAutCookie_${account}=${token};`
+}
+
 export function getOrderFormIdFromCookie(cookies: Context['cookies']) {
   const cookie = cookies.get(CHECKOUT_COOKIE)
   return cookie?.split('=')[1]
